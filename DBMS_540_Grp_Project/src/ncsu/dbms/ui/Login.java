@@ -16,8 +16,10 @@ import javax.swing.JButton;
 import java.awt.Color;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+
 import javax.swing.JLayeredPane;
 
+@SuppressWarnings("unused")
 public class Login {
 
 	private JFrame frame;

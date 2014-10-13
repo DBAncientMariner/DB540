@@ -11,10 +11,12 @@ import java.awt.event.ActionEvent;
 import javax.swing.JTextArea;
 import javax.swing.JEditorPane;
 import javax.swing.JTextPane;
+import javax.swing.JTextField;
 
 public class Home {
 
 	private JFrame frame;
+	private JTextField txtAdmin;
 
 	/**
 	 * Launch the application.
@@ -128,5 +130,11 @@ public class Home {
 		JButton btnManageCourses = new JButton("Manage Courses");
 		btnManageCourses.setBounds(30, 68, 113, 23);
 		panel_4.add(btnManageCourses);
+		
+		txtAdmin = new JTextField();
+		txtAdmin.setText("Admin");
+		txtAdmin.setBounds(30, 11, 86, 20);
+		panel_4.add(txtAdmin);
+		txtAdmin.setColumns(10);
 	}
 }

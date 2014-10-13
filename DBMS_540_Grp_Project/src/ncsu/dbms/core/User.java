@@ -15,15 +15,15 @@ import java.util.Date;
  */
 public class User {
 	public int UserId=0;
-	public String UserFName;
-	public String UserMName;
-	public String UserLName;
-	public String UserEmail;
-	public String UserPassword;
-	public boolean UserIsActive;
+	public String UserFName="";
+	public String UserMName="";
+	public String UserLName="";
+	public String UserEmail="";
+	public String UserPassword="";
+	public boolean UserIsActive=false;
 	public Date UserCreatedDate;
 	public Date UserLastModifiedDate;
-	public int UserLastModifiedBy;
+	public int UserLastModifiedBy=1;
 	
 	public static boolean IsActiveUser(String userName, String password)
 	{
@@ -64,11 +64,18 @@ public class User {
 		
 	}
 	
-	public void AddUser(User user)
+	public static boolean AddUser(User user)
 	{
 		OracleDb oracleDb=new OracleDb();
-		String query="insert into csc_user (User_ID,USER_FNAME,USER_MNAME,USER_LNAME,USER_EMAIL,USER_PASSWORD,USER_ACTIVE,USER_CREATEDDATE,USER_MODIFIEDBY,USER_LASTMODIFIEDDATE)";
-		query =query + " values(csc_user_sequence.nextval,'"+user.UserFName+"','"+user.UserMName+"','"+user.UserLName+"','"+user.UserEmail+"','"+user.UserPassword+"','T',TO_CHAR("+user.UserCreatedDate+", 'YYYY-MM-DD HH24:MI:SS'),1,TO_CHAR("+user.UserLastModifiedDate+", 'YYYY-MM-DD HH24:MI:SS'));";
-		ResultSet rs=oracleDb.GetResultSet(query);
+		User tempUser=new User();
+		tempUser.GetUser(user.UserEmail);
+		if(tempUser.UserId==0)
+		{
+			String query="insert into csc_user (User_ID,USER_FNAME,USER_MNAME,USER_LNAME,USER_EMAIL,USER_PASSWORD,USER_ACTIVE,USER_CREATEDDATE,USER_MODIFIEDBY,USER_LASTMODIFIEDDATE)";
+			query =query + " values(csc_user_sequence.nextval,'"+user.UserFName+"','"+user.UserMName+"','"+user.UserLName+"','"+user.UserEmail+"','"+user.UserPassword+"','T',TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS'),1,TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS'))";
+			return oracleDb.InsertQuery(query);
+		}
+		else
+			return false;
 	}
 }

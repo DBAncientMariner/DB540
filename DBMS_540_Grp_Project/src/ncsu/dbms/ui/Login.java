@@ -23,7 +23,13 @@ public class Login {
 	private JFrame frame;
 	private OracleDb Oracle;
 	private JFrame frameStart;
+	private JFrame frameRegistration;
 	static Login window;
+	private JTextField txt_UserFName;
+	private JTextField txt_UserMName;
+	private JTextField txt_UserLName;
+	private JTextField txt_UserEmail;
+	private JTextField txt_UserPassword;
 	
 	/**
 	 * Launch the application.
@@ -33,6 +39,7 @@ public class Login {
 			public void run() {
 				try {
 					window = new Login();
+					//window.frameRegistration.setVisible(true);
 					window.frameStart.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -47,6 +54,7 @@ public class Login {
 	public Login() {
 		//initialize();
 		initializeFrameStart();
+		//initializeFrameRegistration();
 	}
 
 	/**
@@ -67,12 +75,12 @@ public class Login {
 		frame.getContentPane().add(lbl_Welcome);
 		
 		final JTextField txt_LoginName = new JTextField();
-		txt_LoginName.setToolTipText("Login Name");
+		txt_LoginName.setToolTipText("Login Name/Email");
 		txt_LoginName.setBounds(293, 87, 116, 22);
 		frame.getContentPane().add(txt_LoginName);
 		txt_LoginName.setColumns(10);
 		
-		JTextField txt_Password = new JTextField();
+		final JTextField txt_Password = new JTextField();
 		txt_Password.setToolTipText("Password");
 		txt_Password.setBounds(293, 135, 116, 22);
 		frame.getContentPane().add(txt_Password);
@@ -83,26 +91,38 @@ public class Login {
 		lbl_ErrorMessage.setBounds(52, 242, 506, 115);
 		frame.getContentPane().add(lbl_ErrorMessage);
 		
-		JLabel lbl_LoginName = new JLabel("Login Name");
-		lbl_LoginName.setBounds(183, 80, 74, 36);
+		JLabel lbl_LoginName = new JLabel("Login Name/Email");
+		lbl_LoginName.setBounds(150, 80, 104, 36);
 		frame.getContentPane().add(lbl_LoginName);
 		
 		JLabel lbl_Password = new JLabel("Password");
-		lbl_Password.setBounds(185, 128, 86, 36);
+		lbl_Password.setBounds(150, 128, 104, 36);
 		frame.getContentPane().add(lbl_Password);
 		
 		JButton btn_Login = new JButton("Login");
 		btn_Login.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				lbl_ErrorMessage.setText("");
-				User user=new User();
-				user.GetUser(txt_LoginName.getText());
-				if(user.UserId==0)
+				if(!txt_Password.getText().trim().equalsIgnoreCase("") && !txt_LoginName.getText().trim().equalsIgnoreCase(""))
 				{
-					lbl_ErrorMessage.setText("No such user exists.");
+					User user=new User();
+					user.GetUser(txt_LoginName.getText());
+					if(user.UserId==0)
+					{
+						lbl_ErrorMessage.setText("No such user exists.");
+					}
+					else
+						lbl_ErrorMessage.setText(user.UserFName);
 				}
-				else
-					lbl_ErrorMessage.setText(user.UserFName);
+				else if(txt_LoginName.getText().trim().equalsIgnoreCase("") )
+				{
+					lbl_ErrorMessage.setText("Provide email id");
+				}
+				else if(txt_Password.getText().trim().equalsIgnoreCase("") )
+				{
+					lbl_ErrorMessage.setText("Provide password");
+				}
+				
 			}
 		});
 		btn_Login.setBounds(293, 180, 97, 25);
@@ -155,7 +175,9 @@ public class Login {
 		JButton btn_CreateUser = new JButton("Create User");
 		btn_CreateUser.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				
+				initializeFrameRegistration();
+				window.frameRegistration.setVisible(true);
+				window.frameStart.setVisible(false);
 			}
 		});
 		btn_CreateUser.setBounds(250, 150, 140, 25);
@@ -171,5 +193,110 @@ public class Login {
 		});
 		btn_Exit.setBounds(250, 200, 140, 25);
 		frameStart.getContentPane().add(btn_Exit);
+	}
+
+	//this is main opening screen.
+	private void initializeFrameRegistration()
+	{
+		frameRegistration=new JFrame();
+		frameRegistration.setResizable(false);
+		frameRegistration.setBounds(100,100,627,433);
+		frameRegistration.setLocationRelativeTo(null); 
+		frameRegistration.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frameRegistration.getContentPane().setLayout(null);
+		
+		
+		JLabel lbl_Welcome = new JLabel("Welcome CSC 505 - Registration");
+		lbl_Welcome.setBounds(169, 13, 247, 30);
+		frameRegistration.getContentPane().add(lbl_Welcome);
+		
+		JLabel lblUserFName = new JLabel("First Name *");
+		lblUserFName.setBounds(169, 74, 112, 25);
+		frameRegistration.getContentPane().add(lblUserFName);
+		
+		txt_UserFName = new JTextField();
+		txt_UserFName.setToolTipText("First Name");
+		txt_UserFName.setBounds(300, 75, 116, 22);
+		frameRegistration.getContentPane().add(txt_UserFName);
+		txt_UserFName.setColumns(10);
+		
+		JLabel lbl_UserMName = new JLabel("Middle Name ");
+		lbl_UserMName.setBounds(169, 121, 112, 25);
+		frameRegistration.getContentPane().add(lbl_UserMName);
+		
+		txt_UserMName = new JTextField();
+		txt_UserMName.setToolTipText("Middle Name");
+		txt_UserMName.setColumns(10);
+		txt_UserMName.setBounds(300, 122, 116, 22);
+		frameRegistration.getContentPane().add(txt_UserMName);
+		
+		JLabel lbl_UserLName = new JLabel("Last Name *");
+		lbl_UserLName.setBounds(169, 170, 112, 25);
+		frameRegistration.getContentPane().add(lbl_UserLName);
+		
+		txt_UserLName = new JTextField();
+		txt_UserLName.setToolTipText("Last Name");
+		txt_UserLName.setColumns(10);
+		txt_UserLName.setBounds(300, 171, 116, 22);
+		frameRegistration.getContentPane().add(txt_UserLName);
+		
+		JLabel lbl_UserEmail = new JLabel("Email *");
+		lbl_UserEmail.setBounds(169, 217, 112, 25);
+		frameRegistration.getContentPane().add(lbl_UserEmail);
+		
+		txt_UserEmail = new JTextField();
+		txt_UserEmail.setToolTipText("Email");
+		txt_UserEmail.setColumns(10);
+		txt_UserEmail.setBounds(300, 218, 116, 22);
+		frameRegistration.getContentPane().add(txt_UserEmail);
+		
+		JLabel lbl_UserPassword = new JLabel("Password *");
+		lbl_UserPassword.setBounds(169, 263, 112, 25);
+		frameRegistration.getContentPane().add(lbl_UserPassword);
+		
+		txt_UserPassword = new JTextField();
+		txt_UserPassword.setToolTipText("Password");
+		txt_UserPassword.setColumns(10);
+		txt_UserPassword.setBounds(300, 266, 116, 22);
+		frameRegistration.getContentPane().add(txt_UserPassword);
+		
+		final JLabel lbl_ErrorMessage = new JLabel("");
+		lbl_ErrorMessage.setForeground(Color.RED);
+		lbl_ErrorMessage.setBounds(24, 347, 567, 41);
+		frameRegistration.getContentPane().add(lbl_ErrorMessage);
+		
+		JButton btn_UserSave = new JButton("Create User");
+		btn_UserSave.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				User user=new User();
+				user.UserFName=txt_UserFName.getText();
+				user.UserMName=txt_UserMName.getText();
+				user.UserLName=txt_UserLName.getText();
+				user.UserEmail=txt_UserEmail.getText();
+				user.UserPassword=txt_UserPassword.getText();
+				user.UserIsActive=true;
+				if(User.AddUser(user))
+					lbl_ErrorMessage.setText("User created!");
+				else
+					lbl_ErrorMessage.setText("Error occured,Email id already exist in system! Try again!");
+			}
+		});
+		btn_UserSave.setBounds(300, 314, 116, 25);
+		frameRegistration.getContentPane().add(btn_UserSave);
+		
+		JButton btn_RegistrationBack = new JButton("Back");
+		btn_RegistrationBack.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				initializeFrameStart();
+				window.frameStart.setVisible(true);
+				window.frameRegistration.setVisible(false);
+			}
+		});
+		btn_RegistrationBack.setBounds(169, 314, 116, 25);
+		frameRegistration.getContentPane().add(btn_RegistrationBack);
+		
+		
+		
+		
 	}
 }

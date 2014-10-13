@@ -21,22 +21,9 @@ public class OracleDb {
 	ResultSet ResultSet;
 	Statement Stmt;
 	public OracleDb(){
-<<<<<<< HEAD
 		UserName="SYSTEM";
 		Password="aCZ6q7F";
 		Url="jdbc:oracle:thin:System@//AM-THINKPAD:1521/xe";
-=======
-		try {
-			Class.forName("oracle.jdbc.OracleDriver");
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		String username = "system";
-		String password = "rambo";
-		String url="jdbc:oracle:thin:System@//Sajal-PC:1521/xe";
-		
->>>>>>> 892db12d0b8db06891014cd36a2df0f47ffe29be
 		
 	}
 	public boolean OpenConnection()

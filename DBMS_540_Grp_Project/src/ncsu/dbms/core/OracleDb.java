@@ -48,7 +48,8 @@ public class OracleDb {
 	public void CloseConnection()
 	{
 		try {
-			ResultSet.close();
+			if(ResultSet!=null)
+				ResultSet.close();
 			Stmt.close();
 			Conn.close();
 		} catch (SQLException e) {
@@ -72,8 +73,25 @@ public class OracleDb {
 		}
 		return ResultSet;
 	}
-	public void InsertQuery(String query)
+	public boolean InsertQuery(String query)
 	{
-		
+		try
+		{
+			if(OpenConnection())
+			{
+				Stmt=Conn.createStatement();
+				Stmt.executeUpdate(query);
+				Conn.commit();
+				
+			}
+			else
+				return false;
+		}
+		catch(SQLException e)
+		{
+			return false;
+		}
+		CloseConnection();
+		return true;
 	}
 }

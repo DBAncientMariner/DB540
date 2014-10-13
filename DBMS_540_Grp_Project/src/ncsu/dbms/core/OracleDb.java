@@ -21,9 +21,9 @@ public class OracleDb {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		String username = "SYSTEM";
-		String password = "aCZ6q7F";
-		String url="jdbc:oracle:thin:System@//AM-THINKPAD:1521/xe";
+		String username = "system";
+		String password = "rambo";
+		String url="jdbc:oracle:thin:System@//Sajal-PC:1521/xe";
 		
 		
 		try {

@@ -22,8 +22,8 @@ public class OracleDb {
 	Statement Stmt;
 	public OracleDb(){
 		UserName="SYSTEM";
-		Password="aCZ6q7F";
-		Url="jdbc:oracle:thin:System@//AM-THINKPAD:1521/xe";
+		Password="rambo";
+		Url="jdbc:oracle:thin:System@//Sajal-PC:1521/xe";
 		
 	}
 	public boolean OpenConnection()

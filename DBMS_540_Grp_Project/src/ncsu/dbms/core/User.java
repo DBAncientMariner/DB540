@@ -25,6 +25,7 @@ public class User {
 	public Date UserLastModifiedDate;
 	public int UserLastModifiedBy=1;
 	
+	
 	public static boolean IsActiveUser(String userName, String password)
 	{
 		return false;
@@ -77,5 +78,17 @@ public class User {
 		}
 		else
 			return false;
+	}
+	public static boolean IsFaculty(User user)
+	{
+		return false;
+	}
+	public static boolean IsTA(User user)
+	{
+		return false;
+	}
+	public static boolean IsStudent(User user)
+	{
+		return false;
 	}
 }

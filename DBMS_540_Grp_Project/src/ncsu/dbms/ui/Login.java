@@ -114,7 +114,12 @@ public class Login {
 						lbl_ErrorMessage.setText("No such user exists.");
 					}
 					else
-						lbl_ErrorMessage.setText(user.UserFName);
+					{
+						//user logged in
+						frame.setVisible(false);
+						Home window = new Home();
+						
+					}
 				}
 				else if(txt_LoginName.getText().trim().equalsIgnoreCase("") )
 				{

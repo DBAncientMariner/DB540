@@ -1,22 +1,29 @@
 package ncsu.dbms.ui;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
+import javax.swing.JList;
 import javax.swing.JPanel;
-import javax.swing.JInternalFrame;
+import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.JLabel;
 import javax.swing.JButton;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import javax.swing.JTextArea;
-import javax.swing.JEditorPane;
-import javax.swing.JTextPane;
-import javax.swing.JTextField;
 
-public class Home {
+import javax.swing.event.ListSelectionListener;
 
-	private JFrame frame;
-	private JTextField txtAdmin;
+import ncsu.dbms.core.LocalSession;
+
+
+public class Home extends JFrame {
+
+	private JPanel contentPane;
 
 	/**
 	 * Launch the application.
@@ -25,8 +32,8 @@ public class Home {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Home window = new Home();
-					window.frame.setVisible(true);
+					Home frame = new Home();
+					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -35,106 +42,121 @@ public class Home {
 	}
 
 	/**
-	 * Create the application.
+	 * Create the frame.
 	 */
 	public Home() {
-		initialize();
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 900, 700);
+		setLocationRelativeTo(null); 
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		
+		JPanel panel_Center = new JPanel();
+		panel_Center.setBounds(12, 141, 211, 236);
+		contentPane.add(panel_Center);
+		panel_Center.setLayout(null);
+		
+		JButton btn_ViewScore = new JButton("ViewScore");
+		btn_ViewScore.setBounds(12, 47, 187, 33);
+		panel_Center.add(btn_ViewScore);
+		
+		JButton btn_AttemptHomework = new JButton("Attempt Homework");
+		btn_AttemptHomework.setBounds(12, 83, 187, 33);
+		panel_Center.add(btn_AttemptHomework);
+		
+		JButton btn_ViewSubmissions = new JButton("Past Submissions");
+		btn_ViewSubmissions.setBounds(12, 125, 187, 33);
+		panel_Center.add(btn_ViewSubmissions);
+		
+		JButton btn_Notification = new JButton("Notification");
+		btn_Notification.setBounds(12, 161, 187, 33);
+		panel_Center.add(btn_Notification);
+		
+		JPanel panel_Bottom = new JPanel();
+		panel_Bottom.setBounds(12, 390, 211, 224);
+		contentPane.add(panel_Bottom);
+		
+		JPanel panel_Top = new JPanel();
+		panel_Top.setBounds(12, 13, 211, 128);
+		contentPane.add(panel_Top);
+		panel_Top.setLayout(null);
+		
+		final JPanel panel_Right = new JPanel();
+		panel_Right.setBounds(230, 13, 640, 627);
+		contentPane.add(panel_Right);
+		panel_Right.setLayout(null);
+		
+		JLabel lbl_UserName=new JLabel("");
+		lbl_UserName.setBounds(12, 10, 187, 33);
+		panel_Top.add(lbl_UserName);
+		panel_Right.setLayout(null);
+		JButton btnHome = new JButton("Home");
+		btnHome.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+			}
+		});
+		btnHome.setBounds(12, 46, 187, 33);
+		panel_Top.add(btnHome);
+		
+		JButton btn_Logout = new JButton("Logout");
+		btn_Logout.setBounds(12, 82, 187, 33);
+		panel_Top.add(btn_Logout);
+		
+		OpenHomePage(panel_Right);
 	}
 
-	/**
-	 * Initialize the contents of the frame.
-	 */
-	private void initialize() {
-		frame = new JFrame();
-		frame.setResizable(false);
-		frame.setBounds(100, 100, 604, 485);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().setLayout(null);
+	//handlers home button click
+	public void OpenHomePage(JPanel homePanel)
+	{
+		homePanel.removeAll();
 		
-		JPanel main = new JPanel();
-		main.setBounds(183, 0, 415, 450);
-		frame.getContentPane().add(main);
-		main.setLayout(null);
+		//homePanel.setBackground(Color.gray);
+		JLabel lbl_SelectCourse=new JLabel("Select a course");
+		lbl_SelectCourse.setBounds(100, 10,300,30);
+		homePanel.add(lbl_SelectCourse);
 		
-		JInternalFrame internalFrame = new JInternalFrame("New JInternalFrame");
-		internalFrame.setBounds(0, 0, 415, 450);
-		main.add(internalFrame);
-		internalFrame.setVisible(true);
+		//load all the courses
+		String[] data = {"one", "two", "three", "four"};
+		final JList<String> listCourses = new JList<String>(data);
+		//final JList<String> listCourses = new JList<String>();
+		listCourses.addListSelectionListener(new ListSelectionListener() {
+			public void valueChanged(ListSelectionEvent arg0) {
+				LocalSession.SetCurrentSelectedCourse(listCourses.getSelectedIndex());
+			}
+		});
+		listCourses.setBounds(100, 50,300,100);
 		
-		JPanel panel_1 = new JPanel();
-		panel_1.setBounds(0, 0, 185, 57);
-		frame.getContentPane().add(panel_1);
-		panel_1.setLayout(null);
+		homePanel.add(listCourses);
 		
-		JPanel panel_2 = new JPanel();
-		panel_2.setBounds(0, 56, 185, 152);
-		frame.getContentPane().add(panel_2);
-		panel_2.setLayout(null);
+		JLabel lbl_AddCourse=new JLabel("Add a course");
+		lbl_AddCourse.setBounds(100, 300,100,30);
+		homePanel.add(lbl_AddCourse);
 		
-		JButton btnHome = new JButton("Home");
-		btnHome.setBounds(53, 42, 89, 23);
-		panel_2.add(btnHome);
+		JLabel lbl_AddToken=new JLabel("Provide a token");
+		lbl_AddToken.setBounds(100, 340,100,30);
+		homePanel.add(lbl_AddToken);
 		
-		JButton btnAssignments = new JButton("Assignments");
-		btnAssignments.setBounds(41, 76, 123, 23);
-		panel_2.add(btnAssignments);
+		JTextField txt_Token=new JTextField();
+		txt_Token.setBounds(250, 340, 100,30);
+		txt_Token.setToolTipText("Token");
+		homePanel.add(txt_Token);
 		
-		JButton btnNewButton = new JButton("Past Assignments");
-		btnNewButton.addActionListener(new ActionListener() {
+		JButton btn_AddCourse=new JButton("Add Course");
+		btn_AddCourse.setBounds(370, 340, 100, 30);
+		btn_AddCourse.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				AddCourse();
 			}
 		});
-		btnNewButton.setBounds(41, 110, 118, 23);
-		panel_2.add(btnNewButton);
+		homePanel.add(btn_AddCourse);
 		
-		JTextPane txtpnStudent = new JTextPane();
-		txtpnStudent.setText("Student");
-		txtpnStudent.setBounds(58, 11, 84, 20);
-		panel_2.add(txtpnStudent);
+	}
+	
+	private void AddCourse()
+	{
 		
-		JPanel panel_3 = new JPanel();
-		panel_3.setBounds(0, 205, 185, 143);
-		frame.getContentPane().add(panel_3);
-		panel_3.setLayout(null);
-		
-		JButton btnCreateAssignment = new JButton("Create Assignment");
-		btnCreateAssignment.setBounds(36, 41, 128, 23);
-		panel_3.add(btnCreateAssignment);
-		
-		JButton btnViewAssignments = new JButton("View Assignments");
-		btnViewAssignments.setBounds(36, 75, 128, 23);
-		panel_3.add(btnViewAssignments);
-		
-		JButton btnViewQuestionBank = new JButton("View Question Bank");
-		btnViewQuestionBank.setBounds(36, 109, 128, 23);
-		panel_3.add(btnViewQuestionBank);
-		
-		JTextPane txtpnFaculty = new JTextPane();
-		txtpnFaculty.setText("Faculty");
-		txtpnFaculty.setBounds(36, 11, 113, 20);
-		panel_3.add(txtpnFaculty);
-		
-		JPanel panel_4 = new JPanel();
-		panel_4.setBounds(0, 348, 185, 102);
-		frame.getContentPane().add(panel_4);
-		panel_4.setLayout(null);
-		
-		JButton btnAddUser = new JButton("Manage Assignments");
-		btnAddUser.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
-		btnAddUser.setBounds(21, 34, 138, 23);
-		panel_4.add(btnAddUser);
-		
-		JButton btnManageCourses = new JButton("Manage Courses");
-		btnManageCourses.setBounds(30, 68, 113, 23);
-		panel_4.add(btnManageCourses);
-		
-		txtAdmin = new JTextField();
-		txtAdmin.setText("Admin");
-		txtAdmin.setBounds(30, 11, 86, 20);
-		panel_4.add(txtAdmin);
-		txtAdmin.setColumns(10);
 	}
 }

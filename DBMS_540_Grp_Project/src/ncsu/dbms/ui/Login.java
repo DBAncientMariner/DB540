@@ -42,7 +42,7 @@ public class Login {
 				try {
 					window = new Login();
 					//window.frameRegistration.setVisible(true);
-					window.frameStart.setVisible(true);
+					//window.frameStart.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -200,6 +200,7 @@ public class Login {
 		});
 		btn_Exit.setBounds(250, 200, 140, 25);
 		frameStart.getContentPane().add(btn_Exit);
+		frameStart.setVisible(true);
 	}
 
 	//this is main opening screen.

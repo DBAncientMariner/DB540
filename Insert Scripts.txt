@@ -1,70 +1,70 @@
 insert into csc_role (role_id, role_name, role_description)
-values (CSC_ROLE_SEQUENCE.nextval,'Faculty','Faculty')
+values (CSC_ROLE_SEQUENCE.nextval,'Faculty','Faculty');
 
 insert into csc_role (role_id, role_name, role_description)
-values (CSC_ROLE_SEQUENCE.nextval,'Student','Student')
+values (CSC_ROLE_SEQUENCE.nextval,'Student','Student');
 
 insert into csc_role (role_id, role_name, role_description)
-values (CSC_ROLE_SEQUENCE.nextval,'Teaching Assistant','Teaching Assistant')
+values (CSC_ROLE_SEQUENCE.nextval,'Teaching Assistant','Teaching Assistant');
 
 insert into csc_role (role_id, role_name, role_description)
-values (CSC_ROLE_SEQUENCE.nextval,'Admin','Admin')
+values (CSC_ROLE_SEQUENCE.nextval,'Admin','Admin');
 
 insert into csc_user (user_id,user_id_char,USER_FNAME,USER_LNAME,USER_EMAIL,USER_PASSWORD)
-values (CSC_USER_SEQUENCE .nextval,'tregan','Tom','Regan','tregan@ncsu.edu','tregan')
+values (CSC_USER_SEQUENCE .nextval,'tregan','Tom','Regan','tregan@ncsu.edu','tregan');
 
 insert into csc_user (user_id,user_id_char,USER_FNAME,USER_LNAME,USER_EMAIL,USER_PASSWORD)
-values (CSC_USER_SEQUENCE .nextval,'jmick','Jenelle','Mick','jmick@ncsu.edu','jmick')
+values (CSC_USER_SEQUENCE .nextval,'jmick','Jenelle','Mick','jmick@ncsu.edu','jmick');
 
 insert into csc_user (user_id,user_id_char,USER_FNAME,USER_LNAME,USER_EMAIL,USER_PASSWORD)
-values (CSC_USER_SEQUENCE .nextval,'mfiser','Michal','Fiser','mfiser@ncsu.edu','mfiser')
-
-
-insert into csc_user (user_id,user_id_char,USER_FNAME,USER_LNAME,USER_EMAIL,USER_PASSWORD)
-values (CSC_USER_SEQUENCE .nextval,'jander','Joseph','Anderson','jander@ncsu.edu','jander')
+values (CSC_USER_SEQUENCE .nextval,'mfiser','Michal','Fiser','mfiser@ncsu.edu','mfiser');
 
 
 insert into csc_user (user_id,user_id_char,USER_FNAME,USER_LNAME,USER_EMAIL,USER_PASSWORD)
-values (CSC_USER_SEQUENCE .nextval,'jHarla','Jitendra','Harlalka','jHarla@ncsu.edu','jHarla')
+values (CSC_USER_SEQUENCE .nextval,'jander','Joseph','Anderson','jander@ncsu.edu','jander');
+
 
 insert into csc_user (user_id,user_id_char,USER_FNAME,USER_LNAME,USER_EMAIL,USER_PASSWORD)
-values (CSC_USER_SEQUENCE .nextval,'aneela','Aishwarya','Neelakantan','aneela@ncsu.edu','aneela')
+values (CSC_USER_SEQUENCE .nextval,'jHarla','Jitendra','Harlalka','jHarla@ncsu.edu','jHarla');
 
 insert into csc_user (user_id,user_id_char,USER_FNAME,USER_LNAME,USER_EMAIL,USER_PASSWORD)
-values (CSC_USER_SEQUENCE .nextval,'mjones','Mary','Jones','mjones@ncsu.edu','mjones')
+values (CSC_USER_SEQUENCE .nextval,'aneela','Aishwarya','Neelakantan','aneela@ncsu.edu','aneela');
 
 insert into csc_user (user_id,user_id_char,USER_FNAME,USER_LNAME,USER_EMAIL,USER_PASSWORD)
-values (CSC_USER_SEQUENCE .nextval,'jmoyer','James','Moyer','jmoyer@ncsu.edu','jmoyer')
+values (CSC_USER_SEQUENCE .nextval,'mjones','Mary','Jones','mjones@ncsu.edu','mjones');
 
 insert into csc_user (user_id,user_id_char,USER_FNAME,USER_LNAME,USER_EMAIL,USER_PASSWORD)
-values (CSC_USER_SEQUENCE .nextval,'kogan','Kemafor','Ogan','kogan@ncsu.edu','kogan')
+values (CSC_USER_SEQUENCE .nextval,'jmoyer','James','Moyer','jmoyer@ncsu.edu','jmoyer');
 
 insert into csc_user (user_id,user_id_char,USER_FNAME,USER_LNAME,USER_EMAIL,USER_PASSWORD)
-values (CSC_USER_SEQUENCE .nextval,'rchirkova','Rada','Chirkova','rchirkova@ncsu.edu','rchirkova')
+values (CSC_USER_SEQUENCE .nextval,'kogan','Kemafor','Ogan','kogan@ncsu.edu','kogan');
 
 insert into csc_user (user_id,user_id_char,USER_FNAME,USER_LNAME,USER_EMAIL,USER_PASSWORD)
-values (CSC_USER_SEQUENCE .nextval,'chealey','Cristopher','Healey','chealey@ncsu.edu','chealey')
+values (CSC_USER_SEQUENCE .nextval,'rchirkova','Rada','Chirkova','rchirkova@ncsu.edu','rchirkova');
+
+insert into csc_user (user_id,user_id_char,USER_FNAME,USER_LNAME,USER_EMAIL,USER_PASSWORD)
+values (CSC_USER_SEQUENCE .nextval,'chealey','Cristopher','Healey','chealey@ncsu.edu','chealey');
 
 Insert into csc_course (CSC_COURSE_COURSE_ID,CSC_COURSE_COURSE_NAME,CSC_COURSE_STARTDATE,CSC_COURSE_ENDDATE,
 CSC_COURSE_MAX_ENROLL_NO,CSC_COURSE_NUMBER_OF_STUDENTS,CSC_COURSE_COURSE_ID_CHAR,CSC_COURSE_TOKEN)
 values (CSC_COURSE_SEQUENCE.nextval,'Database Systems',to_date('2014/08/27','YYYY/MM/DD'),to_date('2014/12/12','YYYY/MM/DD'),
-5,3,'CSC440','CSC440FALL14')
+5,3,'CSC440','CSC440FALL14');
 
 Insert into csc_course (CSC_COURSE_COURSE_ID,CSC_COURSE_COURSE_NAME,CSC_COURSE_STARTDATE,CSC_COURSE_ENDDATE,
 CSC_COURSE_MAX_ENROLL_NO,CSC_COURSE_NUMBER_OF_STUDENTS,CSC_COURSE_COURSE_ID_CHAR,CSC_COURSE_TOKEN)
 values (CSC_COURSE_SEQUENCE.nextval,'Database Systems',to_date('2014/08/25','YYYY/MM/DD'),to_date('2014/12/10','YYYY/MM/DD'),
-5,3,'CSC540','CSC540FALL14')
+5,3,'CSC540','CSC540FALL14');
 
 Insert into csc_course (CSC_COURSE_COURSE_ID,CSC_COURSE_COURSE_NAME,CSC_COURSE_STARTDATE,CSC_COURSE_ENDDATE,
 CSC_COURSE_MAX_ENROLL_NO,CSC_COURSE_NUMBER_OF_STUDENTS,CSC_COURSE_COURSE_ID_CHAR,CSC_COURSE_TOKEN)
 values (CSC_COURSE_SEQUENCE.nextval,'Advanced Data Structures',to_date('2013/08/25','YYYY/MM/DD'),to_date('2013/12/06','YYYY/MM/DD'),
-5,3,'CSC541','CSC541FALL14')
+5,3,'CSC541','CSC541FALL14');
 
 insert into CSC_LEVEL_STUDENT (CSC_LEVEL_STUDENT_LEVEL_ID ,CSC_LEVEL_LEVEL_TYPE)
-values (CSC_LEVEL_STUDENT_SEQUENCE.nextval,'Under Graduate')
+values (CSC_LEVEL_STUDENT_SEQUENCE.nextval,'Under Graduate');
 
 insert into CSC_LEVEL_STUDENT (CSC_LEVEL_STUDENT_LEVEL_ID ,CSC_LEVEL_LEVEL_TYPE)
-values (CSC_LEVEL_STUDENT_SEQUENCE.nextval,'Graduate')
+values (CSC_LEVEL_STUDENT_SEQUENCE.nextval,'Graduate');
 
 Insert into CSC_LEVEL_STUDENT_USER (CSC_LEVEL_STU_USER_SURR_KEY,CSC_LEVEL_STU_USER_LEVEL_ID,CSC_LEVEL_STU_USER_USER_ID)
 values (CSC_STUDENT_LEVEL_SEQUENCE.nextval,1,1);

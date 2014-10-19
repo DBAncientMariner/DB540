@@ -21,10 +21,11 @@ import javax.swing.event.ListSelectionListener;
 import ncsu.dbms.core.LocalSession;
 
 
-public class Home extends JFrame {
+public class Home {
 
 	private JPanel contentPane;
-
+	private JFrame frame;
+	
 	/**
 	 * Launch the application.
 	 */
@@ -33,7 +34,6 @@ public class Home extends JFrame {
 			public void run() {
 				try {
 					Home frame = new Home();
-					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -45,12 +45,13 @@ public class Home extends JFrame {
 	 * Create the frame.
 	 */
 	public Home() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 900, 700);
-		setLocationRelativeTo(null); 
+		frame = new JFrame();
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setBounds(100, 100, 900, 700);
+		frame.setLocationRelativeTo(null); 
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		setContentPane(contentPane);
+		frame.setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
 		JPanel panel_Center = new JPanel();
@@ -64,6 +65,12 @@ public class Home extends JFrame {
 		
 		JButton btn_AttemptHomework = new JButton("Attempt Homework");
 		btn_AttemptHomework.setBounds(12, 83, 187, 33);
+		btn_AttemptHomework.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				new AttemptExercise();
+				frame.setVisible(false);
+			}
+		});
 		panel_Center.add(btn_AttemptHomework);
 		
 		JButton btn_ViewSubmissions = new JButton("Past Submissions");
@@ -106,6 +113,8 @@ public class Home extends JFrame {
 		panel_Top.add(btn_Logout);
 		
 		OpenHomePage(panel_Right);
+		
+		frame.setVisible(true);
 	}
 
 	//handlers home button click

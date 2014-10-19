@@ -84,7 +84,6 @@ public class AttemptExercise {
 		btnHome.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				Home home = new Home();
-				home.setVisible(true);
 				frame.setVisible(false);
 			}
 		});
@@ -107,7 +106,6 @@ public class AttemptExercise {
 		btnSave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				Home home = new Home();
-				home.setVisible(true);
 				frame.setVisible(false);
 			}
 		});
@@ -118,7 +116,6 @@ public class AttemptExercise {
 		btnSubmit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				Home home = new Home();
-				home.setVisible(true);
 				frame.setVisible(false);
 			}
 		});

@@ -1,6 +1,7 @@
 # Mac Users
 .DS_Store
 
+*.classpath
 *.class
 
 # Mobile Tools for Java (J2ME)

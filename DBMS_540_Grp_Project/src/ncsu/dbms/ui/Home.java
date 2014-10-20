@@ -1,21 +1,17 @@
 package ncsu.dbms.ui;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.EventQueue;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
-import javax.swing.JLabel;
-import javax.swing.JButton;
-
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-
 import javax.swing.event.ListSelectionListener;
 
 import ncsu.dbms.core.LocalSession;
@@ -33,7 +29,7 @@ public class Home {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Home frame = new Home();
+					new Home();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -67,7 +63,7 @@ public class Home {
 		btn_AttemptHomework.setBounds(12, 83, 187, 33);
 		btn_AttemptHomework.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				new AttemptExercise();
+				new AttemptExercise(0);
 				frame.setVisible(false);
 			}
 		});
@@ -168,7 +164,6 @@ public class Home {
 			}
 		});
 		homePanel.add(btn_AddCourse);
-		
 	}
 	
 	private void AddCourse()

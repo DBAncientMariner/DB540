@@ -77,7 +77,7 @@ public class Notification extends JFrame {
 		btn_AttemptHomework.setBounds(12, 83, 187, 33);
 		btn_AttemptHomework.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				new AttemptExercise();
+				new AttemptExercise(0);
 				setVisible(false);
 			}
 		});

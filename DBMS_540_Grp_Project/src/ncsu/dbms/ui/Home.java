@@ -79,6 +79,13 @@ public class Home {
 		
 		JButton btn_Notification = new JButton("Notification");
 		btn_Notification.setBounds(12, 161, 187, 33);
+		btn_Notification.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Notification notification=new Notification();
+				notification.setVisible(true);
+				frame.setVisible(false);
+			}
+		});
 		panel_Center.add(btn_Notification);
 		
 		JPanel panel_Bottom = new JPanel();

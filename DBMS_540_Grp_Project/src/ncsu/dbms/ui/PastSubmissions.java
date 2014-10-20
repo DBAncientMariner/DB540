@@ -7,26 +7,19 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 
-import javax.swing.ButtonGroup;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 
-import ncsu.dbms.core.Question;
-import ncsu.dbms.db.ExerciseData;
+import ncsu.dbms.db.PastSubmissionData;
 
-public class AttemptExercise {
+public class PastSubmissions {
 
 	private JPanel contentPane;
 	private JFrame frame;
-	private JComboBox<Object> selectAssignment;
-	private String course;
 
 	/**
 	 * Launch the application.
@@ -35,7 +28,7 @@ public class AttemptExercise {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					new AttemptExercise(1);
+					new PastSubmissions();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -46,7 +39,7 @@ public class AttemptExercise {
 	/**
 	 * Create the frame.
 	 */
-	public AttemptExercise(int index) {
+	public PastSubmissions() {
 		frame = new JFrame();
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setBounds(100, 100, 900, 700);
@@ -64,7 +57,6 @@ public class AttemptExercise {
 		JPanel panel_Bottom = new JPanel();
 		panel_Bottom.setBounds(12, 390, 211, 224);
 		contentPane.add(panel_Bottom);
-		panel_Bottom.setLayout(null);
 
 		JPanel panel_Top = new JPanel();
 		panel_Top.setBounds(12, 13, 211, 128);
@@ -72,7 +64,7 @@ public class AttemptExercise {
 		panel_Top.setLayout(null);
 
 		final JPanel panel_Right = new JPanel();
-		final JScrollPane scrollpane = new JScrollPane(panel_Right);
+		JScrollPane scrollpane = new JScrollPane(panel_Right);
 		scrollpane.setBounds(230, 13, 640, 627);
 		scrollpane
 				.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -101,76 +93,34 @@ public class AttemptExercise {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				frame.setVisible(false);
 				new Login();
-			}
-		});
-		
-		JLabel selectAssignmentText = new JLabel("Select Assignment");
-		selectAssignmentText.setBounds(12, 50, 187, 33);
-		panel_Center.add(selectAssignmentText);
-		
-		List<String> list = ExerciseData.getAssigmentList(course);
-		
-		selectAssignment = new JComboBox<>(list.toArray());
-		selectAssignment.setBounds(12, 90, 187, 33);
-		selectAssignment.setSelectedIndex(index);
-		panel_Center.add(selectAssignment);
-		selectAssignment.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				new AttemptExercise(selectAssignment.getSelectedIndex());
-			}
-		});
-
-		JButton btnSave = new JButton("Save");
-		btnSave.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
 				frame.setVisible(false);
-				new Home();
 			}
 		});
-		btnSave.setBounds(12, 107, 187, 33);
-		panel_Bottom.add(btnSave);
 
-		JButton btnSubmit = new JButton("Submit");
-		btnSubmit.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				frame.setVisible(false);
-				new Home();
-			}
-		});
-		btnSubmit.setBounds(12, 143, 187, 33);
-		panel_Bottom.add(btnSubmit);
-
-		openExercise(scrollpane, panel_Right, selectAssignment.getSelectedItem().toString());
+		openExercise(panel_Right);
 		frame.getContentPane().add(scrollpane);
 		frame.setVisible(true);
 	}
 
-	private void openExercise(JScrollPane scrollpane, JPanel panel_Right, String assignment) {
-		List<Question> exercise = ExerciseData.getExercise(assignment);
-		panel_Right.removeAll();
-		panel_Right.setLayout(new GridLayout(exercise.size() * 5, 1));
+	private void openExercise(JPanel panel_Right) {
+		List<String> allAssignments = PastSubmissionData.getAllAssignments();
+		
+		panel_Right.setLayout(new GridLayout(allAssignments.size() * 2, 1));
 
-		for (Question question : exercise) {
-			JLabel questionText = new JLabel(question.getQuestion());
-			panel_Right.add(questionText);
-
-			if (!question.isMultipleChoice()) {
-				ButtonGroup group = new ButtonGroup();
-				for (String option : question.getOptions()) {
-					JRadioButton optionbutton = new JRadioButton(option);
-					group.add(optionbutton);
-					panel_Right.add(optionbutton);
-				}
-			} else {
-				for (String option : question.getOptions()) {
-					JCheckBox optionbutton = new JCheckBox(option);
-					panel_Right.add(optionbutton);
-				}
+		for (String assignment : allAssignments) {
+			JLabel assignmentText = new JLabel(assignment);
+			panel_Right.add(assignmentText);
+			List<String> attempts = PastSubmissionData.getExercisesAttempted(assignment);
+			JPanel assignmentPanel = new JPanel(new GridLayout(attempts.size(), 2));
+			for (String attempt : attempts) {
+				JLabel attemptText = new JLabel(attempt);
+				JButton attemptButton = new JButton("View");
+				
+				assignmentPanel.add(attemptText);
+				assignmentPanel.add(attemptButton);
 			}
+			panel_Right.add(assignmentPanel);
 		}
 	}
 

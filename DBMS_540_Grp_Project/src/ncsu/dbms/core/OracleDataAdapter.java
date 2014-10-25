@@ -594,11 +594,103 @@ public class OracleDataAdapter {
 		}
 		return listUserAttempt;
 	}
+	public ArrayList<UserAttemptExercise> GetUserAttemptExercise()
+	{
+		UserAttemptExercise userAttemptExercise = new UserAttemptExercise();
+		ArrayList<UserAttemptExercise> listUserAttemptExercise = new ArrayList<UserAttemptExercise>();
+		oracleDb.OpenConnection();
+		ResultSet resultset = oracleDb.GetResultSet("Select * from CSC_USERATTEMPT_EXERCISE");
+		try {
+			while (resultset.next()) {
+				userAttemptExercise = new UserAttemptExercise();
+
+				userAttemptExercise.UE_UA_ID   = resultset
+						.getInt("UE_UA_ID");
+				userAttemptExercise.UE_QUESTION_ID   = resultset
+						.getInt("UE_QUESTION_ID");
+				userAttemptExercise.UE_ANSWER_ID    = resultset
+						.getInt("UE_ANSWER_ID");
+				userAttemptExercise.UE_ISSELECTED   = resultset
+						.getBoolean("UE_ISSELECTED");
+				listUserAttemptExercise.add(userAttemptExercise);
+			}
+		} catch (SQLException e) {
+		} finally {
+			oracleDb.CloseConnection();
+		}
+		return listUserAttemptExercise;
+	}
+	public ArrayList<LevelStudent> GetLevelStudent()
+	{
+		LevelStudent levelStudent = new LevelStudent();
+		ArrayList<LevelStudent> listLevelStudent = new ArrayList<LevelStudent>();
+		oracleDb.OpenConnection();
+		ResultSet resultset = oracleDb.GetResultSet("Select * from CSC_LEVEL_STUDENT");
+		try {
+			while (resultset.next()) {
+				levelStudent = new LevelStudent();
+
+				levelStudent.CSC_LEVEL_STUDENT_LEVEL_ID    = resultset
+						.getInt("CSC_LEVEL_STUDENT_LEVEL_ID");
+				levelStudent.CSC_LEVEL_LEVEL_TYPE    = resultset
+						.getString("CSC_LEVEL_LEVEL_TYPE");
+				listLevelStudent.add(levelStudent);
+			}
+		} catch (SQLException e) {
+		} finally {
+			oracleDb.CloseConnection();
+		}
+		return listLevelStudent;
+	}
 	
-	
-	
-	
-	
+	public ArrayList<LevelStudentUser> GetLevelStudentUser()
+	{
+		LevelStudentUser levelStudentUser = new LevelStudentUser();
+		ArrayList<LevelStudentUser> listLevelStudentUser = new ArrayList<LevelStudentUser>();
+		oracleDb.OpenConnection();
+		ResultSet resultset = oracleDb.GetResultSet("Select * from CSC_LEVEL_STUDENT_USER");
+		try {
+			while (resultset.next()) {
+				levelStudentUser = new LevelStudentUser();
+
+				levelStudentUser.CSC_LEVEL_STU_USER_SURR_KEY     = resultset
+						.getInt("CSC_LEVEL_STU_USER_SURR_KEY");
+				levelStudentUser.CSC_LEVEL_STU_USER_LEVEL_ID     = resultset
+						.getInt("CSC_LEVEL_STU_USER_LEVEL_ID");
+				levelStudentUser.CSC_LEVEL_STU_USER_USER_ID      = resultset
+						.getInt("CSC_LEVEL_STU_USER_USER_ID");				
+				listLevelStudentUser.add(levelStudentUser);
+			}
+		} catch (SQLException e) {
+		} finally {
+			oracleDb.CloseConnection();
+		}
+		return listLevelStudentUser;
+	}
+	public ArrayList<Role> GetRole()
+	{
+		Role role = new Role();
+		ArrayList<Role> listRole = new ArrayList<Role>();
+		oracleDb.OpenConnection();
+		ResultSet resultset = oracleDb.GetResultSet("Select * from CSC_ROLE");
+		try {
+			while (resultset.next()) {
+				role = new Role();
+
+				role.Role_ID      = resultset
+						.getInt("Role_ID");
+				role.Role_Name      = resultset
+						.getString("Role_Name");
+				role.Role_Description       = resultset
+						.getString("Role_Description");				
+				listRole.add(role);
+			}
+		} catch (SQLException e) {
+		} finally {
+			oracleDb.CloseConnection();
+		}
+		return listRole;
+	}
 	
 	
 	

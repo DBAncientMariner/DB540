@@ -57,6 +57,14 @@ public class Home {
 		
 		JButton btn_ViewScore = new JButton("ViewScore");
 		btn_ViewScore.setBounds(12, 47, 187, 33);
+		btn_ViewScore.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				frame.setVisible(false);
+				new ViewScore();
+			}
+		});
 		panel_Center.add(btn_ViewScore);
 		
 		JButton btn_AttemptHomework = new JButton("Attempt Homework");

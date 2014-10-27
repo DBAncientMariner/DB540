@@ -215,7 +215,8 @@ public class Home {
 						LocalSession.GetCurrentUser())) {
 					// print success
 					lbl_ErrorToken.setText("Course Added");
-					RefreshList(listCourse.get(0).CSC_COURSE_Course_Name);
+					listModel= new DefaultListModel();	
+					AddCourse();
 				} else {
 					lbl_ErrorToken.setText("Error occured.");
 					// print failure
@@ -236,6 +237,7 @@ public class Home {
 		ArrayList<ncsu.dbms.core.Course> listCourse = oracleDataAdapter.GetCourseForStudent(LocalSession.GetCurrentUser());
 		for(ncsu.dbms.core.Course course:listCourse)
 		{
+			//listModel= new DefaultListModel();
 			listModel.addElement(course.CSC_COURSE_Course_Name);
 		}
 	}

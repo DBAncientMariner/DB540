@@ -5,8 +5,6 @@ package ncsu.dbms.core;
 
 import java.util.ArrayList;
 
-import javax.swing.DefaultListModel;
-
 /**
  * @author ravi Local store
  */
@@ -32,4 +30,9 @@ public class LocalSession {
 	}
 
 	public static ArrayList<Course> CourseListModel=new ArrayList<Course>();
+	
+	public static Course getCurrentSelectedCourseObject() {
+		Course course = CourseListModel.get(_currentSelectedCourse);
+		return course;
+	}
 }

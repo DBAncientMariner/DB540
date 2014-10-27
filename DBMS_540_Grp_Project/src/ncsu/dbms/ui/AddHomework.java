@@ -29,9 +29,9 @@ public class AddHomework extends JFrame {
 	OracleDataAdapter oracleDataAdapter = new OracleDataAdapter();
 	private JPanel contentPane;
 	final JPanel panel_Right = new JPanel();
-	JList listTopic;
-	JList listQuestion;
-	JList listSelectedQuestion;
+	JList jListTopic;
+	JList jListQuestion;
+	JList jListSelectedQuestion;
 	DefaultListModel listModelTopic = new DefaultListModel();
 	DefaultListModel listModelQuestion = new DefaultListModel();
 	DefaultListModel listModelSelectedQuestion = new DefaultListModel();
@@ -151,8 +151,8 @@ public class AddHomework extends JFrame {
 	}
 
 	public void DisplayAllTopic() {
-		final Course selectedCourse = LocalSession.CourseListModel.get(LocalSession
-				.GetCurrentSelectedCourse());
+		final Course selectedCourse = LocalSession.CourseListModel
+				.get(LocalSession.GetCurrentSelectedCourse());
 
 		JLabel lbl_CourseName = new JLabel("CourseName:"
 				+ selectedCourse.CSC_COURSE_Course_Name);
@@ -239,32 +239,40 @@ public class AddHomework extends JFrame {
 		txt_ScoringType.setToolTipText("Scoring Type");
 		txt_ScoringType.setBounds(340, 185, 100, 25);
 		panel_Right.add(txt_ScoringType);
-		
-		
+
 		JButton btn_ScoringType = new JButton("Save");
 		btn_ScoringType.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-				Exercise exercise=new Exercise();
-				exercise.EXERCISE_NAME=txt_ExerciseName.getText();
-				exercise.EXERCISE_COURSE=selectedCourse.CSC_COURSE_Course_ID;
-				exercise.EXERCISE_DIFFICULTY_RANGE1=Integer.parseInt(txt_DifficultyRange1.getText());
-				exercise.EXERCISE_DIFFICULTY_RANGE2=Integer.parseInt(txt_DifficultyRange2.getText());
-				exercise.EXERCISE_CORRECTPT=Integer.parseInt(txt_CorrectPoint.getText());
-				exercise.EXERCISE_PENALTYPT=Integer.parseInt(txt_PenaltyPoint.getText());
-				exercise.EXERCISE_SCORINGTYPE=Integer.parseInt(txt_ScoringType.getText());
-				exercise.EXERCISE_CREATEDBY=LocalSession.GetCurrentUser().UserId;
+				SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
+						"yyyy-MM-dd");
+				Exercise exercise = new Exercise();
+				exercise.EXERCISE_NAME = txt_ExerciseName.getText();
+				exercise.EXERCISE_COURSE = selectedCourse.CSC_COURSE_Course_ID;
+				exercise.EXERCISE_DIFFICULTY_RANGE1 = Integer
+						.parseInt(txt_DifficultyRange1.getText());
+				exercise.EXERCISE_DIFFICULTY_RANGE2 = Integer
+						.parseInt(txt_DifficultyRange2.getText());
+				exercise.EXERCISE_CORRECTPT = Integer.parseInt(txt_CorrectPoint
+						.getText());
+				exercise.EXERCISE_PENALTYPT = Integer.parseInt(txt_PenaltyPoint
+						.getText());
+				exercise.EXERCISE_SCORINGTYPE = Integer
+						.parseInt(txt_ScoringType.getText());
+				exercise.EXERCISE_CREATEDBY = LocalSession.GetCurrentUser().UserId;
 				try {
-					exercise.EXERCISE_STARTDATE=simpleDateFormat.parse(txt_StartDate.getText());
-					exercise.EXERCISE_ENDDATE=simpleDateFormat.parse(txt_EndDate.getText());
+					exercise.EXERCISE_STARTDATE = simpleDateFormat
+							.parse(txt_StartDate.getText());
+					exercise.EXERCISE_ENDDATE = simpleDateFormat
+							.parse(txt_EndDate.getText());
 				} catch (ParseException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				exercise.EXERCISE_RETRYLIMIT=Integer.parseInt(txt_RetryLimit.getText());
-				oracleDataAdapter.InsertExerciseDetails(exercise);
-				
-				
+				exercise.EXERCISE_RETRYLIMIT = Integer.parseInt(txt_RetryLimit
+						.getText());
+
+				SaveExercise(exercise);
+
 			}
 		});
 		btn_ScoringType.setBounds(450, 185, 100, 25);
@@ -272,42 +280,58 @@ public class AddHomework extends JFrame {
 		// /
 
 		JLabel lbl_topics = new JLabel("Select Topics");
-		lbl_ScoringType.setBounds(10, 215, 100, 25);
-		panel_Right.add(lbl_ScoringType);
+		lbl_topics.setBounds(10, 215, 100, 25);
+		panel_Right.add(lbl_topics);
 
 		GetAllTopics();
-		listTopic = new JList(listModelTopic);
-		listTopic.addListSelectionListener(new ListSelectionListener() {
+		jListTopic = new JList(listModelTopic);
+		jListTopic.addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent arg0) {
 				GetAllQuestions();
 			}
 		});
-		listTopic
+		jListTopic
 				.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-		listTopic.setBounds(10, 240, 400, 200);
-		panel_Right.add(listTopic);
-
-		listQuestion = new JList(listModelQuestion);
-		listQuestion.addListSelectionListener(new ListSelectionListener() {
+		jListTopic.setBounds(10, 240, 400, 200);
+		panel_Right.add(jListTopic);
+		// button to select questions
+		JButton btn_SelectQuestion = new JButton(">>");
+		btn_SelectQuestion.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+			}
+		});
+		btn_SelectQuestion.setBounds(350, 450, 50, 25);
+		panel_Right.add(btn_SelectQuestion);
+		
+		JButton btn_RemoveQuestion = new JButton("<<");
+		btn_RemoveQuestion.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+			}
+		});
+		btn_RemoveQuestion.setBounds(350, 500, 50, 25);
+		panel_Right.add(btn_RemoveQuestion);
+		//
+		jListQuestion = new JList(listModelQuestion);
+		jListQuestion.addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent arg0) {
 			}
 		});
-		listQuestion.setBounds(10, 450, 300, 100);
-		listQuestion
+		jListQuestion.setBounds(10, 450, 300, 100);
+		jListQuestion
 				.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-		panel_Right.add(listQuestion);
+		panel_Right.add(jListQuestion);
 
-		listSelectedQuestion = new JList(listModelSelectedQuestion);
-		listSelectedQuestion
+		jListSelectedQuestion = new JList(listModelSelectedQuestion);
+		jListSelectedQuestion
 				.addListSelectionListener(new ListSelectionListener() {
 					public void valueChanged(ListSelectionEvent arg0) {
 						// LocalSession.SetCurrentSelectedCourse(listQuestion.getSelectedIndex());
 					}
 				});
-		listSelectedQuestion.setBounds(400, 450, 300, 100);
-		listSelectedQuestion
+		jListSelectedQuestion.setBounds(400, 450, 300, 100);
+		jListSelectedQuestion
 				.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-		panel_Right.add(listSelectedQuestion);
+		panel_Right.add(jListSelectedQuestion);
 
 	}
 
@@ -324,10 +348,11 @@ public class AddHomework extends JFrame {
 	}
 
 	private void GetAllQuestions() {
-		listModelQuestion = new DefaultListModel();
+		// listModelQuestion = new DefaultListModel();
+		listModelQuestion.clear();
 		Topic topic = new Topic();
 		questionBank = new ArrayList<QuestionBank>();
-		for (int selectedIndex : listTopic.getSelectedIndices()) {
+		for (int selectedIndex : jListTopic.getSelectedIndices()) {
 
 			ArrayList<QuestionBank> listQuestionBank = oracleDataAdapter
 					.GetQuestionByTopic(selectedListTopics.get(selectedIndex));
@@ -338,35 +363,43 @@ public class AddHomework extends JFrame {
 			}
 
 		}
-
 	}
+	private void GetSelectedQuestions() {
+		// listModelQuestion = new DefaultListModel();
+		listModelSelectedQuestion.clear();
+		Topic topic = new Topic();
+		questionBank = new ArrayList<QuestionBank>();
+		for (int selectedIndex : jListTopic.getSelectedIndices()) {
 
+			ArrayList<QuestionBank> listQuestionBank = oracleDataAdapter
+					.GetQuestionByTopic(selectedListTopics.get(selectedIndex));
+			for (QuestionBank temp_questionBank : listQuestionBank) {
+				listModelSelectedQuestion.addElement(temp_questionBank.QUESTIONBANK_TEXT);
+				questionBank.add(temp_questionBank);
+			}
+
+		}
+	}
 	public void GetAllSelectedQuestions() {
 		if (ExerciseId != 0) {
 			listModelSelectedQuestion = new DefaultListModel();
-			ArrayList<QuestionBank> listQuestionBank = oracleDataAdapter.GetQuestionBankForExerciseId(ExerciseId);
-			for (QuestionBank questionBank : listQuestionBank) 
-			{
-				listModelSelectedQuestion.addElement(questionBank.QUESTIONBANK_TEXT);
+			ArrayList<QuestionBank> listQuestionBank = oracleDataAdapter
+					.GetQuestionBankForExerciseId(ExerciseId);
+			for (QuestionBank questionBank : listQuestionBank) {
+				listModelSelectedQuestion
+						.addElement(questionBank.QUESTIONBANK_TEXT);
 			}
 			selectedQuestionBank = listQuestionBank;
 		}
 	}
 
-	
-	private void SaveExercise()
-	{
-		//insert/update exercise details
-		if(ExerciseId!=0)
-		{
-			//updated
-		}
-		else
-		{
-			//insert
-			
-			
-			InsertExerciseDetails()
+	private void SaveExercise(Exercise exercise) {
+		// insert/update exercise details
+		if (ExerciseId != 0) {
+			// updated
+		} else {
+			// insert
+			oracleDataAdapter.InsertExerciseDetails(exercise);
 		}
 	}
 

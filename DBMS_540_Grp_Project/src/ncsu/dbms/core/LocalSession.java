@@ -3,13 +3,15 @@
  */
 package ncsu.dbms.core;
 
+import javax.swing.DefaultListModel;
+
 /**
  * @author ravi Local store
  */
 public class LocalSession {
 
 	private static User _currentUser = new User();
-	private static int _currentSelectedCourse = 0;
+	private static String _currentSelectedCourse = "";
 
 	public static User GetCurrentUser() {
 		return _currentUser;
@@ -19,12 +21,13 @@ public class LocalSession {
 		_currentUser = user;
 	}
 
-	public static int GetCurrentSelectedCourse() {
+	public static String GetCurrentSelectedCourse() {
 		return _currentSelectedCourse;
 	}
 
-	public static void SetCurrentSelectedCourse(int courseId) {
+	public static void SetCurrentSelectedCourse(String courseId) {
 		_currentSelectedCourse = courseId;
 	}
 
+	public static DefaultListModel CourseListModel=new DefaultListModel();
 }

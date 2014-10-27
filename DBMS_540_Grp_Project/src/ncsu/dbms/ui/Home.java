@@ -141,8 +141,8 @@ public class Home {
 		panel_Top.add(btn_Logout);
 		btn_Logout.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				new Login();
 				frame.setVisible(false);
-				Login window = new Login();
 				//LocalSession.SetCurrentUser(NULL);
 			}
 		});

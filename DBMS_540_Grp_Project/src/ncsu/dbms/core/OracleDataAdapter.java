@@ -724,6 +724,28 @@ public class OracleDataAdapter {
 		return listQuestionBankTopic;
 	}
 
+	public ArrayList<QuestionBank_Topic> GetQuestionByTopic(Topic topic) {
+		QuestionBank_Topic questionBankTopic = new QuestionBank_Topic();
+		ArrayList<QuestionBank_Topic> listQuestionBankTopic = new ArrayList<QuestionBank_Topic>();
+		oracleDb.OpenConnection();
+		ResultSet resultset = oracleDb
+				.GetResultSet("select * from CSC_QUESTIONBANK where CSC_QUESTIONBANK_TOPIC_ID = "+topic.TOPIC_ID+";");
+		try {
+			while (resultset.next()) {
+				questionBankTopic = new QuestionBank_Topic();
+
+				questionBankTopic.QT_TOPIC_ID = resultset.getInt("QT_TOPIC_ID");
+				questionBankTopic.QT_QUESTIONBANK_ID = resultset
+						.getInt("QT_QUESTIONBANK_ID");
+				listQuestionBankTopic.add(questionBankTopic);
+			}
+		} catch (SQLException e) {
+		} finally {
+			oracleDb.CloseConnection();
+		}
+		return listQuestionBankTopic;
+	}
+
 	public ArrayList<ExerciseQuestion> GetExerciseQuestion() {
 		ExerciseQuestion exerciseQuestion = new ExerciseQuestion();
 		ArrayList<ExerciseQuestion> listExerciseQuestion = new ArrayList<ExerciseQuestion>();

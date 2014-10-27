@@ -2,7 +2,6 @@ package ncsu.dbms.ui;
 
 import java.awt.Color;
 import java.awt.EventQueue;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
@@ -14,6 +13,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 
+import ncsu.dbms.core.UserAttempt;
+import ncsu.dbms.db.ExerciseData;
 import ncsu.dbms.db.PastSubmissionData;
 
 public class PastSubmissions {
@@ -104,23 +105,30 @@ public class PastSubmissions {
 	}
 
 	private void openExercise(JPanel panel_Right) {
-		List<String> allAssignments = PastSubmissionData.getAllAssignments();
+		List<UserAttempt> inctiveExercise = PastSubmissionData.getInctiveExercise(null);
 		
-		panel_Right.setLayout(new GridLayout(allAssignments.size() * 2, 1));
-
-		for (String assignment : allAssignments) {
-			JLabel assignmentText = new JLabel(assignment);
-			panel_Right.add(assignmentText);
-			List<String> attempts = PastSubmissionData.getExercisesAttempted(assignment);
-			JPanel assignmentPanel = new JPanel(new GridLayout(attempts.size(), 2));
-			for (String attempt : attempts) {
-				JLabel attemptText = new JLabel(attempt);
-				JButton attemptButton = new JButton("View");
+		panel_Right.setLayout(null);
+		
+		int i = 10;
+		for (final UserAttempt userAttempt : inctiveExercise) {
+			JLabel exercise = new JLabel(ExerciseData.getExerciseName(userAttempt.getUA_EXERCISE_ID()));
+			exercise.setBounds(10, i, 110, 35);
+			panel_Right.add(exercise);
+			JLabel attempt = new JLabel("Attempt" + userAttempt.getUA_ID());
+			attempt.setBounds(130, i, 110, 35);
+			panel_Right.add(attempt);
+			JButton view = new JButton("View");
+			view.setBounds(250, i, 70, 30);
+			view.addActionListener(new ActionListener() {
 				
-				assignmentPanel.add(attemptText);
-				assignmentPanel.add(attemptButton);
-			}
-			panel_Right.add(assignmentPanel);
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					frame.setVisible(false);
+					new ViewPastSubmissions(userAttempt.getUA_EXERCISE_ID(), userAttempt.getUA_ID(), true);
+				}
+			});
+			panel_Right.add(view);
+			i += 45;
 		}
 	}
 

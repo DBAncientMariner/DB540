@@ -680,7 +680,7 @@ public class OracleDataAdapter {
 		ArrayList<Topic> listTopic = new ArrayList<Topic>();
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		oracleDb.OpenConnection();
-		ResultSet resultset = oracleDb.GetResultSet("Select * from CSC_TOPIC");
+		ResultSet resultset = oracleDb.GetResultSet("Select * from CSC_TOPIC where TOPIC_ID IN (select CSC_COURSE_TOPIC_TOPIC_ID from CSC_COURSE_TOPIC where CSC_COURSE_TOPIC_COURSE_ID = "+course.CSC_COURSE_Course_ID+" );");
 		try {
 			while (resultset.next()) {
 				topic = new Topic();

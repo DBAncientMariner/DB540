@@ -139,6 +139,13 @@ public class Home {
 		JButton btn_Logout = new JButton("Logout");
 		btn_Logout.setBounds(12, 82, 187, 33);
 		panel_Top.add(btn_Logout);
+		btn_Logout.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				frame.setVisible(false);
+				Login window = new Login();
+				//LocalSession.SetCurrentUser(NULL);
+			}
+		});
 
 		OpenHomePage(panel_Right);
 

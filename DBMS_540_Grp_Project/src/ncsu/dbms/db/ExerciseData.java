@@ -44,4 +44,8 @@ public class ExerciseData {
 		list.add("Assignment 3");
 		return list;
 	}
+	
+	public static String getExerciseName(int id) {
+		return "Exercise";
+	}
 }

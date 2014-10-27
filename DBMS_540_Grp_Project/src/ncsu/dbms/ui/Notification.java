@@ -1,11 +1,9 @@
 package ncsu.dbms.ui;
 
 import java.awt.BorderLayout;
-import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -18,6 +16,7 @@ import ncsu.dbms.core.User;
 
 public class Notification extends JFrame {
 
+	private static final long serialVersionUID = 4620833118495352591L;
 	private JPanel contentPane;
 	final JPanel panel_Right = new JPanel();
 

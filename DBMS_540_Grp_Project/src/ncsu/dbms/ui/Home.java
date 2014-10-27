@@ -79,6 +79,14 @@ public class Home {
 		
 		JButton btn_ViewSubmissions = new JButton("Past Submissions");
 		btn_ViewSubmissions.setBounds(12, 125, 187, 33);
+		btn_ViewSubmissions.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				frame.setVisible(false);
+				new PastSubmissions();
+			}
+		});
 		panel_Center.add(btn_ViewSubmissions);
 		
 		JButton btn_Notification = new JButton("Notification");

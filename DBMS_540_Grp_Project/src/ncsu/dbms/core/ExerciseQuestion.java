@@ -9,7 +9,8 @@ package ncsu.dbms.core;
  */
 public class ExerciseQuestion {
 
-	int EA_ID =0;
-	int EA_EXERCISE_ID =0;
-	int EA_QUESTION_ID =0;
+	public int EA_ID =0;
+	public int EA_EXERCISE_ID =0;
+	public int EA_QUESTION_ID =0;
+	public boolean EA_QUES_IS_PARM =false;
 }

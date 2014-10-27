@@ -8,7 +8,7 @@ package ncsu.dbms.core;
  *
  */
 public class Role {
-	int Role_ID =0;
-	String Role_Name ="";
-	String Role_Description ="";
+	public int Role_ID =0;
+	public String Role_Name ="";
+	public String Role_Description ="";
 }

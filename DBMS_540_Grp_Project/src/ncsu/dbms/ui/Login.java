@@ -105,20 +105,26 @@ public class Login {
 		btn_Login.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				lbl_ErrorMessage.setText("");
+				//testing
+				txt_Password.setText("sgarg5");
+				txt_LoginName.setText("sgarg5");
+				//testing
 				if(!txt_Password.getText().trim().equalsIgnoreCase("") && !txt_LoginName.getText().trim().equalsIgnoreCase(""))
 				{
 					User user=new User();
-					user.GetUser(txt_LoginName.getText());
-					if(user.UserId==0)
+					if(User.IsValidUser(txt_LoginName.getText().trim(), txt_Password.getText().trim()))
 					{
-						lbl_ErrorMessage.setText("No such user exists.");
-					}
-					else
-					{
-						//user logged in
+						//user exists
+						user=User.GetUser(txt_LoginName.getText().trim());
+						LocalSession.SetCurrentUser(user);
 						frame.setVisible(false);
 						Home window = new Home();
 						
+					}
+					else
+					{
+						//user doesn't exist
+						lbl_ErrorMessage.setText("No such user exists.");
 					}
 				}
 				else if(txt_LoginName.getText().trim().equalsIgnoreCase("") )

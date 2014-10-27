@@ -11,12 +11,13 @@ import java.util.Date;
  */
 public class Course {
 	
-	int CSC_COURSE_Course_ID =0;
-	String CSC_COURSE_Course_Name ="";
-	Date CSC_COURSE_StartDate  =new Date();
-	Date CSC_COURSE_EndDate  =new Date();
-	int CSC_COURSE_Max_Enroll_No =0;
-	int CSC_COURSE_Number_Of_Students =0;
+	public int CSC_COURSE_Course_ID =0;
+	public String CSC_COURSE_Course_Name ="";
+	public String CSC_COURSE_token="";
+	public Date CSC_COURSE_StartDate  =new Date();
+	public Date CSC_COURSE_EndDate  =new Date();
+	public int CSC_COURSE_Max_Enroll_No =0;
+	public int CSC_COURSE_Number_Of_Students =0;
 	
 
 

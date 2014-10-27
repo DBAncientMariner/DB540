@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -21,74 +22,67 @@ public class User {
 	public String UserEmail="";
 	public String UserPassword="";
 	public boolean UserIsActive=false;
-	public Date UserCreatedDate;
-	public Date UserLastModifiedDate;
+	public Date UserCreatedDate=new Date();
+	public Date UserLastModifiedDate=new Date();
 	public int UserLastModifiedBy=1;
+	public String user_id_char="";
+	public ArrayList<UserRole> UserRoles=new ArrayList<UserRole>();
+	public ArrayList<Course> UserCourses=new ArrayList<Course>();
 	
 	
 	public static boolean IsActiveUser(String userName, String password)
 	{
 		return false;
 	}
-	public void GetUser(String userEmail)
+	public static User GetUser(String userEmail)
 	{
-		OracleDb oracleDb=new OracleDb();
-		UserEmail=userEmail.replace("'","''");
-		ResultSet rs=oracleDb.GetResultSet("Select * from CSC_User where User_Email='"+userEmail+"'");
-		try {
-			while(rs.next())
-			{
-				SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-mm-dd HH:mm:ss");
-				UserId=rs.getInt("User_ID");
-				UserFName=rs.getString("USER_FNAME");
-				UserMName=rs.getString("USER_MNAME");
-				UserLName=rs.getString("USER_LNAME");
-				UserEmail=rs.getString("USER_EMAIL");
-				UserIsActive=rs.getString("User_ID")=="T"?true:false;
-				try
-				{
-				UserCreatedDate= simpleDateFormat.parse(rs.getString("User_CREATEDDATE"));
-				UserLastModifiedDate=simpleDateFormat.parse(rs.getString("USER_LASTMODIFIEDDATE"));
-				}
-				catch(Exception e)
-				{
-					
-				}
-				UserLastModifiedBy=rs.getInt("USER_MODIFIEDBY");
-			}
-			oracleDb.CloseConnection();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		OracleDataAdapter oracleDataAdapter=new OracleDataAdapter();
+		User user=new User();
+		user=oracleDataAdapter.GetUserDetails(userEmail);
+		if(user.UserId!=0)
+		{
+			user.UserRoles=oracleDataAdapter.GetUserRole(user.UserId);
 		}
-			
-		
+		return user;
+	}
+	public static boolean IsValidUser(String username, String password )
+	{
+		OracleDataAdapter oracleDataAdapter=new OracleDataAdapter();
+		User user=new User();
+		user=oracleDataAdapter.GetUserDetails(username,password);
+		return user.UserId==0?false:true;
 	}
 	
 	public static boolean AddUser(User user)
 	{
-		OracleDb oracleDb=new OracleDb();
-		User tempUser=new User();
-		tempUser.GetUser(user.UserEmail);
-		if(tempUser.UserId==0)
-		{
-			String query="insert into csc_user (User_ID,USER_FNAME,USER_MNAME,USER_LNAME,USER_EMAIL,USER_PASSWORD,USER_ACTIVE,USER_CREATEDDATE,USER_MODIFIEDBY,USER_LASTMODIFIEDDATE)";
-			query =query + " values(csc_user_sequence.nextval,'"+user.UserFName+"','"+user.UserMName+"','"+user.UserLName+"','"+user.UserEmail+"','"+user.UserPassword+"','T',TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS'),1,TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS'))";
-			return oracleDb.InsertQuery(query);
-		}
-		else
-			return false;
+		OracleDataAdapter oracleDbAdapter=new OracleDataAdapter();
+		return oracleDbAdapter.InsertUser(user);	
 	}
 	public static boolean IsFaculty(User user)
 	{
+		for(UserRole userRole:user.UserRoles)
+		{
+			if(userRole.Roles.Role_Name.equalsIgnoreCase("Faculty"))
+				return true;
+		}
 		return false;
 	}
 	public static boolean IsTA(User user)
 	{
+		for(UserRole userRole:user.UserRoles)
+		{
+			if(userRole.Roles.Role_Name.equalsIgnoreCase("Teaching Assistant"))
+				return true;
+		}
 		return false;
 	}
 	public static boolean IsStudent(User user)
 	{
+		for(UserRole userRole:user.UserRoles)
+		{
+			if(userRole.Roles.Role_Name.equalsIgnoreCase("Student"))
+				return true;
+		}
 		return false;
 	}
 }

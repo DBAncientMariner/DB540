@@ -36,8 +36,8 @@ CREATE TABLE CSC_COURSE
 (
 CSC_COURSE_Course_ID INTEGER not null,
 CSC_COURSE_Course_Name varchar(100) not null,
-CSC_COURSE_StartDate varchar(25),
-CSC_COURSE_EndDate varchar(25),
+CSC_COURSE_StartDate DATE,
+CSC_COURSE_EndDate DATE,
 CSC_COURSE_Max_Enroll_No Integer,
 CSC_COURSE_Number_Of_Students Integer,
 CONSTRAINT CSC_COURSE_pk primary key (CSC_COURSE_Course_ID)

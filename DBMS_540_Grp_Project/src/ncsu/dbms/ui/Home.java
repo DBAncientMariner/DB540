@@ -200,8 +200,7 @@ public class Home {
 				lbl_ErrorToken.setText("Invalid course id");
 			} else if (listCourse.get(0).CSC_COURSE_EndDate
 					.compareTo(new Date()) <= 0) {
-				lbl_ErrorToken.setText(listCourse.get(0).CSC_COURSE_EndDate+"-"+listCourse.get(0).CSC_COURSE_StartDate);
-				//lbl_ErrorToken.setText("Course over, cannot register.");
+				lbl_ErrorToken.setText("Course over, cannot register.");
 			} else if (listCourse.get(0).CSC_COURSE_Max_Enroll_No <= listCourse
 					.get(0).CSC_COURSE_Number_Of_Students) {
 				lbl_ErrorToken.setText("Course full, cannot register.");

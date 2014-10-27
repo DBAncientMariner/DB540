@@ -29,7 +29,7 @@ public class OracleDataAdapter {
 			while (resultset.next()) {
 				User user = new User();
 				SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
-						"DD-MMM-YY");
+						"yyyy-MM-dd");
 				user.UserId = resultset.getInt("User_ID");
 				user.UserFName = resultset.getString("USER_FNAME");
 				user.UserMName = resultset.getString("USER_MNAME");
@@ -63,7 +63,7 @@ public class OracleDataAdapter {
 		try {
 			while (resultset.next()) {
 				SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
-						"DD-MMM-YY");
+						"yyyy-MM-dd");
 				user.UserId = resultset.getInt("User_ID");
 				user.UserFName = resultset.getString("USER_FNAME");
 				user.UserMName = resultset.getString("USER_MNAME");
@@ -94,7 +94,7 @@ public class OracleDataAdapter {
 		try {
 			while (resultset.next()) {
 				SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
-						"DD-MMM-YY");
+						"yyyy-MM-dd");
 				user.UserId = resultset.getInt("User_ID");
 				user.UserFName = resultset.getString("USER_FNAME");
 				user.UserMName = resultset.getString("USER_MNAME");
@@ -146,7 +146,7 @@ public class OracleDataAdapter {
 			while (resultset.next()) {
 				questionBank = new QuestionBank();
 				SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
-						"DD-MMM-YY");
+						"yyyy-MM-dd");
 				questionBank.QUESTIONBANK_ID = resultset
 						.getInt("QUESTIONBANK_ID");
 				questionBank.QUESTIONBANK_TEXT = resultset
@@ -195,7 +195,7 @@ public class OracleDataAdapter {
 			while (resultset.next()) {
 				answerBank = new AnswerBank();
 				SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
-						"DD-MMM-YY");
+						"yyyy-MM-dd");
 				answerBank.ANSWERBANK_ID = resultset.getInt("ANSWERBANK_ID");
 				answerBank.ANSWERBANK_TEXT = resultset
 						.getString("ANSWERBANK_TEXT");
@@ -254,7 +254,7 @@ public class OracleDataAdapter {
 		Course course = new Course();
 		ArrayList<Course> listCourse = new ArrayList<Course>();
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
-				"DD-MMM-YY");
+				"yyyy-MM-dd");
 		oracleDb.OpenConnection();
 		ResultSet resultset = oracleDb.GetResultSet("Select * from CSC_COURSE");
 		try {
@@ -303,7 +303,7 @@ public class OracleDataAdapter {
 		Course course = new Course();
 		ArrayList<Course> listCourse = new ArrayList<Course>();
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
-				"DD-MMM-YY");
+				"yyyy-MM-dd");
 		oracleDb.OpenConnection();
 		ResultSet resultset = oracleDb.GetResultSet("select * from csc_course where CSC_COURSE_COURSE_ID IN (select CSC_CLASS_COURSE_ID from CSC_CLASS where CSC_CLASS_SURR_KEY IN(select CSC_U_R_CLASS_SURR_KEY from csc_user_role where USER_ROLE_USER_ID = "+user.UserId+" and USER_ROLE_ROLE_ID ="+roleId);
 		try {
@@ -341,8 +341,7 @@ public class OracleDataAdapter {
 	{
 		Course course = new Course();
 		ArrayList<Course> listCourse = new ArrayList<Course>();
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
-				"dd-M-yy");
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		oracleDb.OpenConnection();
 		ResultSet resultset = oracleDb.GetResultSet("Select * from CSC_COURSE WHERE CSC_COURSE_token='"+tokenId+"'");
 		try {
@@ -361,8 +360,8 @@ public class OracleDataAdapter {
 						.getInt("CSC_COURSE_Number_Of_Students");
 				try {
 					
-					course.CSC_COURSE_StartDate=resultset.getTimestamp("CSC_COURSE_STARTDATE");
-					course.CSC_COURSE_EndDate = resultset.getTimestamp("CSC_COURSE_ENDDATE");
+					course.CSC_COURSE_StartDate=simpleDateFormat.parse(resultset.getString("CSC_COURSE_STARTDATE"));
+					course.CSC_COURSE_EndDate = simpleDateFormat.parse(resultset.getString("CSC_COURSE_ENDDATE"));
 				} catch (SQLException e) {
 				}
 				listCourse.add(course);
@@ -388,8 +387,9 @@ public class OracleDataAdapter {
 						ArrayList<Object> param=new ArrayList<Object>();
 						param.add(user.UserId);
 						param.add(token);
-						oracleDb.ExecuteStoredProcedure2Param("CSC_InsertCourseForStudent",param);
+						boolean returnvalue=oracleDb.ExecuteStoredProcedure2Param("CSC_InsertCourseForStudent",param);
 						oracleDb.CloseConnection();
+						return returnvalue;
 					}
 					catch(Exception e)
 					{
@@ -596,7 +596,7 @@ public class OracleDataAdapter {
 		Exercise exercise = new Exercise();
 		ArrayList<Exercise> listExercise = new ArrayList<Exercise>();
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
-				"DD-MMM-YY");
+				"yyyy-MM-dd");
 		oracleDb.OpenConnection();
 		ResultSet resultset = oracleDb.GetResultSet("Select * from CSC_EXERCISE");
 		try {
@@ -652,7 +652,7 @@ public class OracleDataAdapter {
 		Topic topic = new Topic();
 		ArrayList<Topic> listTopic = new ArrayList<Topic>();
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
-				"DD-MMM-YY");
+				"yyyy-MM-dd");
 		oracleDb.OpenConnection();
 		ResultSet resultset = oracleDb
 				.GetResultSet("Select * from CSC_TOPIC");
@@ -733,7 +733,7 @@ public class OracleDataAdapter {
 		UserAttempt userAttempt = new UserAttempt();
 		ArrayList<UserAttempt> listUserAttempt = new ArrayList<UserAttempt>();
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
-				"DD-MMM-YY");
+				"yyyy-MM-dd");
 		oracleDb.OpenConnection();
 		ResultSet resultset = oracleDb
 				.GetResultSet("Select * from CSC_USER_ATTEMPT");

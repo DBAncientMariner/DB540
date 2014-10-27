@@ -158,8 +158,7 @@ public class Home {
 		listCourses = new JList(listModel);
 				listCourses.addListSelectionListener(new ListSelectionListener() {
 					public void valueChanged(ListSelectionEvent arg0) {
-						LocalSession.SetCurrentSelectedCourse(listCourses
-								.getSelectedIndex());
+						LocalSession.SetCurrentSelectedCourse((String)listCourses.getSelectedValue());
 					}
 				});
 				listCourses.setBounds(100, 50, 300, 100);
@@ -240,5 +239,6 @@ public class Home {
 			//listModel= new DefaultListModel();
 			listModel.addElement(course.CSC_COURSE_Course_Name);
 		}
+		LocalSession.CourseListModel=listModel;
 	}
 }

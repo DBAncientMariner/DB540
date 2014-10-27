@@ -675,6 +675,32 @@ public class OracleDataAdapter {
 		}
 		return listTopic;
 	}
+	public ArrayList<Topic> GetTopicByCourseId(Course course) {
+		Topic topic = new Topic();
+		ArrayList<Topic> listTopic = new ArrayList<Topic>();
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		oracleDb.OpenConnection();
+		ResultSet resultset = oracleDb.GetResultSet("Select * from CSC_TOPIC");
+		try {
+			while (resultset.next()) {
+				topic = new Topic();
+
+				topic.TOPIC_ID = resultset.getInt("TOPIC_ID");
+				topic.TOPIC_KEYWORD = resultset.getString("TOPIC_KEYWORD");
+				topic.TOPIC_CREATEDBY = resultset.getInt("TOPIC_CREATEDBY");
+				try {
+					topic.TOPIC_CREATEDDATE = simpleDateFormat.parse(resultset
+							.getString("TOPIC_CREATEDDATE"));
+				} catch (Exception e) {
+				}
+				listTopic.add(topic);
+			}
+		} catch (SQLException e) {
+		} finally {
+			oracleDb.CloseConnection();
+		}
+		return listTopic;
+	}
 
 	public ArrayList<QuestionBank_Topic> GetQuestionBankTopic() {
 		QuestionBank_Topic questionBankTopic = new QuestionBank_Topic();

@@ -775,9 +775,9 @@ public class OracleDataAdapter {
 		return listExercise;
 	}
 	
-	public ArrayList<Exercise> GetActiveExerciseForCourse(int course_id) {
+	public List<Exercise> GetActiveExerciseForCourse(int course_id) {
 		Exercise exercise = new Exercise();
-		ArrayList<Exercise> listExercise = new ArrayList<Exercise>();
+		List<Exercise> listExercise = new LinkedList<Exercise>();
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		oracleDb.OpenConnection();
 		ResultSet resultset = oracleDb
@@ -871,8 +871,7 @@ public class OracleDataAdapter {
 		//delete all the old questions
 		{
 			String query = "DELETE FROM CSC_EXERCISE_QUESTION where EA_EXERCISE_ID="+exercise.EXERCISE_ID;
-			ResultSet resultset = oracleDb
-					.GetResultSet(query);
+			ResultSet resultset = oracleDb.GetResultSet(query);
 		}
 		for (QuestionBank questionBank : listSelectedQuestion) {
 			String query = "INSERT INTO CSC_EXERCISE_QUESTION (EA_ID,EA_EXERCISE_ID,EA_QUESTION_ID,EA_QUES_IS_PARM) values(";
@@ -1042,10 +1041,10 @@ public class OracleDataAdapter {
 		return listExerciseQuestion;
 	}
 
-	public ArrayList<QuestionBank> GetQuestionBankForExerciseId(
+	public List<QuestionBank> GetQuestionBankForExerciseId(
 			int EA_EXERCISE_ID) {
 		QuestionBank questionBank = new QuestionBank();
-		ArrayList<QuestionBank> listQuestionBank = new ArrayList<QuestionBank>();
+		List<QuestionBank> listQuestionBank = new LinkedList<QuestionBank>();
 		oracleDb.OpenConnection();
 		ResultSet resultset = oracleDb
 				.GetResultSet("Select * from  CSC_QuestionBank where (select EA_QUESTION_ID from CSC_EXERCISE_QUESTION where EA_EXERCISE_ID="

@@ -6,17 +6,29 @@ PROCEDURE CSC_InsertCourseForStudent
 IS
 var_class_surr number;
 var_role number;
+var_count number;
 Begin
-update csc_course
-set CSC_COURSE_NUMBER_OF_STUDENTS=CSC_COURSE_NUMBER_OF_STUDENTS+1
-where csc_course_token=var_csc_course_token and CSC_COURSE_MAX_ENROLL_NO>CSC_COURSE_NUMBER_OF_STUDENTS;
 
-Select CSC_CLASS_SURR_KEY into var_class_surr FROM csc_course co, csc_class cl
-where co.CSC_COURSE_COURSE_ID = cl.CSC_CLASS_COURSE_ID
-and co.CSC_COURSE_TOKEN = var_csc_course_token;
 Select ROLE_ID into var_role from csc_role where ROLE_NAME = 'Student';
 
-Insert into CSC_USER_ROLE(USER_ROLE_USER_ID,USER_ROLE_ROLE_ID,CSC_U_R_CLASS_SURR_KEY)
-values (var_student_Id,var_role,var_class_surr);
-commit;
+Select count(*) into var_count FROM csc_course co, csc_class cl,csc_user_role ur
+where co.CSC_COURSE_COURSE_ID = cl.CSC_CLASS_COURSE_ID
+and cl.CSC_CLASS_SURR_KEY = ur.CSC_U_R_CLASS_SURR_KEY
+and co.CSC_COURSE_TOKEN = var_csc_course_token
+and ur.user_role_user_id = var_student_Id
+and ur.USER_ROLE_ROLE_ID = var_role;
+
+IF var_count = 0 THEN
+  update csc_course
+  set CSC_COURSE_NUMBER_OF_STUDENTS=CSC_COURSE_NUMBER_OF_STUDENTS+1
+  where csc_course_token=var_csc_course_token and CSC_COURSE_MAX_ENROLL_NO>CSC_COURSE_NUMBER_OF_STUDENTS;
+  
+  Select CSC_CLASS_SURR_KEY into var_class_surr FROM csc_course co, csc_class cl
+  where co.CSC_COURSE_COURSE_ID = cl.CSC_CLASS_COURSE_ID
+  and co.CSC_COURSE_TOKEN = var_csc_course_token;
+  
+  Insert into CSC_USER_ROLE(USER_ROLE_USER_ID,USER_ROLE_ROLE_ID,CSC_U_R_CLASS_SURR_KEY)
+  values (var_student_Id,var_role,var_class_surr);
+  commit;
+END IF;
 END;

@@ -11,8 +11,8 @@ import java.util.Date;
  */
 public class Topic {
 
-	int TOPIC_ID=0;
-	String TOPIC_KEYWORD ="";
-	int TOPIC_CREATEDBY=0;
-	Date TOPIC_CREATEDDATE =new Date();
+	public int TOPIC_ID=0;
+	public String TOPIC_KEYWORD ="";
+	public int TOPIC_CREATEDBY=0;
+	public Date TOPIC_CREATEDDATE =new Date();
 }

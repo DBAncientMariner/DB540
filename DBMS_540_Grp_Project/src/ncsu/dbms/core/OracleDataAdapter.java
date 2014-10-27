@@ -316,10 +316,9 @@ public class OracleDataAdapter {
 		ArrayList<Course> listCourse = new ArrayList<Course>();
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		oracleDb.OpenConnection();
-		String query="select * from csc_course where CSC_COURSE_COURSE_ID IN (select CSC_CLASS_COURSE_ID from CSC_CLASS where CSC_CLASS_SURR_KEY IN(select CSC_U_R_CLASS_SURR_KEY from csc_user_role where USER_ROLE_USER_ID = "
-				+ user.UserId + " and USER_ROLE_ROLE_ID =" + roleId+"))";
-		ResultSet resultset = oracleDb
-				.GetResultSet(query);
+		String query = "select * from csc_course where CSC_COURSE_COURSE_ID IN (select CSC_CLASS_COURSE_ID from CSC_CLASS where CSC_CLASS_SURR_KEY IN(select CSC_U_R_CLASS_SURR_KEY from csc_user_role where USER_ROLE_USER_ID = "
+				+ user.UserId + " and USER_ROLE_ROLE_ID =" + roleId + "))";
+		ResultSet resultset = oracleDb.GetResultSet(query);
 		try {
 			while (resultset.next()) {
 				course = new Course();
@@ -649,6 +648,16 @@ public class OracleDataAdapter {
 		return listExercise;
 	}
 
+	public boolean InsertExerciseDetails(Exercise exercise) {
+			
+			oracleDb.OpenConnection();
+			String query="insert into CSC_EXERCISE(EXERCISE_NAME,EXERCISE_COURSE,EXERCISE_DIFFICULTY_RANGE1,EXERCISE_DIFFICULTY_RANGE2,EXERCISE_RETRYLIMIT,EXERCISE_CORRECTPT,EXERCISE_PENALTYPT,EXERCISE_SCORINGTYPE,EXERCISE_CREATEDBY,EXERCISE_MODIFIEDBY,EXERCISE_STARTDATE,EXERCISE_ENDDATE,EXERCISE_LASTMODIFIEDDATE)";
+			query=query+"Values('"+exercise.EXERCISE_NAME +"','"+ exercise.EXERCISE_COURSE+"','"+exercise.EXERCISE_DIFFICULTY_RANGE1+"','"+exercise.EXERCISE_DIFFICULTY_RANGE2+"','";
+			query=query+exercise.EXERCISE_RETRYLIMIT+"','"+exercise.EXERCISE_CORRECTPT+"','"+exercise.EXERCISE_PENALTYPT+"','"+exercise.EXERCISE_SCORINGTYPE+"','"+exercise.EXERCISE_CREATEDBY+"','";
+			query=query+exercise.EXERCISE_STARTDATE+"','"+exercise.EXERCISE_ENDDATE+"',TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS'))";
+			return oracleDb.InsertQuery(query);
+	}
+
 	public ArrayList<Topic> GetTopic() {
 		Topic topic = new Topic();
 		ArrayList<Topic> listTopic = new ArrayList<Topic>();
@@ -675,12 +684,15 @@ public class OracleDataAdapter {
 		}
 		return listTopic;
 	}
+
 	public ArrayList<Topic> GetTopicByCourseId(Course course) {
 		Topic topic = new Topic();
 		ArrayList<Topic> listTopic = new ArrayList<Topic>();
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		oracleDb.OpenConnection();
-		ResultSet resultset = oracleDb.GetResultSet("Select * from CSC_TOPIC where TOPIC_ID IN (select CSC_COURSE_TOPIC_TOPIC_ID from CSC_COURSE_TOPIC where CSC_COURSE_TOPIC_COURSE_ID = "+course.CSC_COURSE_Course_ID+" );");
+		String query = "Select * from CSC_TOPIC where TOPIC_ID IN (select CSC_COURSE_TOPIC_TOPIC_ID from CSC_COURSE_TOPIC where CSC_COURSE_TOPIC_COURSE_ID = "
+				+ course.CSC_COURSE_Course_ID + ")";
+		ResultSet resultset = oracleDb.GetResultSet(query);
 		try {
 			while (resultset.next()) {
 				topic = new Topic();
@@ -724,26 +736,54 @@ public class OracleDataAdapter {
 		return listQuestionBankTopic;
 	}
 
-	public ArrayList<QuestionBank_Topic> GetQuestionByTopic(Topic topic) {
-		QuestionBank_Topic questionBankTopic = new QuestionBank_Topic();
-		ArrayList<QuestionBank_Topic> listQuestionBankTopic = new ArrayList<QuestionBank_Topic>();
+	public ArrayList<QuestionBank> GetQuestionByTopic(Topic topic) {
+		QuestionBank questionBank = new QuestionBank();
+		ArrayList<QuestionBank> listQuestionBank = new ArrayList<QuestionBank>();
 		oracleDb.OpenConnection();
 		ResultSet resultset = oracleDb
-				.GetResultSet("select * from CSC_QUESTIONBANK where CSC_QUESTIONBANK_TOPIC_ID = "+topic.TOPIC_ID+";");
+				.GetResultSet("select * from CSC_QUESTIONBANK where CSC_QUESTIONBANK_TOPIC_ID = "
+						+ topic.TOPIC_ID);
 		try {
 			while (resultset.next()) {
-				questionBankTopic = new QuestionBank_Topic();
-
-				questionBankTopic.QT_TOPIC_ID = resultset.getInt("QT_TOPIC_ID");
-				questionBankTopic.QT_QUESTIONBANK_ID = resultset
-						.getInt("QT_QUESTIONBANK_ID");
-				listQuestionBankTopic.add(questionBankTopic);
+				questionBank = new QuestionBank();
+				SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
+						"yyyy-MM-dd");
+				questionBank.QUESTIONBANK_ID = resultset
+						.getInt("QUESTIONBANK_ID");
+				questionBank.QUESTIONBANK_TEXT = resultset
+						.getString("QUESTIONBANK_TEXT");
+				questionBank.QUESTIONBANK_HINT = resultset
+						.getString("QUESTIONBANK_HINT");
+				questionBank.QUESTIONBANK_EXPLANATION = resultset
+						.getString("QUESTIONBANK_EXPLANATION");
+				questionBank.QUESTIONBANK_DIFFICULTYLEVEL = resultset
+						.getInt("QUESTIONBANK_DIFFICULTYLEVEL");
+				questionBank.QUESTIONBANK_CREATEDBY = resultset
+						.getInt("QUESTIONBANK_CREATEDBY");
+				questionBank.QUESTIONBANK_MODIFIEDBY = resultset
+						.getInt("QUESTIONBANK_MODIFIEDBY");
+				if(resultset.getString("CSC_QB_IS_PARAMETERIZED").equalsIgnoreCase("f"))
+				questionBank.CSC_QB_IS_PARAMETERIZED = false;
+				else
+					questionBank.CSC_QB_IS_PARAMETERIZED = true;
+				questionBank.CSC_QUESTIONBANK_TOPIC_ID = resultset
+						.getInt("CSC_QUESTIONBANK_TOPIC_ID");
+				try {
+					questionBank.QUESTIONBANK_CREATEDDATE = simpleDateFormat
+							.parse(resultset
+									.getString("QUESTIONBANK_CREATEDDATE"));
+					questionBank.QUESTIONBANK_MODIFIEDDATE = simpleDateFormat
+							.parse(resultset
+									.getString("QUESTIONBANK_MODIFIEDDATE"));
+				} catch (Exception e) {
+				}
+				listQuestionBank.add(questionBank);
 			}
 		} catch (SQLException e) {
 		} finally {
 			oracleDb.CloseConnection();
 		}
-		return listQuestionBankTopic;
+		return listQuestionBank;
 	}
 
 	public ArrayList<ExerciseQuestion> GetExerciseQuestion() {
@@ -770,6 +810,55 @@ public class OracleDataAdapter {
 			oracleDb.CloseConnection();
 		}
 		return listExerciseQuestion;
+	}
+
+	public ArrayList<QuestionBank> GetQuestionBankForExerciseId(
+			int EA_EXERCISE_ID) {
+		QuestionBank questionBank = new QuestionBank();
+		ArrayList<QuestionBank> listQuestionBank = new ArrayList<QuestionBank>();
+		oracleDb.OpenConnection();
+		ResultSet resultset = oracleDb
+				.GetResultSet("Select * from  CSC_QuestionBank where (select EA_QUESTION_ID from CSC_EXERCISE_QUESTION where EA_EXERCISE_ID="
+						+ EA_EXERCISE_ID);
+		try {
+			while (resultset.next()) {
+				questionBank = new QuestionBank();
+				SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
+						"yyyy-MM-dd");
+				questionBank.QUESTIONBANK_ID = resultset
+						.getInt("QUESTIONBANK_ID");
+				questionBank.QUESTIONBANK_TEXT = resultset
+						.getString("QUESTIONBANK_TEXT");
+				questionBank.QUESTIONBANK_HINT = resultset
+						.getString("QUESTIONBANK_HINT");
+				questionBank.QUESTIONBANK_EXPLANATION = resultset
+						.getString("QUESTIONBANK_EXPLANATION");
+				questionBank.QUESTIONBANK_DIFFICULTYLEVEL = resultset
+						.getInt("QUESTIONBANK_DIFFICULTYLEVEL");
+				questionBank.QUESTIONBANK_CREATEDBY = resultset
+						.getInt("QUESTIONBANK_CREATEDBY");
+				questionBank.QUESTIONBANK_MODIFIEDBY = resultset
+						.getInt("QUESTIONBANK_MODIFIEDBY");
+				questionBank.CSC_QB_IS_PARAMETERIZED = resultset
+						.getBoolean("CSC_QB_IS_PARAMETERIZED");
+				questionBank.CSC_QUESTIONBANK_TOPIC_ID = resultset
+						.getInt("CSC_QUESTIONBANK_TOPIC_ID");
+				try {
+					questionBank.QUESTIONBANK_CREATEDDATE = simpleDateFormat
+							.parse(resultset
+									.getString("QUESTIONBANK_CREATEDDATE"));
+					questionBank.QUESTIONBANK_MODIFIEDDATE = simpleDateFormat
+							.parse(resultset
+									.getString("QUESTIONBANK_MODIFIEDDATE"));
+				} catch (Exception e) {
+				}
+				listQuestionBank.add(questionBank);
+			}
+		} catch (SQLException e) {
+		} finally {
+			oracleDb.CloseConnection();
+		}
+		return listQuestionBank;
 	}
 
 	public ArrayList<UserAttempt> GetUserAttempt() {

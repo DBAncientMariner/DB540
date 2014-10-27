@@ -29,22 +29,23 @@ public class Home {
 	private JLabel lbl_ErrorToken = new JLabel();
 	String[] data = { "" };
 	final JPanel panel_Right = new JPanel();
-	JList listCourses ;
-	DefaultListModel listModel= new DefaultListModel();	
+	JList listCourses;
+	DefaultListModel listModel = new DefaultListModel();
+
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					new Home();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+	// public static void main(String[] args) {
+	// EventQueue.invokeLater(new Runnable() {
+	// public void run() {
+	// try {
+	// new Home();
+	// } catch (Exception e) {
+	// e.printStackTrace();
+	// }
+	// }
+	// });
+	// }
 
 	/**
 	 * Create the frame.
@@ -89,7 +90,7 @@ public class Home {
 		JButton btn_ViewSubmissions = new JButton("Past Submissions");
 		btn_ViewSubmissions.setBounds(12, 125, 187, 33);
 		btn_ViewSubmissions.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				frame.setVisible(false);
@@ -108,6 +109,16 @@ public class Home {
 			}
 		});
 		panel_Center.add(btn_Notification);
+		JButton btnAddHomework = new JButton("Add Homework");
+		btnAddHomework.setBounds(12, 200, 187, 33);
+		btnAddHomework.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				AddHomework addHomework = new AddHomework();
+				addHomework.setVisible(true);
+				frame.setVisible(false);
+			}
+		});
+		panel_Center.add(btnAddHomework);
 
 		JPanel panel_Bottom = new JPanel();
 		panel_Bottom.setBounds(12, 390, 211, 224);
@@ -118,7 +129,6 @@ public class Home {
 		contentPane.add(panel_Top);
 		panel_Top.setLayout(null);
 
-		
 		panel_Right.setBounds(230, 13, 640, 627);
 		contentPane.add(panel_Right);
 		panel_Right.setLayout(null);
@@ -143,7 +153,7 @@ public class Home {
 			public void actionPerformed(ActionEvent arg0) {
 				new Login();
 				frame.setVisible(false);
-				//LocalSession.SetCurrentUser(NULL);
+				// LocalSession.SetCurrentUser(NULL);
 			}
 		});
 
@@ -163,16 +173,16 @@ public class Home {
 
 		// load all the courses
 		listCourses = new JList(listModel);
-				listCourses.addListSelectionListener(new ListSelectionListener() {
-					public void valueChanged(ListSelectionEvent arg0) {
-						LocalSession.SetCurrentSelectedCourse((String)listCourses.getSelectedValue());
-					}
-				});
-				listCourses.setBounds(100, 50, 300, 100);
-				homePanel.add(listCourses);
-				AddCourse();
-		//Component data=new ArrayList<String>();
-		
+		listCourses.addListSelectionListener(new ListSelectionListener() {
+			public void valueChanged(ListSelectionEvent arg0) {
+				LocalSession.SetCurrentSelectedCourse(listCourses
+						.getSelectedIndex());
+			}
+		});
+		listCourses.setBounds(100, 50, 300, 100);
+		homePanel.add(listCourses);
+		AddCourse();
+		// Component data=new ArrayList<String>();
 
 		JLabel lbl_AddCourse = new JLabel("Add a course");
 		lbl_AddCourse.setBounds(100, 300, 100, 30);
@@ -205,7 +215,8 @@ public class Home {
 	private void AddCourse(String token) {
 		OracleDataAdapter oracleDataAdapter = new OracleDataAdapter();
 		{
-			ArrayList<ncsu.dbms.core.Course> listCourse = oracleDataAdapter.GetCourseForToken(token);
+			ArrayList<ncsu.dbms.core.Course> listCourse = oracleDataAdapter
+					.GetCourseForToken(token);
 			if (listCourse != null && listCourse.size() == 0) {
 				lbl_ErrorToken.setText("Invalid course id");
 			} else if (listCourse.get(0).CSC_COURSE_EndDate
@@ -214,38 +225,36 @@ public class Home {
 			} else if (listCourse.get(0).CSC_COURSE_Max_Enroll_No <= listCourse
 					.get(0).CSC_COURSE_Number_Of_Students) {
 				lbl_ErrorToken.setText("Course full, cannot register.");
-			}
-			else
-			{
+			} else {
 				if (oracleDataAdapter.AddStudentToCourse(token,
 						LocalSession.GetCurrentUser())) {
 					// print success
 					lbl_ErrorToken.setText("Course Added");
-					listModel= new DefaultListModel();	
+					listModel = new DefaultListModel();
 					AddCourse();
 				} else {
 					lbl_ErrorToken.setText("Error occured.");
 					// print failure
 				}
-				
+
 			}
 		}
-		
+
 	}
-	private void RefreshList(String data)
-	{
+
+	private void RefreshList(String data) {
 		listModel.addElement(data);
-		
+
 	}
-	private void AddCourse()
-	{
+
+	private void AddCourse() {
 		OracleDataAdapter oracleDataAdapter = new OracleDataAdapter();
-		ArrayList<ncsu.dbms.core.Course> listCourse = oracleDataAdapter.GetCourseForStudent(LocalSession.GetCurrentUser());
-		for(ncsu.dbms.core.Course course:listCourse)
-		{
-			//listModel= new DefaultListModel();
+		ArrayList<ncsu.dbms.core.Course> listCourse = oracleDataAdapter
+				.GetCourseForStudent(LocalSession.GetCurrentUser());
+		for (ncsu.dbms.core.Course course : listCourse) {
+			// listModel= new DefaultListModel();
 			listModel.addElement(course.CSC_COURSE_Course_Name);
 		}
-		LocalSession.CourseListModel=listModel;
+		LocalSession.CourseListModel = listCourse;
 	}
 }

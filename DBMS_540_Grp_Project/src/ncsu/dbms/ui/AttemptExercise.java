@@ -121,6 +121,7 @@ public class AttemptExercise {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				new AttemptExercise(selectAssignment.getSelectedIndex());
+				frame.setVisible(false);
 			}
 		});
 

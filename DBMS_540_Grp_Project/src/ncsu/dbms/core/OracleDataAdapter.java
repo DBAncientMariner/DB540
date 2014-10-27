@@ -5,10 +5,10 @@ package ncsu.dbms.core;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * @author ravi
@@ -238,6 +238,133 @@ public class OracleDataAdapter {
 		return listAnswerBank;
 	}
 
+	public List<QuestionBank> GetQuestion(int exercise_id) {
+		QuestionBank questionBank = new QuestionBank();
+		
+		List<QuestionBank> ListQuestions = new LinkedList<QuestionBank>();
+		
+		oracleDb.OpenConnection();
+		ResultSet resultset = oracleDb
+				.GetResultSet("Select * from CSC_QUESTIONBANK where QUESTIONBANK_ID IN (select EA_QUESTION_ID from CSC_EXERCISE_QUESTION where EA_EXERCISE_ID = "+exercise_id+") ORDER BY DBMS_RANDOM.RANDOM;");
+		try {
+			if(resultset == null)
+				return ListQuestions;
+			while (resultset.next()) {
+				questionBank = new QuestionBank();
+				SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
+						"yyyy-MM-dd");
+				questionBank.QUESTIONBANK_ID = resultset
+						.getInt("QUESTIONBANK_ID");
+				questionBank.QUESTIONBANK_TEXT = resultset
+						.getString("QUESTIONBANK_TEXT");
+				questionBank.QUESTIONBANK_HINT = resultset
+						.getString("QUESTIONBANK_HINT");
+				questionBank.QUESTIONBANK_EXPLANATION = resultset
+						.getString("QUESTIONBANK_EXPLANATION");
+				questionBank.QUESTIONBANK_DIFFICULTYLEVEL = resultset
+						.getInt("QUESTIONBANK_DIFFICULTYLEVEL");
+				questionBank.QUESTIONBANK_CREATEDBY = resultset
+						.getInt("QUESTIONBANK_CREATEDBY");
+				questionBank.QUESTIONBANK_MODIFIEDBY = resultset
+						.getInt("QUESTIONBANK_MODIFIEDBY");
+				questionBank.CSC_QB_IS_PARAMETERIZED = resultset
+						.getBoolean("CSC_QB_IS_PARAMETERIZED");
+				questionBank.CSC_QUESTIONBANK_TOPIC_ID = resultset
+						.getInt("CSC_QUESTIONBANK_TOPIC_ID");
+				try {
+					questionBank.QUESTIONBANK_CREATEDDATE = simpleDateFormat
+							.parse(resultset
+									.getString("QUESTIONBANK_CREATEDDATE"));
+					questionBank.QUESTIONBANK_MODIFIEDDATE = simpleDateFormat
+							.parse(resultset
+									.getString("QUESTIONBANK_MODIFIEDDATE"));
+				} catch (Exception e) {
+				}
+				ListQuestions.add(questionBank);
+			}
+		} catch (SQLException e) {
+		} finally {
+			oracleDb.CloseConnection();
+		}
+		return ListQuestions;
+	}
+	
+	public ArrayList<AnswerBank> GetCorrectAnswerBank(int Question_id, int no_of_correct) {
+		AnswerBank answerBank = new AnswerBank();
+		ArrayList<AnswerBank> listAnswerBank = new ArrayList<AnswerBank>();
+		oracleDb.OpenConnection();
+		ResultSet resultset = oracleDb
+				.GetResultSet("Select * From (Select AB.* from CSC_Answerbank AB, CSC_QUESTIONBANK_ANSWERBANK QBAB where AB.ANSWERBANK_ID = QBAB.QABANK_ANSWER_ID and QBAB.QABANK_ISCORRECT = 'T' and QBAB.QABANK_QUESITON_ID = "+Question_id+" ORDER BY DBMS_RANDOM.RANDOM) where ROWNUM <= "+no_of_correct+";");
+		try {
+			while (resultset.next()) {
+				answerBank = new AnswerBank();
+				SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
+						"yyyy-MM-dd");
+				answerBank.ANSWERBANK_ID = resultset.getInt("ANSWERBANK_ID");
+				answerBank.ANSWERBANK_TEXT = resultset
+						.getString("ANSWERBANK_TEXT");
+				answerBank.ANSWERBANK_EXPLANATION = resultset
+						.getString("ANSWERBANK_EXPLANATION");
+				answerBank.ANSWERBANK_CREATEDBY = resultset
+						.getInt("ANSWERBANK_CREATEDBY");
+				answerBank.ANSWERBANK_MODIFIEDBY = resultset
+						.getInt("ANSWERBANK_MODIFIEDBY");
+				try {
+					answerBank.ANSWERBANK_CREATEDDATE = simpleDateFormat
+							.parse(resultset
+									.getString("ANSWERBANK_CREATEDDATE"));
+					answerBank.ANSWERBANK_MODIFIEDDATE = simpleDateFormat
+							.parse(resultset
+									.getString("ANSWERBANK_MODIFIEDDATE"));
+				} catch (Exception e) {
+				}
+				listAnswerBank.add(answerBank);
+			}
+		} catch (SQLException e) {
+		} finally {
+			oracleDb.CloseConnection();
+		}
+		return listAnswerBank;
+	}
+	
+	public ArrayList<AnswerBank> GetInCorrectAnswerBank(int Question_id, int no_of_incorrect) {
+		AnswerBank answerBank = new AnswerBank();
+		ArrayList<AnswerBank> listAnswerBank = new ArrayList<AnswerBank>();
+		oracleDb.OpenConnection();
+		ResultSet resultset = oracleDb
+				.GetResultSet("Select * From (Select AB.* from CSC_Answerbank AB, CSC_QUESTIONBANK_ANSWERBANK QBAB where AB.ANSWERBANK_ID = QBAB.QABANK_ANSWER_ID and QBAB.QABANK_ISCORRECT = 'F' and QBAB.QABANK_QUESITON_ID = "+Question_id+" ORDER BY DBMS_RANDOM.RANDOM) where ROWNUM <= "+no_of_incorrect+";");
+		try {
+			while (resultset.next()) {
+				answerBank = new AnswerBank();
+				SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
+						"yyyy-MM-dd");
+				answerBank.ANSWERBANK_ID = resultset.getInt("ANSWERBANK_ID");
+				answerBank.ANSWERBANK_TEXT = resultset
+						.getString("ANSWERBANK_TEXT");
+				answerBank.ANSWERBANK_EXPLANATION = resultset
+						.getString("ANSWERBANK_EXPLANATION");
+				answerBank.ANSWERBANK_CREATEDBY = resultset
+						.getInt("ANSWERBANK_CREATEDBY");
+				answerBank.ANSWERBANK_MODIFIEDBY = resultset
+						.getInt("ANSWERBANK_MODIFIEDBY");
+				try {
+					answerBank.ANSWERBANK_CREATEDDATE = simpleDateFormat
+							.parse(resultset
+									.getString("ANSWERBANK_CREATEDDATE"));
+					answerBank.ANSWERBANK_MODIFIEDDATE = simpleDateFormat
+							.parse(resultset
+									.getString("ANSWERBANK_MODIFIEDDATE"));
+				} catch (Exception e) {
+				}
+				listAnswerBank.add(answerBank);
+			}
+		} catch (SQLException e) {
+		} finally {
+			oracleDb.CloseConnection();
+		}
+		return listAnswerBank;
+	}
+	
 	// returns question answer bank
 	public ArrayList<QuestionBank_AnswerBank> GetQuestionAnswerBank() {
 		QuestionBank_AnswerBank questionAnswerBank = new QuestionBank_AnswerBank();
@@ -647,6 +774,62 @@ public class OracleDataAdapter {
 		}
 		return listExercise;
 	}
+	
+	public ArrayList<Exercise> GetActiveExerciseForCourse(int course_id) {
+		Exercise exercise = new Exercise();
+		ArrayList<Exercise> listExercise = new ArrayList<Exercise>();
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		oracleDb.OpenConnection();
+		ResultSet resultset = oracleDb
+				.GetResultSet("select * from csc_exercise where TRUNC(EXERCISE_STARTDATE) <= TRUNC(SYSDATE) AND TRUNC(EXERCISE_ENDDATE) >= TRUNC(SYSDATE) AND EXERCISE_COURSE = "+course_id+";");
+		try {
+			if(resultset == null)
+			{
+				return listExercise;
+			}
+			while (resultset.next()) {
+				exercise = new Exercise();
+
+				exercise.EXERCISE_ID = resultset.getInt("EXERCISE_ID");
+				exercise.EXERCISE_NAME = resultset.getString("EXERCISE_NAME");
+				exercise.EXERCISE_COURSE = resultset.getInt("EXERCISE_COURSE");
+				exercise.EXERCISE_NAME = resultset.getString("EXERCISE_NAME");
+				exercise.EXERCISE_DIFFICULTY_RANGE1 = resultset
+						.getInt("EXERCISE_DIFFICULTY_RANGE1");
+				exercise.EXERCISE_DIFFICULTY_RANGE2 = resultset
+						.getInt("EXERCISE_DIFFICULTY_RANGE2");
+				exercise.EXERCISE_RETRYLIMIT = resultset
+						.getInt("EXERCISE_RETRYLIMIT");
+				exercise.EXERCISE_CORRECTPT = resultset
+						.getInt("EXERCISE_CORRECTPT");
+				exercise.EXERCISE_PENALTYPT = resultset
+						.getInt("EXERCISE_PENALTYPT");
+				exercise.EXERCISE_SCORINGTYPE = resultset
+						.getInt("EXERCISE_SCORINGTYPE");
+				exercise.EXERCISE_CREATEDBY = resultset
+						.getInt("EXERCISE_CREATEDBY");
+				exercise.EXERCISE_MODIFIEDBY = resultset
+						.getInt("EXERCISE_MODIFIEDBY");
+
+				try {
+					exercise.EXERCISE_STARTDATE = simpleDateFormat
+							.parse(resultset.getString("EXERCISE_STARTDATE"));
+					exercise.EXERCISE_ENDDATE = simpleDateFormat
+							.parse(resultset.getString("EXERCISE_ENDDATE"));
+					exercise.EXERCISE_LASTMODIFIEDDATE = simpleDateFormat
+							.parse(resultset
+									.getString("EXERCISE_LASTMODIFIEDDATE"));
+				} catch (Exception e) {
+				}
+				listExercise.add(exercise);
+			}
+		} catch (SQLException e) {
+		} finally {
+			oracleDb.CloseConnection();
+		}
+		return listExercise;
+	}
+	
 
 	public boolean InsertExerciseDetails(Exercise exercise) {
 			
@@ -895,6 +1078,45 @@ public class OracleDataAdapter {
 		return listUserAttempt;
 	}
 
+	public ArrayList<UserAttempt> GetUserAttemptFromCourse(int course_id) {
+		
+		User user = LocalSession.GetCurrentUser();
+		UserAttempt userAttempt = new UserAttempt();
+		ArrayList<UserAttempt> listUserAttempt = new ArrayList<UserAttempt>();
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		oracleDb.OpenConnection();
+		ResultSet resultset = oracleDb
+				.GetResultSet("select * from CSC_USER_ATTEMPT UT,CSC_EXERCISE EX where UT.UA_EXERCISE_ID = EX.EXERCISE_ID and EX.EXERCISE_COURSE = "+course_id+" and UT.UA_USER_ID = "+user.UserId+";");
+		try {
+			if(resultset == null) {
+				return listUserAttempt;
+			}
+			while (resultset.next()) {
+				userAttempt = new UserAttempt();
+
+				userAttempt.UA_ID = resultset.getInt("UA_ID");
+				userAttempt.UA_USER_ID = resultset.getInt("UA_USER_ID");
+				userAttempt.UA_EXERCISE_ID = resultset.getInt("UA_EXERCISE_ID");
+				userAttempt.UA_SUBMITTED = resultset.getBoolean("UA_SUBMITTED");
+				userAttempt.UA_SCORE = resultset.getDouble("UA_SCORE");
+				try {
+					userAttempt.UA_STARTATTEMPT_DATE = simpleDateFormat
+							.parse(resultset.getString("UA_STARTATTEMPT_DATE"));
+					userAttempt.UA_LASTATTEMPT_DATE = simpleDateFormat
+							.parse(resultset.getString("UA_LASTATTEMPT_DATE"));
+					userAttempt.UA_STARTATTEMPT_DATE = simpleDateFormat
+							.parse(resultset.getString("UA_STARTATTEMPT_DATE"));
+				} catch (Exception e) {
+				}
+				listUserAttempt.add(userAttempt);
+			}
+		} catch (SQLException e) {
+		} finally {
+			oracleDb.CloseConnection();
+		}
+		return listUserAttempt;
+	}
+	
 	public ArrayList<UserAttemptExercise> GetUserAttemptExercise() {
 		UserAttemptExercise userAttemptExercise = new UserAttemptExercise();
 		ArrayList<UserAttemptExercise> listUserAttemptExercise = new ArrayList<UserAttemptExercise>();

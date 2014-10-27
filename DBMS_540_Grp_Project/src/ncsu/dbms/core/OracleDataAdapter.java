@@ -648,14 +648,60 @@ public class OracleDataAdapter {
 		return listExercise;
 	}
 
-	public boolean InsertExerciseDetails(Exercise exercise) {
-			
-			oracleDb.OpenConnection();
-			String query="insert into CSC_EXERCISE(EXERCISE_NAME,EXERCISE_COURSE,EXERCISE_DIFFICULTY_RANGE1,EXERCISE_DIFFICULTY_RANGE2,EXERCISE_RETRYLIMIT,EXERCISE_CORRECTPT,EXERCISE_PENALTYPT,EXERCISE_SCORINGTYPE,EXERCISE_CREATEDBY,EXERCISE_MODIFIEDBY,EXERCISE_STARTDATE,EXERCISE_ENDDATE,EXERCISE_LASTMODIFIEDDATE)";
-			query=query+"Values('"+exercise.EXERCISE_NAME +"','"+ exercise.EXERCISE_COURSE+"','"+exercise.EXERCISE_DIFFICULTY_RANGE1+"','"+exercise.EXERCISE_DIFFICULTY_RANGE2+"','";
-			query=query+exercise.EXERCISE_RETRYLIMIT+"','"+exercise.EXERCISE_CORRECTPT+"','"+exercise.EXERCISE_PENALTYPT+"','"+exercise.EXERCISE_SCORINGTYPE+"','"+exercise.EXERCISE_CREATEDBY+"','";
-			query=query+exercise.EXERCISE_STARTDATE+"','"+exercise.EXERCISE_ENDDATE+"',TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS'))";
-			return oracleDb.InsertQuery(query);
+	public int InsertExerciseDetails(Exercise exercise) {
+
+		oracleDb.OpenConnection();
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-dd");
+		String query = "insert into CSC_EXERCISE(EXERCISE_ID,EXERCISE_NAME,EXERCISE_COURSE,EXERCISE_DIFFICULTY_RANGE1,EXERCISE_DIFFICULTY_RANGE2,EXERCISE_RETRYLIMIT,EXERCISE_CORRECTPT,EXERCISE_PENALTYPT,EXERCISE_SCORINGTYPE,EXERCISE_CREATEDBY,EXERCISE_MODIFIEDBY,EXERCISE_STARTDATE,EXERCISE_ENDDATE,EXERCISE_LASTMODIFIEDDATE)";
+		query = query + "Values(CSC_EXERCISE_sequence.NextVal,'"
+				+ exercise.EXERCISE_NAME + "','" + exercise.EXERCISE_COURSE
+				+ "','" + exercise.EXERCISE_DIFFICULTY_RANGE1 + "','"
+				+ exercise.EXERCISE_DIFFICULTY_RANGE2 + "','";
+		query = query + exercise.EXERCISE_RETRYLIMIT + "','"
+				+ exercise.EXERCISE_CORRECTPT + "','"
+				+ exercise.EXERCISE_PENALTYPT + "','"
+				+ exercise.EXERCISE_SCORINGTYPE + "','"
+				+ exercise.EXERCISE_CREATEDBY + "','"
+				+ exercise.EXERCISE_CREATEDBY + "','";
+		query = query + simpleDateFormat.format(exercise.EXERCISE_STARTDATE) + "','"
+				+ simpleDateFormat.format(exercise.EXERCISE_ENDDATE)
+				+ "',TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS'))";
+		int retval = 0;
+		try {
+			oracleDb.InsertQuery(query);
+
+			ResultSet resultset = oracleDb
+					.GetResultSet("select Max(EXERCISE_ID) as EXERCISE_ID  from csc_exercise ");
+
+			while (resultset.next()) {
+				retval = resultset.getInt("EXERCISE_ID");
+				return retval;
+			}
+		} catch (SQLException e) {
+
+		}
+		return retval;
+	}
+
+	public boolean InsertExerciseQuestion(Exercise exercise,
+			ArrayList<QuestionBank> listSelectedQuestion) {
+		//delete all the old questions
+		{
+			String query = "DELETE FROM CSC_EXERCISE_QUESTION where EA_EXERCISE_ID="+exercise.EXERCISE_ID;
+			ResultSet resultset = oracleDb
+					.GetResultSet(query);
+		}
+		for (QuestionBank questionBank : listSelectedQuestion) {
+			String query = "INSERT INTO CSC_EXERCISE_QUESTION (EA_ID,EA_EXERCISE_ID,EA_QUESTION_ID,EA_QUES_IS_PARM) values(";
+			String cSC_QB_IS_PARAMETERIZED = questionBank.CSC_QB_IS_PARAMETERIZED == false ? "F"
+					: "T";
+			query = query + "CSC_EXERCISE_Question_sequence.NextVal,"
+					+ exercise.EXERCISE_ID + "," + questionBank.QUESTIONBANK_ID
+					+ ",'" + cSC_QB_IS_PARAMETERIZED + "'";
+			query = query + ")";
+			oracleDb.InsertQuery(query);
+		}
+		return false;
 	}
 
 	public ArrayList<Topic> GetTopic() {
@@ -762,8 +808,9 @@ public class OracleDataAdapter {
 						.getInt("QUESTIONBANK_CREATEDBY");
 				questionBank.QUESTIONBANK_MODIFIEDBY = resultset
 						.getInt("QUESTIONBANK_MODIFIEDBY");
-				if(resultset.getString("CSC_QB_IS_PARAMETERIZED").equalsIgnoreCase("f"))
-				questionBank.CSC_QB_IS_PARAMETERIZED = false;
+				if (resultset.getString("CSC_QB_IS_PARAMETERIZED")
+						.equalsIgnoreCase("f"))
+					questionBank.CSC_QB_IS_PARAMETERIZED = false;
 				else
 					questionBank.CSC_QB_IS_PARAMETERIZED = true;
 				questionBank.CSC_QUESTIONBANK_TOPIC_ID = resultset

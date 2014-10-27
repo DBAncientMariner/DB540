@@ -39,6 +39,8 @@ public class AddHomework extends JFrame {
 	ArrayList<QuestionBank> questionBank = new ArrayList<QuestionBank>();
 	ArrayList<QuestionBank> selectedQuestionBank = new ArrayList<QuestionBank>();
 
+	JTextField txt_DifficultyRange1;
+	JTextField txt_DifficultyRange2;
 	/**
 	 * Launch the application.
 	 */
@@ -190,7 +192,7 @@ public class AddHomework extends JFrame {
 		lbl_DifficultyRange1.setBounds(10, 115, 100, 25);
 		panel_Right.add(lbl_DifficultyRange1);
 
-		final JTextField txt_DifficultyRange1 = new JTextField();
+		txt_DifficultyRange1 = new JTextField("1");
 		txt_DifficultyRange1.setToolTipText("Select Difficulty Range");
 		txt_DifficultyRange1.setBounds(120, 115, 100, 25);
 		panel_Right.add(txt_DifficultyRange1);
@@ -199,7 +201,7 @@ public class AddHomework extends JFrame {
 		lbl_DifficultyRange3.setBounds(230, 115, 100, 25);
 		panel_Right.add(lbl_DifficultyRange3);
 
-		final JTextField txt_DifficultyRange2 = new JTextField();
+		txt_DifficultyRange2 = new JTextField("6");
 		txt_DifficultyRange2.setToolTipText("Select Difficulty Range 2");
 		txt_DifficultyRange2.setBounds(340, 115, 100, 25);
 		panel_Right.add(txt_DifficultyRange2);
@@ -298,17 +300,19 @@ public class AddHomework extends JFrame {
 		JButton btn_SelectQuestion = new JButton(">>");
 		btn_SelectQuestion.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				UpdateSelectedQuestions();
 			}
 		});
-		btn_SelectQuestion.setBounds(350, 450, 50, 25);
+		btn_SelectQuestion.setBounds(310, 450, 50, 25);
 		panel_Right.add(btn_SelectQuestion);
 		
 		JButton btn_RemoveQuestion = new JButton("<<");
 		btn_RemoveQuestion.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				RemoveSelectedQuestions();
 			}
 		});
-		btn_RemoveQuestion.setBounds(350, 500, 50, 25);
+		btn_RemoveQuestion.setBounds(310, 500, 50, 25);
 		panel_Right.add(btn_RemoveQuestion);
 		//
 		jListQuestion = new JList(listModelQuestion);
@@ -357,9 +361,20 @@ public class AddHomework extends JFrame {
 			ArrayList<QuestionBank> listQuestionBank = oracleDataAdapter
 					.GetQuestionByTopic(selectedListTopics.get(selectedIndex));
 			for (QuestionBank temp_questionBank : listQuestionBank) {
-				listModelQuestion
-						.addElement(temp_questionBank.QUESTIONBANK_TEXT);
+				if(txt_DifficultyRange1.getText().equalsIgnoreCase(""))
+				{
+					txt_DifficultyRange1.setText("1");
+				}
+				if(txt_DifficultyRange2.getText().equalsIgnoreCase(""))
+				{
+					txt_DifficultyRange2.setText("6");
+				}
+				if(temp_questionBank.QUESTIONBANK_DIFFICULTYLEVEL>=Integer.parseInt(txt_DifficultyRange1.getText())
+						&& temp_questionBank.QUESTIONBANK_DIFFICULTYLEVEL<=Integer.parseInt(txt_DifficultyRange2.getText()))
+				{
+				listModelQuestion.addElement(temp_questionBank.QUESTIONBANK_TEXT);
 				questionBank.add(temp_questionBank);
+				}
 			}
 
 		}
@@ -367,17 +382,40 @@ public class AddHomework extends JFrame {
 	private void GetSelectedQuestions() {
 		// listModelQuestion = new DefaultListModel();
 		listModelSelectedQuestion.clear();
-		Topic topic = new Topic();
-		questionBank = new ArrayList<QuestionBank>();
-		for (int selectedIndex : jListTopic.getSelectedIndices()) {
-
-			ArrayList<QuestionBank> listQuestionBank = oracleDataAdapter
-					.GetQuestionByTopic(selectedListTopics.get(selectedIndex));
-			for (QuestionBank temp_questionBank : listQuestionBank) {
-				listModelSelectedQuestion.addElement(temp_questionBank.QUESTIONBANK_TEXT);
-				questionBank.add(temp_questionBank);
-			}
-
+		
+	}
+	private void UpdateSelectedQuestions()
+	{
+		listModelSelectedQuestion.clear();		
+		for (int selectedIndex : jListQuestion.getSelectedIndices()) {
+			selectedQuestionBank.add(questionBank.get(selectedIndex));
+			questionBank.remove(selectedIndex);
+		}
+		for(QuestionBank question:selectedQuestionBank)
+		{
+			listModelSelectedQuestion.addElement(question.QUESTIONBANK_TEXT);
+		}
+		listModelQuestion.clear();
+		for(QuestionBank question:questionBank)
+		{
+			listModelQuestion.addElement(question.QUESTIONBANK_TEXT);
+		}
+	}
+	private void RemoveSelectedQuestions()
+	{
+		listModelQuestion.clear();		
+		for (int selectedIndex : jListSelectedQuestion.getSelectedIndices()) {
+			questionBank.add(selectedQuestionBank.get(selectedIndex));
+			selectedQuestionBank.remove(selectedIndex);
+		}
+		for(QuestionBank question:questionBank)
+		{
+			listModelQuestion.addElement(question.QUESTIONBANK_TEXT);
+		}
+		listModelSelectedQuestion.clear();
+		for(QuestionBank question:selectedQuestionBank)
+		{
+			listModelSelectedQuestion.addElement(question.QUESTIONBANK_TEXT);
 		}
 	}
 	public void GetAllSelectedQuestions() {
@@ -399,7 +437,11 @@ public class AddHomework extends JFrame {
 			// updated
 		} else {
 			// insert
-			oracleDataAdapter.InsertExerciseDetails(exercise);
+			exercise.EXERCISE_ID=oracleDataAdapter.InsertExerciseDetails(exercise);
+			ExerciseId=exercise.EXERCISE_ID;
+			//
+			if(ExerciseId!=0)
+				oracleDataAdapter.InsertExerciseQuestion(exercise,selectedQuestionBank);
 		}
 	}
 

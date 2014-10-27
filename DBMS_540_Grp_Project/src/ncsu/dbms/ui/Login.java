@@ -116,6 +116,7 @@ public class Login {
 					{
 						//user exists
 						user=User.GetUser(txt_LoginName.getText().trim());
+						
 						LocalSession.SetCurrentUser(user);
 						frame.setVisible(false);
 						Home window = new Home();

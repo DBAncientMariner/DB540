@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Date;
 
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -28,7 +29,8 @@ public class Home {
 	private JLabel lbl_ErrorToken = new JLabel();
 	String[] data = { "" };
 	final JPanel panel_Right = new JPanel();
-	JList<String> listCourses = new JList<String>();
+	JList listCourses ;
+	DefaultListModel listModel= new DefaultListModel();	
 	/**
 	 * Launch the application.
 	 */
@@ -153,7 +155,7 @@ public class Home {
 		homePanel.add(lbl_SelectCourse);
 
 		// load all the courses
-		
+		listCourses = new JList(listModel);
 				listCourses.addListSelectionListener(new ListSelectionListener() {
 					public void valueChanged(ListSelectionEvent arg0) {
 						LocalSession.SetCurrentSelectedCourse(listCourses
@@ -161,6 +163,8 @@ public class Home {
 					}
 				});
 				listCourses.setBounds(100, 50, 300, 100);
+				homePanel.add(listCourses);
+				AddCourse();
 		//Component data=new ArrayList<String>();
 		
 
@@ -211,9 +215,7 @@ public class Home {
 						LocalSession.GetCurrentUser())) {
 					// print success
 					lbl_ErrorToken.setText("Course Added");
-					
-					data[data.length]=listCourse.get(0).CSC_COURSE_Course_Name;
-					RefreshList(data);
+					RefreshList(listCourse.get(0).CSC_COURSE_Course_Name);
 				} else {
 					lbl_ErrorToken.setText("Error occured.");
 					// print failure
@@ -223,12 +225,18 @@ public class Home {
 		}
 		
 	}
-	private void RefreshList(String[] data)
+	private void RefreshList(String data)
 	{
-		listCourses = new JList<String>(data);
+		listModel.addElement(data);
+		
 	}
 	private void AddCourse()
 	{
-		listCourses = new JList<String>(data);
+		OracleDataAdapter oracleDataAdapter = new OracleDataAdapter();
+		ArrayList<ncsu.dbms.core.Course> listCourse = oracleDataAdapter.GetCourseForStudent(LocalSession.GetCurrentUser());
+		for(ncsu.dbms.core.Course course:listCourse)
+		{
+			listModel.addElement(course.CSC_COURSE_Course_Name);
+		}
 	}
 }

@@ -898,39 +898,32 @@ public class OracleDataAdapter {
 		return exercise;
 	}
 	
-	public int UpdateExerciseDetails(Exercise exercise)
+	public boolean UpdateExerciseDetails(Exercise exercise)
 	{
 		oracleDb.OpenConnection();
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-dd");
-		String query = "UPDATE CSC_EXERCISE(EXERCISE_NAME,EXERCISE_COURSE,EXERCISE_DIFFICULTY_RANGE1,EXERCISE_DIFFICULTY_RANGE2,EXERCISE_RETRYLIMIT,EXERCISE_CORRECTPT,EXERCISE_PENALTYPT,EXERCISE_SCORINGTYPE,EXERCISE_CREATEDBY,EXERCISE_MODIFIEDBY,EXERCISE_STARTDATE,EXERCISE_ENDDATE,EXERCISE_LASTMODIFIEDDATE)";
-		query = query + "Values('"
-				+ exercise.EXERCISE_NAME + "','" + exercise.EXERCISE_COURSE
-				+ "','" + exercise.EXERCISE_DIFFICULTY_RANGE1 + "','"
-				+ exercise.EXERCISE_DIFFICULTY_RANGE2 + "','";
-		query = query + exercise.EXERCISE_RETRYLIMIT + "','"
-				+ exercise.EXERCISE_CORRECTPT + "','"
-				+ exercise.EXERCISE_PENALTYPT + "','"
-				+ exercise.EXERCISE_SCORINGTYPE + "','"
-				+ exercise.EXERCISE_CREATEDBY + "','"
-				+ exercise.EXERCISE_CREATEDBY + "','";
-		query = query + simpleDateFormat.format(exercise.EXERCISE_STARTDATE)
-				+ "','" + simpleDateFormat.format(exercise.EXERCISE_ENDDATE)
-				+ "',TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS')) WHERE EXERCISE_ID="+exercise.EXERCISE_ID;
-		int retval = 0;
+		String query = "UPDATE CSC_EXERCISE SET "
+				+ "EXERCISE_NAME='"+ exercise.EXERCISE_NAME
+				+ "',EXERCISE_COURSE="+ exercise.EXERCISE_COURSE
+				+ ",EXERCISE_DIFFICULTY_RANGE1="+ exercise.EXERCISE_DIFFICULTY_RANGE1
+				+ ",EXERCISE_DIFFICULTY_RANGE2="+ exercise.EXERCISE_DIFFICULTY_RANGE2
+				+ ",EXERCISE_RETRYLIMIT="+ exercise.EXERCISE_RETRYLIMIT
+				+ ",EXERCISE_CORRECTPT="+ exercise.EXERCISE_CORRECTPT 
+				+ ",EXERCISE_PENALTYPT="+ exercise.EXERCISE_PENALTYPT 
+				+ ",EXERCISE_SCORINGTYPE="+ exercise.EXERCISE_SCORINGTYPE 
+				+ ",EXERCISE_CREATEDBY="+ exercise.EXERCISE_CREATEDBY
+				+ ",EXERCISE_MODIFIEDBY="+ exercise.EXERCISE_CREATEDBY
+				+ ",EXERCISE_STARTDATE='"+ simpleDateFormat.format(exercise.EXERCISE_STARTDATE)
+				+ "',EXERCISE_ENDDATE='"+ simpleDateFormat.format(exercise.EXERCISE_ENDDATE)
+				+ "',EXERCISE_LASTMODIFIEDDATE=TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS') WHERE EXERCISE_ID="+exercise.EXERCISE_ID;
 		try {
-			oracleDb.InsertQuery(query);
-
-			ResultSet resultset = oracleDb
-					.GetResultSet("select Max(EXERCISE_ID) as EXERCISE_ID  from csc_exercise ");
-
-			while (resultset.next()) {
-				retval = resultset.getInt("EXERCISE_ID");
-				return retval;
-			}
-		} catch (SQLException e) {
-
+			return oracleDb.InsertQuery(query);
 		}
-		return retval;
+		catch(Exception e)
+		{
+			
+		}
+		return false;
 	}
 	
 	public int InsertExerciseDetails(Exercise exercise) {
@@ -970,11 +963,11 @@ public class OracleDataAdapter {
 
 	public boolean InsertExerciseQuestion(Exercise exercise,
 			ArrayList<QuestionBank> listSelectedQuestion) {
-		//delete all the old questions
+		// delete all the old questions
 		{
-			String query = "DELETE FROM CSC_EXERCISE_QUESTION where EA_EXERCISE_ID="+exercise.EXERCISE_ID;
-			ResultSet resultset = oracleDb
-					.GetResultSet(query);
+			String query = "DELETE FROM CSC_EXERCISE_QUESTION where EA_EXERCISE_ID="
+					+ exercise.EXERCISE_ID;
+			ResultSet resultset = oracleDb.GetResultSet(query);
 		}
 		for (QuestionBank questionBank : listSelectedQuestion) {
 			String query = "INSERT INTO CSC_EXERCISE_QUESTION (EA_ID,EA_EXERCISE_ID,EA_QUESTION_ID,EA_QUES_IS_PARM) values(";
@@ -1150,8 +1143,8 @@ public class OracleDataAdapter {
 		ArrayList<QuestionBank> listQuestionBank = new ArrayList<QuestionBank>();
 		oracleDb.OpenConnection();
 		ResultSet resultset = oracleDb
-				.GetResultSet("Select * from  CSC_QuestionBank where (select EA_QUESTION_ID from CSC_EXERCISE_QUESTION where EA_EXERCISE_ID="
-						+ EA_EXERCISE_ID);
+				.GetResultSet("Select * from  CSC_QuestionBank where QUESTIONBANK_ID in(select EA_QUESTION_ID from CSC_EXERCISE_QUESTION where EA_EXERCISE_ID="
+						+ EA_EXERCISE_ID+")");
 		try {
 			while (resultset.next()) {
 				questionBank = new QuestionBank();
@@ -1172,7 +1165,7 @@ public class OracleDataAdapter {
 				questionBank.QUESTIONBANK_MODIFIEDBY = resultset
 						.getInt("QUESTIONBANK_MODIFIEDBY");
 				questionBank.CSC_QB_IS_PARAMETERIZED = resultset
-						.getBoolean("CSC_QB_IS_PARAMETERIZED");
+						.getString("CSC_QB_IS_PARAMETERIZED").equalsIgnoreCase("f")?false:true;
 				questionBank.CSC_QUESTIONBANK_TOPIC_ID = resultset
 						.getInt("CSC_QUESTIONBANK_TOPIC_ID");
 				try {
@@ -1579,6 +1572,5 @@ public class OracleDataAdapter {
 				+ topic.TOPIC_ID + "," + exercise.EXERCISE_ID;
 		query = query + ")";
 		return oracleDb.InsertQuery(query);
-	
-}
+	}
 }

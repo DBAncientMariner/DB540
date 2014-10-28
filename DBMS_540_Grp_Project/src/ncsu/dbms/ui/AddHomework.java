@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 import javax.swing.DefaultListModel;
@@ -25,7 +26,7 @@ import ncsu.dbms.core.*;
 public class AddHomework extends JFrame {
 
 	public int ExerciseId = 7;
-	public Exercise currentExercise=new Exercise();
+	public Exercise currentExercise = new Exercise();
 	private static final long serialVersionUID = 4620833118495352591L;
 	OracleDataAdapter oracleDataAdapter = new OracleDataAdapter();
 	private JPanel contentPane;
@@ -37,12 +38,13 @@ public class AddHomework extends JFrame {
 	DefaultListModel listModelQuestion = new DefaultListModel();
 	DefaultListModel listModelSelectedQuestion = new DefaultListModel();
 	ArrayList<Topic> selectedListTopics = new ArrayList<Topic>();
-	ArrayList<Topic> selectedTopics=new ArrayList<Topic>();
+	ArrayList<Topic> selectedTopics = new ArrayList<Topic>();
 	ArrayList<QuestionBank> questionBank = new ArrayList<QuestionBank>();
 	ArrayList<QuestionBank> selectedQuestionBank = new ArrayList<QuestionBank>();
 
 	JTextField txt_DifficultyRange1;
 	JTextField txt_DifficultyRange2;
+
 	/**
 	 * Launch the application.
 	 */
@@ -62,9 +64,7 @@ public class AddHomework extends JFrame {
 	 * Create the frame.
 	 */
 	public AddHomework() {
-		
-		
-		
+
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setBounds(100, 100, 900, 700);
 		this.setLocationRelativeTo(null);
@@ -167,7 +167,8 @@ public class AddHomework extends JFrame {
 	}
 
 	public void DisplayAllTopic() {
-		currentExercise=GetExercise(ExerciseId);
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-dd");
+		currentExercise = GetExercise(ExerciseId);
 		final Course selectedCourse = LocalSession.CourseListModel
 				.get(LocalSession.GetCurrentSelectedCourse());
 
@@ -191,7 +192,14 @@ public class AddHomework extends JFrame {
 		panel_Right.add(lbl_StartDate);
 
 		final JTextField txt_StartDate = new JTextField();
-		txt_StartDate.setText(currentExercise.EXERCISE_STARTDATE.toString());
+
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(currentExercise.EXERCISE_STARTDATE);
+		int year = cal.get(Calendar.YEAR);
+		int month = cal.get(Calendar.MONTH);
+		int day = cal.get(Calendar.DAY_OF_MONTH);
+
+		txt_StartDate.setText(year + "-" + month + "-" + day);
 		txt_StartDate.setToolTipText("Start Date (yyyy-MM-dd");
 		txt_StartDate.setBounds(120, 80, 100, 25);
 		panel_Right.add(txt_StartDate);
@@ -200,8 +208,13 @@ public class AddHomework extends JFrame {
 		lbl_EndDate.setBounds(230, 80, 100, 25);
 		panel_Right.add(lbl_EndDate);
 
+		cal = Calendar.getInstance();
+		cal.setTime(currentExercise.EXERCISE_ENDDATE);
+		year = cal.get(Calendar.YEAR);
+		month = cal.get(Calendar.MONTH);
+		day = cal.get(Calendar.DAY_OF_MONTH);
 		final JTextField txt_EndDate = new JTextField();
-		txt_EndDate.setText(currentExercise.EXERCISE_ENDDATE.toString());
+		txt_EndDate.setText(year + "-" + month + "-" + day);
 		txt_EndDate.setToolTipText("End Date (yyyy-MM-dd");
 		txt_EndDate.setBounds(340, 80, 100, 25);
 		panel_Right.add(txt_EndDate);
@@ -211,7 +224,8 @@ public class AddHomework extends JFrame {
 		panel_Right.add(lbl_DifficultyRange1);
 
 		txt_DifficultyRange1 = new JTextField("1");
-		txt_DifficultyRange1.setText(Integer.toString(currentExercise.EXERCISE_DIFFICULTY_RANGE1));
+		txt_DifficultyRange1.setText(Integer
+				.toString(currentExercise.EXERCISE_DIFFICULTY_RANGE1));
 		txt_DifficultyRange1.setToolTipText("Select Difficulty Range");
 		txt_DifficultyRange1.setBounds(120, 115, 100, 25);
 		panel_Right.add(txt_DifficultyRange1);
@@ -221,7 +235,8 @@ public class AddHomework extends JFrame {
 		panel_Right.add(lbl_DifficultyRange3);
 
 		txt_DifficultyRange2 = new JTextField("6");
-		txt_DifficultyRange2.setText(Integer.toString(currentExercise.EXERCISE_DIFFICULTY_RANGE2));
+		txt_DifficultyRange2.setText(Integer
+				.toString(currentExercise.EXERCISE_DIFFICULTY_RANGE2));
 		txt_DifficultyRange2.setToolTipText("Select Difficulty Range 2");
 		txt_DifficultyRange2.setBounds(340, 115, 100, 25);
 		panel_Right.add(txt_DifficultyRange2);
@@ -231,7 +246,8 @@ public class AddHomework extends JFrame {
 		panel_Right.add(lbl_RetryLimit);
 
 		final JTextField txt_RetryLimit = new JTextField();
-		txt_RetryLimit.setText(Integer.toString(currentExercise.EXERCISE_RETRYLIMIT));
+		txt_RetryLimit.setText(Integer
+				.toString(currentExercise.EXERCISE_RETRYLIMIT));
 		txt_RetryLimit.setToolTipText("Retry Limit");
 		txt_RetryLimit.setBounds(120, 150, 100, 25);
 		panel_Right.add(txt_RetryLimit);
@@ -241,7 +257,8 @@ public class AddHomework extends JFrame {
 		panel_Right.add(lbl_CorrectPoint);
 
 		final JTextField txt_CorrectPoint = new JTextField();
-		txt_CorrectPoint.setText(Integer.toString(currentExercise.EXERCISE_CORRECTPT));
+		txt_CorrectPoint.setText(Integer
+				.toString(currentExercise.EXERCISE_CORRECTPT));
 		txt_CorrectPoint.setToolTipText("Correct Point");
 		txt_CorrectPoint.setBounds(340, 150, 100, 25);
 		panel_Right.add(txt_CorrectPoint);
@@ -251,7 +268,8 @@ public class AddHomework extends JFrame {
 		panel_Right.add(lbl_PenaltyPoint);
 
 		final JTextField txt_PenaltyPoint = new JTextField();
-		txt_PenaltyPoint.setText(Integer.toString(currentExercise.EXERCISE_PENALTYPT));
+		txt_PenaltyPoint.setText(Integer
+				.toString(currentExercise.EXERCISE_PENALTYPT));
 		txt_PenaltyPoint.setToolTipText("Penalty Point");
 		txt_PenaltyPoint.setBounds(120, 185, 100, 25);
 		panel_Right.add(txt_PenaltyPoint);
@@ -261,7 +279,8 @@ public class AddHomework extends JFrame {
 		panel_Right.add(lbl_ScoringType);
 
 		final JTextField txt_ScoringType = new JTextField();
-		txt_ScoringType.setText(Integer.toString(currentExercise.EXERCISE_SCORINGTYPE));
+		txt_ScoringType.setText(Integer
+				.toString(currentExercise.EXERCISE_SCORINGTYPE));
 		txt_ScoringType.setToolTipText("Scoring Type");
 		txt_ScoringType.setBounds(340, 185, 100, 25);
 		panel_Right.add(txt_ScoringType);
@@ -320,7 +339,7 @@ public class AddHomework extends JFrame {
 				.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		jListTopic.setBounds(10, 240, 400, 200);
 		panel_Right.add(jListTopic);
-		
+
 		// button to select questions
 		JButton btn_SelectQuestion = new JButton(">>");
 		btn_SelectQuestion.addActionListener(new ActionListener() {
@@ -330,7 +349,7 @@ public class AddHomework extends JFrame {
 		});
 		btn_SelectQuestion.setBounds(310, 450, 50, 25);
 		panel_Right.add(btn_SelectQuestion);
-		
+
 		JButton btn_RemoveQuestion = new JButton("<<");
 		btn_RemoveQuestion.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -375,25 +394,26 @@ public class AddHomework extends JFrame {
 			listModelTopic.addElement(topic.TOPIC_KEYWORD);
 		}
 		selectedListTopics = listTopics;
-//		int[] indices=new int[listTopics.size()];
-//		if(ExerciseId!=0)
-//		{
-//			ArrayList<Topic> listSelectedTopics=oracleDataAdapter.GetTopicForExercise(ExerciseId);
-//			for(Topic topic:listSelectedTopics)
-//			{
-//				for(int index=0;index<listTopics.size();index++)
-//				{
-//					if(listTopics.get(index).TOPIC_ID==topic.TOPIC_ID)
-//					{
-//						//indices[index]=index;
-//						jListTopic.setSelectedIndex(index);
-//					}
-//				}
-//			}
-//		}
-//		if(indices!=null)
-//			jListTopic.setSelectedIndices(indices);
-			
+		// int[] indices=new int[listTopics.size()];
+		// if(ExerciseId!=0)
+		// {
+		// ArrayList<Topic>
+		// listSelectedTopics=oracleDataAdapter.GetTopicForExercise(ExerciseId);
+		// for(Topic topic:listSelectedTopics)
+		// {
+		// for(int index=0;index<listTopics.size();index++)
+		// {
+		// if(listTopics.get(index).TOPIC_ID==topic.TOPIC_ID)
+		// {
+		// //indices[index]=index;
+		// jListTopic.setSelectedIndex(index);
+		// }
+		// }
+		// }
+		// }
+		// if(indices!=null)
+		// jListTopic.setSelectedIndices(indices);
+
 	}
 
 	private void GetAllQuestions() {
@@ -406,80 +426,77 @@ public class AddHomework extends JFrame {
 			ArrayList<QuestionBank> listQuestionBank = oracleDataAdapter
 					.GetQuestionByTopic(selectedListTopics.get(selectedIndex));
 			for (QuestionBank temp_questionBank : listQuestionBank) {
-				if(txt_DifficultyRange1.getText().equalsIgnoreCase(""))
-				{
+				if (txt_DifficultyRange1.getText().equalsIgnoreCase("")) {
 					txt_DifficultyRange1.setText("1");
 				}
-				if(txt_DifficultyRange2.getText().equalsIgnoreCase(""))
-				{
+				if (txt_DifficultyRange2.getText().equalsIgnoreCase("")) {
 					txt_DifficultyRange2.setText("6");
 				}
-				if(temp_questionBank.QUESTIONBANK_DIFFICULTYLEVEL>=Integer.parseInt(txt_DifficultyRange1.getText())
-						&& temp_questionBank.QUESTIONBANK_DIFFICULTYLEVEL<=Integer.parseInt(txt_DifficultyRange2.getText()))
-				{
-					boolean alreadyexist=false;
-					for(QuestionBank tempQuestionBank:selectedQuestionBank)
-					{
-						if(tempQuestionBank.QUESTIONBANK_ID == temp_questionBank.QUESTIONBANK_ID)
-						{
-							alreadyexist=true;
+				if (temp_questionBank.QUESTIONBANK_DIFFICULTYLEVEL >= Integer
+						.parseInt(txt_DifficultyRange1.getText())
+						&& temp_questionBank.QUESTIONBANK_DIFFICULTYLEVEL <= Integer
+								.parseInt(txt_DifficultyRange2.getText())) {
+					boolean alreadyexist = false;
+					for (QuestionBank tempQuestionBank : selectedQuestionBank) {
+						if (tempQuestionBank.QUESTIONBANK_ID == temp_questionBank.QUESTIONBANK_ID) {
+							alreadyexist = true;
 							break;
 						}
 					}
-					if(!alreadyexist)
-					{
-					listModelQuestion.addElement(temp_questionBank.QUESTIONBANK_TEXT);
-					questionBank.add(temp_questionBank);
+					if (!alreadyexist) {
+						listModelQuestion
+								.addElement(temp_questionBank.QUESTIONBANK_TEXT);
+						questionBank.add(temp_questionBank);
 					}
 				}
 			}
 		}
 	}
+
 	private void GetSelectedQuestions() {
 		// listModelQuestion = new DefaultListModel();
 		listModelSelectedQuestion.clear();
-		
+
 	}
-	private void UpdateSelectedQuestions()
-	{
-		listModelSelectedQuestion.clear();		
+
+	private void UpdateSelectedQuestions() {
+		listModelSelectedQuestion.clear();
 		for (int selectedIndex : jListQuestion.getSelectedIndices()) {
 			selectedQuestionBank.add(questionBank.get(selectedIndex));
 			questionBank.remove(selectedIndex);
 		}
-		for(QuestionBank question:selectedQuestionBank)
-		{
+		for (QuestionBank question : selectedQuestionBank) {
 			listModelSelectedQuestion.addElement(question.QUESTIONBANK_TEXT);
 		}
 		listModelQuestion.clear();
-		for(QuestionBank question:questionBank)
-		{
+		for (QuestionBank question : questionBank) {
 			listModelQuestion.addElement(question.QUESTIONBANK_TEXT);
 		}
 	}
-	private void RemoveSelectedQuestions()
-	{
-		listModelQuestion.clear();		
+
+	private void RemoveSelectedQuestions() {
+		listModelQuestion.clear();
 		for (int selectedIndex : jListSelectedQuestion.getSelectedIndices()) {
 			questionBank.add(selectedQuestionBank.get(selectedIndex));
 			selectedQuestionBank.remove(selectedIndex);
 		}
-		for(QuestionBank question:questionBank)
-		{
+		for (QuestionBank question : questionBank) {
 			listModelQuestion.addElement(question.QUESTIONBANK_TEXT);
 		}
 		listModelSelectedQuestion.clear();
-		for(QuestionBank question:selectedQuestionBank)
-		{
+		for (QuestionBank question : selectedQuestionBank) {
 			listModelSelectedQuestion.addElement(question.QUESTIONBANK_TEXT);
 		}
 	}
+
 	public void GetAllSelectedQuestions() {
 		if (ExerciseId != 0) {
 			listModelSelectedQuestion.clear();
-			selectedQuestionBank = oracleDataAdapter.GetQuestionBankForExerciseId(ExerciseId);
+			selectedQuestionBank = oracleDataAdapter
+					.GetQuestionBankForExerciseId(ExerciseId);
 			for (QuestionBank questionBank : selectedQuestionBank) {
-				listModelSelectedQuestion.addElement(questionBank.QUESTIONBANK_TEXT);
+				listModelSelectedQuestion
+						.addElement(questionBank.QUESTIONBANK_TEXT);
 			}
 		}
 	}
@@ -487,19 +504,28 @@ public class AddHomework extends JFrame {
 	private void SaveExercise(Exercise exercise) {
 		// insert/update exercise details
 		if (ExerciseId != 0) {
+			exercise.EXERCISE_ID = ExerciseId;
 			oracleDataAdapter.UpdateExerciseDetails(exercise);
+			for (int selectedIndex : jListTopic.getSelectedIndices()) {
+				oracleDataAdapter.InsertExerciseTopic(exercise,
+						selectedListTopics.get(selectedIndex));
+			}
+			oracleDataAdapter.InsertExerciseQuestion(exercise,
+					selectedQuestionBank);
 			// updated
 		} else {
 			// insert
-			exercise.EXERCISE_ID=oracleDataAdapter.InsertExerciseDetails(exercise);
-			ExerciseId=exercise.EXERCISE_ID;
+			exercise.EXERCISE_ID = oracleDataAdapter
+					.InsertExerciseDetails(exercise);
+			ExerciseId = exercise.EXERCISE_ID;
 			//
-			if(ExerciseId!=0)
-			{
-				for (int selectedIndex : jListTopic.getSelectedIndices()){
-					oracleDataAdapter.InsertExerciseTopic(exercise,selectedListTopics.get(selectedIndex));
+			if (ExerciseId != 0) {
+				for (int selectedIndex : jListTopic.getSelectedIndices()) {
+					oracleDataAdapter.InsertExerciseTopic(exercise,
+							selectedListTopics.get(selectedIndex));
 				}
-				oracleDataAdapter.InsertExerciseQuestion(exercise,selectedQuestionBank);
+				oracleDataAdapter.InsertExerciseQuestion(exercise,
+						selectedQuestionBank);
 			}
 		}
 	}

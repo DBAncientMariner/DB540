@@ -145,7 +145,7 @@ public class OracleDb {
 		return true;
 	}
 	
-	public int ExecuteStoredProcedure3ParamOut(String storedProcedure,ArrayList<Object> Param)
+	public int ExecuteStoredProcedure4ParamOut(String storedProcedure,ArrayList<Object> Param)
 	{
 		try
 		{
@@ -153,7 +153,7 @@ public class OracleDb {
 			{
 				Stmt = Conn.createStatement();
 			    CallableStatement proc =
-			    		Conn.prepareCall("{call "+storedProcedure+"(?, ?,?,?)}");
+			    		Conn.prepareCall("{call "+storedProcedure+"(?, ?,?,?,?)}");
 			    int index=1;
 			    for(Object param:Param)
 			    {
@@ -161,7 +161,7 @@ public class OracleDb {
 			    	 index++;
 			    }
 			    
-			    proc.registerOutParameter(4, Types.INTEGER);
+			    proc.registerOutParameter(5, Types.INTEGER);
 			    proc.execute();
 				Conn.commit();
 				int retval = proc.getInt(1);

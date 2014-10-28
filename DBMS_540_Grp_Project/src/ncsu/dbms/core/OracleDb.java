@@ -26,9 +26,9 @@ public class OracleDb {
 	Statement Stmt;
 
 	public OracleDb() {
-		UserName = "SYSTEM";
-		Password = "rambo";
-		Url = "jdbc:oracle:thin:System@//Sajal-PC:1521/xe";
+		UserName = ConnectionDetails.UserName;
+		Password = ConnectionDetails.Password;
+		Url = ConnectionDetails.Url;
 
 	}
 

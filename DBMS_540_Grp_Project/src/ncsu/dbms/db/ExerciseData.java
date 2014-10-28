@@ -75,4 +75,25 @@ public class ExerciseData {
 	public static void submitExercise(List<Question> exerciseQuestions, Exercise exercise) {
 		
 	}
+	
+	public static double calculateScore(List<Question> exerciseQuestions, Exercise exercise) {
+		double score = 0;
+		double correctscore = exercise.EXERCISE_CORRECTPT;
+		double penaltyscore = exercise.EXERCISE_PENALTYPT;
+		for (Question question : exerciseQuestions) {
+			boolean isCorrect = true;
+			List<Options> options = question.getOptions();
+			for (Options op : options) {
+				if(op.isCorrect() != op.isMarked()) {
+					score -= penaltyscore;
+					isCorrect = false;
+					break;
+				}
+			}
+			if(isCorrect) {
+				score += correctscore;
+			}
+		}
+		return score;
+	}
 }

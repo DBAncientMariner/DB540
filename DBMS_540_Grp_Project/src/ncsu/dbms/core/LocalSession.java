@@ -35,4 +35,9 @@ public class LocalSession {
 		Course course = CourseListModel.get(_currentSelectedCourse);
 		return course;
 	}
+	
+	public static void clearSession() {
+		_currentUser = null;
+		_currentSelectedCourse = 0;
+	}
 }

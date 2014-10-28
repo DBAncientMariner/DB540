@@ -177,7 +177,7 @@ public class OracleDataAdapter {
 				questionBank.QUESTIONBANK_MODIFIEDBY = resultset
 						.getInt("QUESTIONBANK_MODIFIEDBY");
 				questionBank.CSC_QB_IS_PARAMETERIZED = resultset
-						.getBoolean("CSC_QB_IS_PARAMETERIZED");
+						.getString("CSC_QB_IS_PARAMETERIZED").equalsIgnoreCase("f")?false:true;
 				questionBank.CSC_QUESTIONBANK_TOPIC_ID = resultset
 						.getInt("CSC_QUESTIONBANK_TOPIC_ID");
 				try {
@@ -849,7 +849,90 @@ public class OracleDataAdapter {
 		return listExercise;
 	}
 	
+	public Exercise GetExercise(int exerciseId) {
+		Exercise exercise = new Exercise();
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		oracleDb.OpenConnection();
+		ResultSet resultset = oracleDb
+				.GetResultSet("Select * from CSC_EXERCISE where EXERCISE_ID="+exerciseId);
+		try {
+			while (resultset.next()) {
+				exercise = new Exercise();
 
+				exercise.EXERCISE_ID = resultset.getInt("EXERCISE_ID");
+				exercise.EXERCISE_NAME = resultset.getString("EXERCISE_NAME");
+				exercise.EXERCISE_COURSE = resultset.getInt("EXERCISE_COURSE");
+				exercise.EXERCISE_NAME = resultset.getString("EXERCISE_NAME");
+				exercise.EXERCISE_DIFFICULTY_RANGE1 = resultset
+						.getInt("EXERCISE_DIFFICULTY_RANGE1");
+				exercise.EXERCISE_DIFFICULTY_RANGE2 = resultset
+						.getInt("EXERCISE_DIFFICULTY_RANGE2");
+				exercise.EXERCISE_RETRYLIMIT = resultset
+						.getInt("EXERCISE_RETRYLIMIT");
+				exercise.EXERCISE_CORRECTPT = resultset
+						.getInt("EXERCISE_CORRECTPT");
+				exercise.EXERCISE_PENALTYPT = resultset
+						.getInt("EXERCISE_PENALTYPT");
+				exercise.EXERCISE_SCORINGTYPE = resultset
+						.getInt("EXERCISE_SCORINGTYPE");
+				exercise.EXERCISE_CREATEDBY = resultset
+						.getInt("EXERCISE_CREATEDBY");
+				exercise.EXERCISE_MODIFIEDBY = resultset
+						.getInt("EXERCISE_MODIFIEDBY");
+
+				try {
+					exercise.EXERCISE_STARTDATE = simpleDateFormat
+							.parse(resultset.getString("EXERCISE_STARTDATE"));
+					exercise.EXERCISE_ENDDATE = simpleDateFormat
+							.parse(resultset.getString("EXERCISE_ENDDATE"));
+					exercise.EXERCISE_LASTMODIFIEDDATE = simpleDateFormat
+							.parse(resultset
+									.getString("EXERCISE_LASTMODIFIEDDATE"));
+				} catch (Exception e) {
+				}
+			}
+		} catch (SQLException e) {
+		} finally {
+			oracleDb.CloseConnection();
+		}
+		return exercise;
+	}
+	
+	public int UpdateExerciseDetails(Exercise exercise)
+	{
+		oracleDb.OpenConnection();
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-dd");
+		String query = "UPDATE CSC_EXERCISE(EXERCISE_NAME,EXERCISE_COURSE,EXERCISE_DIFFICULTY_RANGE1,EXERCISE_DIFFICULTY_RANGE2,EXERCISE_RETRYLIMIT,EXERCISE_CORRECTPT,EXERCISE_PENALTYPT,EXERCISE_SCORINGTYPE,EXERCISE_CREATEDBY,EXERCISE_MODIFIEDBY,EXERCISE_STARTDATE,EXERCISE_ENDDATE,EXERCISE_LASTMODIFIEDDATE)";
+		query = query + "Values('"
+				+ exercise.EXERCISE_NAME + "','" + exercise.EXERCISE_COURSE
+				+ "','" + exercise.EXERCISE_DIFFICULTY_RANGE1 + "','"
+				+ exercise.EXERCISE_DIFFICULTY_RANGE2 + "','";
+		query = query + exercise.EXERCISE_RETRYLIMIT + "','"
+				+ exercise.EXERCISE_CORRECTPT + "','"
+				+ exercise.EXERCISE_PENALTYPT + "','"
+				+ exercise.EXERCISE_SCORINGTYPE + "','"
+				+ exercise.EXERCISE_CREATEDBY + "','"
+				+ exercise.EXERCISE_CREATEDBY + "','";
+		query = query + simpleDateFormat.format(exercise.EXERCISE_STARTDATE)
+				+ "','" + simpleDateFormat.format(exercise.EXERCISE_ENDDATE)
+				+ "',TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS')) WHERE EXERCISE_ID="+exercise.EXERCISE_ID;
+		int retval = 0;
+		try {
+			oracleDb.InsertQuery(query);
+
+			ResultSet resultset = oracleDb
+					.GetResultSet("select Max(EXERCISE_ID) as EXERCISE_ID  from csc_exercise ");
+
+			while (resultset.next()) {
+				retval = resultset.getInt("EXERCISE_ID");
+				return retval;
+			}
+		} catch (SQLException e) {
+
+		}
+		return retval;
+	}
+	
 	public int InsertExerciseDetails(Exercise exercise) {
 
 		oracleDb.OpenConnection();
@@ -1484,5 +1567,18 @@ public class OracleDataAdapter {
 		}
 		return listExerciseTopic;
 	}
+	public boolean InsertExerciseTopic(Exercise exercise, Topic topic) {
 
+		
+		String query = "DELETE FROM  CSC_EXERCISE_TOPIC where  CSC_EXERCISE_TOPIC_EXERCISE_ID="
+				+ exercise.EXERCISE_ID;
+		ResultSet resultset = oracleDb.GetResultSet(query);
+
+		query = "INSERT INTO CSC_EXERCISE_TOPIC (CSC_EXERCISE_TOPIC_SURR_KEY ,CSC_EXERCISE_TOPIC_TOPIC_ID,CSC_EXERCISE_TOPIC_EXERCISE_ID) values(";
+		query = query + "CSC_EXERCISE_TOPIC_SEQUENCE.NextVal,"
+				+ topic.TOPIC_ID + "," + exercise.EXERCISE_ID;
+		query = query + ")";
+		return oracleDb.InsertQuery(query);
+	
+}
 }

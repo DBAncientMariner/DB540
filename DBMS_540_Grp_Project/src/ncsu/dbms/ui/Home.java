@@ -5,6 +5,7 @@ import java.awt.Component;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -19,8 +20,10 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import ncsu.dbms.core.Course;
 import ncsu.dbms.core.LocalSession;
 import ncsu.dbms.core.OracleDataAdapter;
+import ncsu.dbms.core.User;
 
 public class Home {
 
@@ -161,6 +164,10 @@ public class Home {
 
 		OpenHomePage(panel_Right);
 
+		if(User.IsFaculty(LocalSession.GetCurrentUser()))
+		{
+			EditCourse(panel_Right);
+		}
 		frame.setVisible(true);
 	}
 
@@ -187,25 +194,25 @@ public class Home {
 		// Component data=new ArrayList<String>();
 
 		JLabel lbl_AddCourse = new JLabel("Add a course");
-		lbl_AddCourse.setBounds(100, 300, 100, 30);
+		lbl_AddCourse.setBounds(100, 200, 100, 30);
 		homePanel.add(lbl_AddCourse);
 
 		JLabel lbl_AddToken = new JLabel("Provide a token");
-		lbl_AddToken.setBounds(100, 340, 100, 30);
+		lbl_AddToken.setBounds(100, 250, 100, 30);
 		homePanel.add(lbl_AddToken);
 
 		lbl_ErrorToken = new JLabel("");
-		lbl_ErrorToken.setBounds(100, 390, 500, 30);
+		lbl_ErrorToken.setBounds(100, 250, 500, 30);
 		lbl_ErrorToken.setForeground(Color.red);
 		homePanel.add(lbl_ErrorToken);
 
 		final JTextField txt_Token = new JTextField();
-		txt_Token.setBounds(250, 340, 100, 30);
+		txt_Token.setBounds(250, 250, 100, 30);
 		txt_Token.setToolTipText("Token");
 		homePanel.add(txt_Token);
 
 		JButton btn_AddCourse = new JButton("Add Course");
-		btn_AddCourse.setBounds(370, 340, 100, 30);
+		btn_AddCourse.setBounds(370, 250, 100, 30);
 		btn_AddCourse.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				AddCourse(txt_Token.getText());
@@ -258,5 +265,101 @@ public class Home {
 			listModel.addElement(course.CSC_COURSE_Course_Name);
 		}
 		LocalSession.CourseListModel = listCourse;
+	}
+	private void EditCourse(JPanel panel)
+	{
+		JLabel lblCourseAdd = new JLabel("Add a course");
+		lblCourseAdd.setBounds(100, 300, 500, 30);
+		panel.add(lblCourseAdd);
+		
+		JLabel lbl_CourseName = new JLabel("Course Name");
+		lbl_CourseName.setBounds(100, 340, 150, 30);
+		panel.add(lbl_CourseName);
+
+		final JTextField txt_CourseName = new JTextField();
+		txt_CourseName.setBounds(250, 340, 150, 30);
+		txt_CourseName.setToolTipText("Course Name");
+		panel.add(txt_CourseName);
+		
+		JLabel lbl_CourseStartDate = new JLabel("Course Start Date");
+		lbl_CourseStartDate.setBounds(100, 370, 150, 30);
+		panel.add(lbl_CourseStartDate);
+
+		final JTextField txt_CourseStartDate = new JTextField();
+		txt_CourseStartDate.setBounds(250, 370, 150, 30);
+		txt_CourseStartDate.setToolTipText("Course Start Date");
+		panel.add(txt_CourseStartDate);
+		
+		
+		JLabel lbl_CourseEndDate = new JLabel("Course End Date");
+		lbl_CourseEndDate.setBounds(100, 400, 150, 30);
+		panel.add(lbl_CourseEndDate);
+
+		final JTextField txt_CourseEndDate = new JTextField();
+		txt_CourseEndDate.setBounds(250, 400, 150, 30);
+		txt_CourseEndDate.setToolTipText("Course End Date");
+		panel.add(txt_CourseEndDate);
+		
+		JLabel lbl_MaxEnrollment = new JLabel("Max Enrollment");
+		lbl_MaxEnrollment.setBounds(100, 430, 150, 30);
+		panel.add(lbl_MaxEnrollment);
+
+		final JTextField txt_MaxEnrollment = new JTextField();
+		txt_MaxEnrollment.setBounds(250, 430, 150, 30);
+		txt_MaxEnrollment.setToolTipText("Max Enrollment");
+		panel.add(txt_MaxEnrollment);
+		
+		JLabel lbl_CourseToken = new JLabel("Course Token");
+		lbl_CourseToken.setBounds(100, 460, 150, 30);
+		panel.add(lbl_CourseToken);
+
+		final JTextField txt_CourseToken = new JTextField();
+		txt_CourseToken.setBounds(250, 460, 150, 30);
+		txt_CourseToken.setToolTipText("Course Token");
+		panel.add(txt_CourseToken);
+		
+		JButton btn_CreateButton=new JButton("Create Course");
+		btn_CreateButton.setBounds(250, 500, 150, 30);
+		btn_CreateButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
+						"yyyy-MM-dd");
+				Course course=new Course();
+				course.CSC_COURSE_Course_Name=txt_CourseName.getText();
+				try
+				{
+				course.CSC_COURSE_StartDate=simpleDateFormat.parse(txt_CourseStartDate.getText());
+				course.CSC_COURSE_EndDate=simpleDateFormat.parse(txt_CourseEndDate.getText());
+				course.CSC_COURSE_Max_Enroll_No=Integer.parseInt(txt_MaxEnrollment.getText());
+				course.CSC_COURSE_Number_Of_Students=0;
+				course.CSC_COURSE_token=txt_CourseToken.getText();
+				OracleDataAdapter oracleDataAdapter = new OracleDataAdapter();
+				
+				if(oracleDataAdapter.InsertCourse(course))
+				{
+					txt_CourseName.setText("");
+					txt_CourseStartDate.setText("");
+					txt_CourseEndDate.setText("");
+					txt_MaxEnrollment.setText("");
+					txt_CourseToken.setText("");
+				}
+				else
+				{
+					//error
+				}
+				}
+				catch(Exception e)
+				{
+					
+				}
+				
+				
+				//create course
+			}
+		});
+		panel.add(btn_CreateButton);
+		
+		
+		
 	}
 }

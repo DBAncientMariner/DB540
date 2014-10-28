@@ -176,8 +176,9 @@ public class OracleDataAdapter {
 						.getInt("QUESTIONBANK_CREATEDBY");
 				questionBank.QUESTIONBANK_MODIFIEDBY = resultset
 						.getInt("QUESTIONBANK_MODIFIEDBY");
-				questionBank.CSC_QB_IS_PARAMETERIZED = resultset
-						.getString("CSC_QB_IS_PARAMETERIZED").equalsIgnoreCase("f")?false:true;
+				questionBank.CSC_QB_IS_PARAMETERIZED = resultset.getString(
+						"CSC_QB_IS_PARAMETERIZED").equalsIgnoreCase("f") ? false
+						: true;
 				questionBank.CSC_QUESTIONBANK_TOPIC_ID = resultset
 						.getInt("CSC_QUESTIONBANK_TOPIC_ID");
 				try {
@@ -240,14 +241,15 @@ public class OracleDataAdapter {
 
 	public List<QuestionBank> GetQuestion(int exercise_id) {
 		QuestionBank questionBank = new QuestionBank();
-		
+
 		List<QuestionBank> ListQuestions = new LinkedList<QuestionBank>();
-		
+
 		oracleDb.OpenConnection();
 		ResultSet resultset = oracleDb
-				.GetResultSet("Select * from CSC_QUESTIONBANK where QUESTIONBANK_ID IN (select EA_QUESTION_ID from CSC_EXERCISE_QUESTION where EA_EXERCISE_ID = "+exercise_id+") ORDER BY DBMS_RANDOM.RANDOM;");
+				.GetResultSet("Select * from CSC_QUESTIONBANK where QUESTIONBANK_ID IN (select EA_QUESTION_ID from CSC_EXERCISE_QUESTION where EA_EXERCISE_ID = "
+						+ exercise_id + ") ORDER BY DBMS_RANDOM.RANDOM;");
 		try {
-			if(resultset == null)
+			if (resultset == null)
 				return ListQuestions;
 			while (resultset.next()) {
 				questionBank = new QuestionBank();
@@ -288,13 +290,17 @@ public class OracleDataAdapter {
 		}
 		return ListQuestions;
 	}
-	
-	public List<AnswerBank> GetCorrectAnswerBank(int Question_id, int no_of_correct) {
+
+	public List<AnswerBank> GetCorrectAnswerBank(int Question_id,
+			int no_of_correct) {
 		AnswerBank answerBank = new AnswerBank();
 		List<AnswerBank> listAnswerBank = new LinkedList<AnswerBank>();
 		oracleDb.OpenConnection();
 		ResultSet resultset = oracleDb
-				.GetResultSet("Select * From (Select AB.* from CSC_Answerbank AB, CSC_QUESTIONBANK_ANSWERBANK QBAB where AB.ANSWERBANK_ID = QBAB.QABANK_ANSWER_ID and QBAB.QABANK_ISCORRECT = 'T' and QBAB.QABANK_QUESITON_ID = "+Question_id+" ORDER BY DBMS_RANDOM.RANDOM) where ROWNUM <= "+no_of_correct+";");
+				.GetResultSet("Select * From (Select AB.* from CSC_Answerbank AB, CSC_QUESTIONBANK_ANSWERBANK QBAB where AB.ANSWERBANK_ID = QBAB.QABANK_ANSWER_ID and QBAB.QABANK_ISCORRECT = 'T' and QBAB.QABANK_QUESITON_ID = "
+						+ Question_id
+						+ " ORDER BY DBMS_RANDOM.RANDOM) where ROWNUM <= "
+						+ no_of_correct + ";");
 		try {
 			while (resultset.next()) {
 				answerBank = new AnswerBank();
@@ -326,13 +332,17 @@ public class OracleDataAdapter {
 		}
 		return listAnswerBank;
 	}
-	
-	public ArrayList<AnswerBank> GetInCorrectAnswerBank(int Question_id, int no_of_incorrect) {
+
+	public ArrayList<AnswerBank> GetInCorrectAnswerBank(int Question_id,
+			int no_of_incorrect) {
 		AnswerBank answerBank = new AnswerBank();
 		ArrayList<AnswerBank> listAnswerBank = new ArrayList<AnswerBank>();
 		oracleDb.OpenConnection();
 		ResultSet resultset = oracleDb
-				.GetResultSet("Select * From (Select AB.* from CSC_Answerbank AB, CSC_QUESTIONBANK_ANSWERBANK QBAB where AB.ANSWERBANK_ID = QBAB.QABANK_ANSWER_ID and QBAB.QABANK_ISCORRECT = 'F' and QBAB.QABANK_QUESITON_ID = "+Question_id+" ORDER BY DBMS_RANDOM.RANDOM) where ROWNUM <= "+no_of_incorrect+";");
+				.GetResultSet("Select * From (Select AB.* from CSC_Answerbank AB, CSC_QUESTIONBANK_ANSWERBANK QBAB where AB.ANSWERBANK_ID = QBAB.QABANK_ANSWER_ID and QBAB.QABANK_ISCORRECT = 'F' and QBAB.QABANK_QUESITON_ID = "
+						+ Question_id
+						+ " ORDER BY DBMS_RANDOM.RANDOM) where ROWNUM <= "
+						+ no_of_incorrect + ";");
 		try {
 			while (resultset.next()) {
 				answerBank = new AnswerBank();
@@ -364,7 +374,7 @@ public class OracleDataAdapter {
 		}
 		return listAnswerBank;
 	}
-	
+
 	// returns question answer bank
 	public ArrayList<QuestionBank_AnswerBank> GetQuestionAnswerBank() {
 		QuestionBank_AnswerBank questionAnswerBank = new QuestionBank_AnswerBank();
@@ -774,9 +784,9 @@ public class OracleDataAdapter {
 		}
 		return listExercise;
 	}
-	
-	public int InsertUserAttempSubmit(int exercise_id,double score, char IsSubmitted)
-	{
+
+	public int InsertUserAttempSubmit(int exercise_id, double score,
+			char IsSubmitted) {
 		ArrayList<Object> param = new ArrayList<Object>();
 		User user = LocalSession.GetCurrentUser();
 		try {
@@ -784,9 +794,8 @@ public class OracleDataAdapter {
 			param.add(exercise_id);
 			param.add(score);
 			param.add(IsSubmitted);
-			int returnvalue = oracleDb
-					.ExecuteStoredProcedure4ParamOut(
-							"CSC_InsertUserAttempSubmit", param);
+			int returnvalue = oracleDb.ExecuteStoredProcedure4ParamOut(
+					"CSC_InsertUserAttempSubmit", param);
 			oracleDb.CloseConnection();
 			return returnvalue;
 		} catch (Exception e) {
@@ -794,6 +803,7 @@ public class OracleDataAdapter {
 		}
 		return -1;
 	}
+
 	public ArrayList<Exercise> GetActiveExerciseForCourse(int course_id) {
 		Exercise exercise = new Exercise();
 		ArrayList<Exercise> listExercise = new ArrayList<Exercise>();
@@ -801,10 +811,12 @@ public class OracleDataAdapter {
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		oracleDb.OpenConnection();
 		ResultSet resultset = oracleDb
-				.GetResultSet("Select EX.* from csc_exercise EX where EX.EXERCISE_RETRYLIMIT > ANY (Select count(ATTEMP_ID) From csc_user_attempt UA1 where UA1.UA_EXERCISE_ID = EX.EXERCISE_ID and UA1.UA_USER_ID = "+user.UserId+") and TRUNC(EX.EXERCISE_STARTDATE) <= TRUNC(SYSDATE) AND TRUNC(EX.EXERCISE_ENDDATE) >= TRUNC(SYSDATE) AND EXERCISE_COURSE = "+course_id+";");
+				.GetResultSet("Select EX.* from csc_exercise EX where EX.EXERCISE_RETRYLIMIT > ANY (Select count(ATTEMP_ID) From csc_user_attempt UA1 where UA1.UA_EXERCISE_ID = EX.EXERCISE_ID and UA1.UA_USER_ID = "
+						+ user.UserId
+						+ ") and TRUNC(EX.EXERCISE_STARTDATE) <= TRUNC(SYSDATE) AND TRUNC(EX.EXERCISE_ENDDATE) >= TRUNC(SYSDATE) AND EXERCISE_COURSE = "
+						+ course_id + ";");
 		try {
-			if(resultset == null)
-			{
+			if (resultset == null) {
 				return listExercise;
 			}
 			while (resultset.next()) {
@@ -849,13 +861,14 @@ public class OracleDataAdapter {
 		}
 		return listExercise;
 	}
-	
+
 	public Exercise GetExercise(int exerciseId) {
 		Exercise exercise = new Exercise();
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		oracleDb.OpenConnection();
 		ResultSet resultset = oracleDb
-				.GetResultSet("Select * from CSC_EXERCISE where EXERCISE_ID="+exerciseId);
+				.GetResultSet("Select * from CSC_EXERCISE where EXERCISE_ID="
+						+ exerciseId);
 		try {
 			while (resultset.next()) {
 				exercise = new Exercise();
@@ -898,35 +911,44 @@ public class OracleDataAdapter {
 		}
 		return exercise;
 	}
-	
-	public boolean UpdateExerciseDetails(Exercise exercise)
-	{
+
+	public boolean UpdateExerciseDetails(Exercise exercise) {
 		oracleDb.OpenConnection();
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-dd");
-		String query = "UPDATE CSC_EXERCISE SET "
-				+ "EXERCISE_NAME='"+ exercise.EXERCISE_NAME
-				+ "',EXERCISE_COURSE="+ exercise.EXERCISE_COURSE
-				+ ",EXERCISE_DIFFICULTY_RANGE1="+ exercise.EXERCISE_DIFFICULTY_RANGE1
-				+ ",EXERCISE_DIFFICULTY_RANGE2="+ exercise.EXERCISE_DIFFICULTY_RANGE2
-				+ ",EXERCISE_RETRYLIMIT="+ exercise.EXERCISE_RETRYLIMIT
-				+ ",EXERCISE_CORRECTPT="+ exercise.EXERCISE_CORRECTPT 
-				+ ",EXERCISE_PENALTYPT="+ exercise.EXERCISE_PENALTYPT 
-				+ ",EXERCISE_SCORINGTYPE="+ exercise.EXERCISE_SCORINGTYPE 
-				+ ",EXERCISE_CREATEDBY="+ exercise.EXERCISE_CREATEDBY
-				+ ",EXERCISE_MODIFIEDBY="+ exercise.EXERCISE_CREATEDBY
-				+ ",EXERCISE_STARTDATE='"+ simpleDateFormat.format(exercise.EXERCISE_STARTDATE)
-				+ "',EXERCISE_ENDDATE='"+ simpleDateFormat.format(exercise.EXERCISE_ENDDATE)
-				+ "',EXERCISE_LASTMODIFIEDDATE=TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS') WHERE EXERCISE_ID="+exercise.EXERCISE_ID;
+		String query = "UPDATE CSC_EXERCISE SET " + "EXERCISE_NAME='"
+				+ exercise.EXERCISE_NAME
+				+ "',EXERCISE_COURSE="
+				+ exercise.EXERCISE_COURSE
+				+ ",EXERCISE_DIFFICULTY_RANGE1="
+				+ exercise.EXERCISE_DIFFICULTY_RANGE1
+				+ ",EXERCISE_DIFFICULTY_RANGE2="
+				+ exercise.EXERCISE_DIFFICULTY_RANGE2
+				+ ",EXERCISE_RETRYLIMIT="
+				+ exercise.EXERCISE_RETRYLIMIT
+				+ ",EXERCISE_CORRECTPT="
+				+ exercise.EXERCISE_CORRECTPT
+				+ ",EXERCISE_PENALTYPT="
+				+ exercise.EXERCISE_PENALTYPT
+				+ ",EXERCISE_SCORINGTYPE="
+				+ exercise.EXERCISE_SCORINGTYPE
+				+ ",EXERCISE_CREATEDBY="
+				+ exercise.EXERCISE_CREATEDBY
+				+ ",EXERCISE_MODIFIEDBY="
+				+ exercise.EXERCISE_CREATEDBY
+				+ ",EXERCISE_STARTDATE='"
+				+ simpleDateFormat.format(exercise.EXERCISE_STARTDATE)
+				+ "',EXERCISE_ENDDATE='"
+				+ simpleDateFormat.format(exercise.EXERCISE_ENDDATE)
+				+ "',EXERCISE_LASTMODIFIEDDATE=TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS') WHERE EXERCISE_ID="
+				+ exercise.EXERCISE_ID;
 		try {
 			return oracleDb.InsertQuery(query);
-		}
-		catch(Exception e)
-		{
-			
+		} catch (Exception e) {
+
 		}
 		return false;
 	}
-	
+
 	public int InsertExerciseDetails(Exercise exercise) {
 
 		oracleDb.OpenConnection();
@@ -942,8 +964,8 @@ public class OracleDataAdapter {
 				+ exercise.EXERCISE_SCORINGTYPE + "','"
 				+ exercise.EXERCISE_CREATEDBY + "','"
 				+ exercise.EXERCISE_CREATEDBY + "','";
-		query = query + simpleDateFormat.format(exercise.EXERCISE_STARTDATE) + "','"
-				+ simpleDateFormat.format(exercise.EXERCISE_ENDDATE)
+		query = query + simpleDateFormat.format(exercise.EXERCISE_STARTDATE)
+				+ "','" + simpleDateFormat.format(exercise.EXERCISE_ENDDATE)
 				+ "',TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS'))";
 		int retval = 0;
 		try {
@@ -1145,7 +1167,7 @@ public class OracleDataAdapter {
 		oracleDb.OpenConnection();
 		ResultSet resultset = oracleDb
 				.GetResultSet("Select * from  CSC_QuestionBank where QUESTIONBANK_ID in(select EA_QUESTION_ID from CSC_EXERCISE_QUESTION where EA_EXERCISE_ID="
-						+ EA_EXERCISE_ID+")");
+						+ EA_EXERCISE_ID + ")");
 		try {
 			while (resultset.next()) {
 				questionBank = new QuestionBank();
@@ -1165,8 +1187,9 @@ public class OracleDataAdapter {
 						.getInt("QUESTIONBANK_CREATEDBY");
 				questionBank.QUESTIONBANK_MODIFIEDBY = resultset
 						.getInt("QUESTIONBANK_MODIFIEDBY");
-				questionBank.CSC_QB_IS_PARAMETERIZED = resultset
-						.getString("CSC_QB_IS_PARAMETERIZED").equalsIgnoreCase("f")?false:true;
+				questionBank.CSC_QB_IS_PARAMETERIZED = resultset.getString(
+						"CSC_QB_IS_PARAMETERIZED").equalsIgnoreCase("f") ? false
+						: true;
 				questionBank.CSC_QUESTIONBANK_TOPIC_ID = resultset
 						.getInt("CSC_QUESTIONBANK_TOPIC_ID");
 				try {
@@ -1222,16 +1245,20 @@ public class OracleDataAdapter {
 	}
 
 	public ArrayList<UserAttempt> GetUserAttemptFromCourse(int course_id) {
-		
+
 		User user = LocalSession.GetCurrentUser();
 		UserAttempt userAttempt = new UserAttempt();
 		ArrayList<UserAttempt> listUserAttempt = new ArrayList<UserAttempt>();
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		oracleDb.OpenConnection();
 		ResultSet resultset = oracleDb
-				.GetResultSet("select * from CSC_USER_ATTEMPT UT,CSC_EXERCISE EX where UT.UA_EXERCISE_ID = EX.EXERCISE_ID and EX.EXERCISE_COURSE = "+course_id+" and UT.UA_USER_ID = "+user.UserId+";");
+				.GetResultSet("select * from CSC_USER_ATTEMPT UT,CSC_EXERCISE EX where UT.UA_EXERCISE_ID = EX.EXERCISE_ID and EX.EXERCISE_COURSE = "
+						+ course_id
+						+ " and UT.UA_USER_ID = "
+						+ user.UserId
+						+ ";");
 		try {
-			if(resultset == null) {
+			if (resultset == null) {
 				return listUserAttempt;
 			}
 			while (resultset.next()) {
@@ -1259,7 +1286,7 @@ public class OracleDataAdapter {
 		}
 		return listUserAttempt;
 	}
-	
+
 	public ArrayList<UserAttemptExercise> GetUserAttemptExercise() {
 		UserAttemptExercise userAttemptExercise = new UserAttemptExercise();
 		ArrayList<UserAttemptExercise> listUserAttemptExercise = new ArrayList<UserAttemptExercise>();
@@ -1561,26 +1588,28 @@ public class OracleDataAdapter {
 		}
 		return listExerciseTopic;
 	}
+
 	public boolean InsertExerciseTopic(Exercise exercise, Topic topic) {
 
-		
 		String query = "DELETE FROM  CSC_EXERCISE_TOPIC where  CSC_EXERCISE_TOPIC_EXERCISE_ID="
 				+ exercise.EXERCISE_ID;
 		ResultSet resultset = oracleDb.GetResultSet(query);
 
 		query = "INSERT INTO CSC_EXERCISE_TOPIC (CSC_EXERCISE_TOPIC_SURR_KEY ,CSC_EXERCISE_TOPIC_TOPIC_ID,CSC_EXERCISE_TOPIC_EXERCISE_ID) values(";
-		query = query + "CSC_EXERCISE_TOPIC_SEQUENCE.NextVal,"
-				+ topic.TOPIC_ID + "," + exercise.EXERCISE_ID;
+		query = query + "CSC_EXERCISE_TOPIC_SEQUENCE.NextVal," + topic.TOPIC_ID
+				+ "," + exercise.EXERCISE_ID;
 		query = query + ")";
 		return oracleDb.InsertQuery(query);
 	}
+
 	public ArrayList<Exercise> GetExerciseForCourseId(int courseId) {
 		Exercise exercise = new Exercise();
 		ArrayList<Exercise> listExercise = new ArrayList<Exercise>();
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		oracleDb.OpenConnection();
 		ResultSet resultset = oracleDb
-				.GetResultSet("select * from CSC_EXERCISE where  EXERCISE_COURSE="+courseId);
+				.GetResultSet("select * from CSC_EXERCISE where  EXERCISE_COURSE="
+						+ courseId);
 		try {
 			while (resultset.next()) {
 				exercise = new Exercise();
@@ -1623,5 +1652,34 @@ public class OracleDataAdapter {
 			oracleDb.CloseConnection();
 		}
 		return listExercise;
+	}
+
+	/**
+	 * @param course
+	 */
+	public boolean InsertCourse(Course course) {
+		SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyy-MM-dd");
+		String query = "SELECT * FROM CSC_COURSE where CSC_COURSE_TOKEN ='"
+				+ course.CSC_COURSE_token + "'";
+		ResultSet resultset = oracleDb.GetResultSet(query);
+		try {
+			if (!resultset.next()) {
+				query = "INSERT INTO CSC_COURSE (CSC_COURSE_COURSE_NAME ,CSC_COURSE_STARTDATE,CSC_COURSE_ENDDATE,CSC_COURSE_MAX_ENROLL_NO,CSC_COURSE_NUMBER_OF_STUDENTS,CSC_COURSE_TOKEN) "
+						+ "values('"+course.CSC_COURSE_Course_Name+"',"
+						+ "'"+simpleDateFormat.format(course.CSC_COURSE_StartDate)+"',"
+						+ "'"+simpleDateFormat.format(course.CSC_COURSE_EndDate)+"',"
+						+ ""+(course.CSC_COURSE_Max_Enroll_No)+","
+						+ ""+(course.CSC_COURSE_Number_Of_Students)+","
+						+ "'"+(course.CSC_COURSE_token)+"'"
+								+ ")";
+				return oracleDb.InsertQuery(query);
+			}
+			else
+				return false;
+		} catch (Exception e) {
+
+		}
+		return false;
+		
 	}
 }

@@ -131,16 +131,16 @@ public class AttemptExercise {
 			}
 		});
 
-		JButton btnSave = new JButton("Save");
-		btnSave.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				frame.setVisible(false);
-				ExerciseData.saveExercise(exerciseQuestions, exerciseList.get(index));
-				new Home();
-			}
-		});
-		btnSave.setBounds(12, 107, 187, 33);
-		panel_Bottom.add(btnSave);
+//		JButton btnSave = new JButton("Save");
+//		btnSave.addActionListener(new ActionListener() {
+//			public void actionPerformed(ActionEvent arg0) {
+//				frame.setVisible(false);
+//				ExerciseData.saveExercise(exerciseQuestions, exerciseList.get(index));
+//				new Home();
+//			}
+//		});
+//		btnSave.setBounds(12, 107, 187, 33);
+//		panel_Bottom.add(btnSave);
 
 		JButton btnSubmit = new JButton("Submit");
 		btnSubmit.addActionListener(new ActionListener() {
@@ -194,5 +194,7 @@ public class AttemptExercise {
 				}
 			}
 		}
+		
+		ExerciseData.saveExercise(exerciseQuestions, exercise);
 	}
 }

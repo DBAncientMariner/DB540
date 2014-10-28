@@ -70,7 +70,15 @@ public class ExerciseData {
 	}
 	
 	public static void saveExercise(List<Question> exerciseQuestions, Exercise exercise) {
-		
+		double score = 0;
+		OracleDataAdapter adp = new OracleDataAdapter();
+		int uaId = adp.InsertUserAttempSubmit(exercise.EXERCISE_ID, score);
+		for (Question question : exerciseQuestions) {
+			List<Options> options = question.getOptions();
+			for (Options op : options) {
+				OracleDataAdapter1.InsertIntoUserAttempExercise(uaId, question.getQuestionId(), op.getAnswerId(), 'f');
+			}
+		}
 	}
 	
 	public static void submitExercise(List<Question> exerciseQuestions, Exercise exercise) {

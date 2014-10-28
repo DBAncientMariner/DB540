@@ -23,6 +23,7 @@ values (CSC_USER_SEQUENCE .nextval,'mfiser','Michal','Fiser','mfiser@ncsu.edu','
 insert into csc_user (user_id,user_id_char,USER_FNAME,USER_LNAME,USER_EMAIL,USER_PASSWORD)
 values (CSC_USER_SEQUENCE .nextval,'jander','Joseph','Anderson','jander@ncsu.edu','jander');
 
+
 insert into csc_user (user_id,user_id_char,USER_FNAME,USER_LNAME,USER_EMAIL,USER_PASSWORD)
 values (CSC_USER_SEQUENCE .nextval,'jHarla','Jitendra','Harlalka','jHarla@ncsu.edu','jHarla');
 
@@ -667,5 +668,3 @@ VALUES (CSC_EXERCISE_QUESTION_SEQUENCE.nextval,1,2,'F');
 
 INSERT INTO CSC_EXERCISE_QUESTION(EA_ID,EA_EXERCISE_ID,EA_QUESTION_ID,EA_QUES_IS_PARM)
 VALUES (CSC_EXERCISE_QUESTION_SEQUENCE.nextval,1,1,'T');
-
-Update csc_exercise SET EXERCISE_RETRYLIMIT = 1000 where EXERCISE_RETRYLIMIT = -1;

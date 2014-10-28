@@ -32,3 +32,23 @@ IF var_count = 0 THEN
   commit;
 END IF;
 END;
+
+CREATE OR REPLACE
+PROCEDURE CSC_InsertUserAttempSubmit
+( user_id IN number,
+exercise_id IN number,
+score IN Number,
+var_UA_surr_key OUT NUMBER
+)
+AS
+var_attemp_id number;
+var_no_of_attemp number;
+BEGIN
+Select count(*) INTO var_no_of_attemp from CSC_USER_ATTEMPT
+where UA_USER_ID = user_id
+and UA_EXERCISE_ID = exercise_id;
+var_attemp_id := var_no_of_attemp+1;
+INSERT INTO CSC_USER_ATTEMPT (UA_ID,UA_USER_ID ,UA_EXERCISE_ID ,UA_STARTATTEMPT_DATE ,UA_SUBMITTED ,UA_SCORE,ATTEMP_ID)
+VALUES(CSC_USER_ATTEMPT_SEQUENCE.nextval,user_id,exercise_id,SYSDATE,'T',score,var_attemp_id);
+var_UA_surr_key := CSC_USER_ATTEMPT_SEQUENCE.currval;
+END;

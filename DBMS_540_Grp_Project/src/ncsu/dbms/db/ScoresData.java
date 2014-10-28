@@ -26,8 +26,7 @@ public class ScoresData {
 //		ua3.setUA_ID(1);
 //		allAttempts.add(ua3);
 		
-		int cnum = LocalSession.GetCurrentSelectedCourse();
-		Course course = LocalSession.CourseListModel.get(cnum);
+		Course course = LocalSession.getCurrentSelectedCourseObject();
 		OracleDataAdapter adp = new OracleDataAdapter();
 		List<UserAttempt> allAttempts = adp.GetUserAttemptFromCourse(course.CSC_COURSE_Course_ID);
 		return allAttempts;

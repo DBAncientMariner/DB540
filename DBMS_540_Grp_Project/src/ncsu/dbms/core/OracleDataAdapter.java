@@ -775,9 +775,23 @@ public class OracleDataAdapter {
 		return listExercise;
 	}
 	
-	public boolean InsertUser_Submit(int exercise_id,Date StartDate, )
+	public int InsertUserAttempSubmit(int exercise_id,double score)
 	{
-		ArrayList<Object>
+		ArrayList<Object> param = new ArrayList<Object>();
+		User user = LocalSession.GetCurrentUser();
+		try {
+			param.add(user.UserId);
+			param.add(exercise_id);
+			param.add(score);
+			int returnvalue = oracleDb
+					.ExecuteStoredProcedure3ParamOut(
+							"CSC_InsertUserAttempSubmit", param);
+			oracleDb.CloseConnection();
+			return returnvalue;
+		} catch (Exception e) {
+
+		}
+		return -1;
 	}
 	public ArrayList<Exercise> GetActiveExerciseForCourse(int course_id) {
 		Exercise exercise = new Exercise();

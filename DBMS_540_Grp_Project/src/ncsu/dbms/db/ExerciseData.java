@@ -10,6 +10,7 @@ import ncsu.dbms.core.Exercise;
 import ncsu.dbms.core.LocalSession;
 import ncsu.dbms.core.Options;
 import ncsu.dbms.core.OracleDataAdapter;
+import ncsu.dbms.core.OracleDataAdapter1;
 import ncsu.dbms.core.Question;
 import ncsu.dbms.core.QuestionBank;
 
@@ -73,7 +74,19 @@ public class ExerciseData {
 	}
 	
 	public static void submitExercise(List<Question> exerciseQuestions, Exercise exercise) {
-		
+		double score = calculateScore(exerciseQuestions, exercise);
+		OracleDataAdapter adp = new OracleDataAdapter();
+		int uaId = adp.InsertUserAttempSubmit(exercise.EXERCISE_ID, score);
+		for (Question question : exerciseQuestions) {
+			List<Options> options = question.getOptions();
+			for (Options op : options) {
+				if(op.isMarked()) {
+					OracleDataAdapter1.InsertIntoUserAttempExercise(uaId, question.getQuestionId(), op.getAnswerId(), 't');
+				} else {
+					OracleDataAdapter1.InsertIntoUserAttempExercise(uaId, question.getQuestionId(), op.getAnswerId(), 'f');
+				}
+			}
+		}
 	}
 	
 	public static double calculateScore(List<Question> exerciseQuestions, Exercise exercise) {

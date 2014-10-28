@@ -1,6 +1,6 @@
 package ncsu.dbms.core;
 
-public class OracleDataAdabtor1 {
+public class OracleDataAdapter1 {
 
 	
 	public static boolean InsertIntoUserAttempExercise(int ua_id,int Q_id, int A_id,char is_select)

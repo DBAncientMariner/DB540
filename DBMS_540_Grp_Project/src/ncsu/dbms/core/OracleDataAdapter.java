@@ -294,8 +294,11 @@ public class OracleDataAdapter {
 		List<AnswerBank> listAnswerBank = new LinkedList<AnswerBank>();
 		oracleDb.OpenConnection();
 		ResultSet resultset = oracleDb
-				.GetResultSet("Select * From (Select AB.* from CSC_Answerbank AB, CSC_QUESTIONBANK_ANSWERBANK QBAB where AB.ANSWERBANK_ID = QBAB.QABANK_ANSWER_ID and QBAB.QABANK_ISCORRECT = 'T' and QBAB.QABANK_QUESITON_ID = "+Question_id+" ORDER BY DBMS_RANDOM.RANDOM) where ROWNUM <= "+no_of_correct+";");
+				.GetResultSet("Select * From (Select AB.* from CSC_Answerbank AB, CSC_QUESTIONBANK_ANSWERBANK QBAB where AB.ANSWERBANK_ID = QBAB.QABANK_ANSWER_ID and QBAB.QABANK_ISCORRECT = 'T' and QBAB.QABANK_QUESITON_ID = "+Question_id+" ORDER BY DBMS_RANDOM.RANDOM) where ROWNUM <= "+no_of_correct);
 		try {
+			if(resultset == null) {
+				return listAnswerBank;
+			}
 			while (resultset.next()) {
 				answerBank = new AnswerBank();
 				SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
@@ -332,8 +335,11 @@ public class OracleDataAdapter {
 		ArrayList<AnswerBank> listAnswerBank = new ArrayList<AnswerBank>();
 		oracleDb.OpenConnection();
 		ResultSet resultset = oracleDb
-				.GetResultSet("Select * From (Select AB.* from CSC_Answerbank AB, CSC_QUESTIONBANK_ANSWERBANK QBAB where AB.ANSWERBANK_ID = QBAB.QABANK_ANSWER_ID and QBAB.QABANK_ISCORRECT = 'F' and QBAB.QABANK_QUESITON_ID = "+Question_id+" ORDER BY DBMS_RANDOM.RANDOM) where ROWNUM <= "+no_of_incorrect+";");
+				.GetResultSet("Select * From (Select AB.* from CSC_Answerbank AB, CSC_QUESTIONBANK_ANSWERBANK QBAB where AB.ANSWERBANK_ID = QBAB.QABANK_ANSWER_ID and QBAB.QABANK_ISCORRECT = 'F' and QBAB.QABANK_QUESITON_ID = "+Question_id+" ORDER BY DBMS_RANDOM.RANDOM) where ROWNUM <= "+no_of_incorrect);
 		try {
+			if(resultset == null) {
+				return listAnswerBank;
+			}
 			while (resultset.next()) {
 				answerBank = new AnswerBank();
 				SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
@@ -775,7 +781,7 @@ public class OracleDataAdapter {
 		return listExercise;
 	}
 	
-	public int InsertUserAttempSubmit(int exercise_id,double score, char IsSubmitted)
+	public int InsertUserAttempSubmit(int exercise_id,double score, String IsSubmitted)
 	{
 		ArrayList<Object> param = new ArrayList<Object>();
 		User user = LocalSession.GetCurrentUser();
@@ -794,14 +800,37 @@ public class OracleDataAdapter {
 		}
 		return -1;
 	}
+	
+	public int UpdateUserAttempSubmit(int exercise_id,double score, String IsSubmitted)
+	{
+		ArrayList<Object> param = new ArrayList<Object>();
+		User user = LocalSession.GetCurrentUser();
+		try {
+			param.add(user.UserId);
+			param.add(exercise_id);
+			param.add(score);
+			param.add(IsSubmitted);
+			int returnvalue = oracleDb
+					.ExecuteStoredProcedure4ParamOut(
+							"CSC_InsertUserAttempt_final", param);
+			oracleDb.CloseConnection();
+			return returnvalue;
+		} catch (Exception e) {
+
+		}
+		return -1;
+	}
 	public ArrayList<Exercise> GetActiveExerciseForCourse(int course_id) {
 		Exercise exercise = new Exercise();
 		ArrayList<Exercise> listExercise = new ArrayList<Exercise>();
 		User user = LocalSession.GetCurrentUser();
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		oracleDb.OpenConnection();
+		
+		int uid = user.UserId;
+		String query="Select EX.* from csc_exercise EX where EX.EXERCISE_RETRYLIMIT > ANY (Select count(ATTEMP_ID) From csc_user_attempt UA1 where UA1.UA_EXERCISE_ID = EX.EXERCISE_ID and UA1.UA_USER_ID = "+uid+") and TRUNC(EX.EXERCISE_STARTDATE) <= TRUNC(SYSDATE) AND TRUNC(EX.EXERCISE_ENDDATE) >= TRUNC(SYSDATE) AND EXERCISE_COURSE ="+ course_id;
 		ResultSet resultset = oracleDb
-				.GetResultSet("Select EX.* from csc_exercise EX where EX.EXERCISE_RETRYLIMIT > ANY (Select count(ATTEMP_ID) From csc_user_attempt UA1 where UA1.UA_EXERCISE_ID = EX.EXERCISE_ID and UA1.UA_USER_ID = "+user.UserId+") and TRUNC(EX.EXERCISE_STARTDATE) <= TRUNC(SYSDATE) AND TRUNC(EX.EXERCISE_ENDDATE) >= TRUNC(SYSDATE) AND EXERCISE_COURSE = "+course_id+";");
+				.GetResultSet(query);
 		try {
 			if(resultset == null)
 			{
@@ -1144,8 +1173,7 @@ public class OracleDataAdapter {
 		ArrayList<QuestionBank> listQuestionBank = new ArrayList<QuestionBank>();
 		oracleDb.OpenConnection();
 		ResultSet resultset = oracleDb
-				.GetResultSet("Select * from  CSC_QuestionBank where QUESTIONBANK_ID in(select EA_QUESTION_ID from CSC_EXERCISE_QUESTION where EA_EXERCISE_ID="
-						+ EA_EXERCISE_ID+")");
+				.GetResultSet("Select * from  CSC_QuestionBank where QUESTIONBANK_ID in(select EA_QUESTION_ID from CSC_EXERCISE_QUESTION where EA_EXERCISE_ID="+ EA_EXERCISE_ID+")");
 		try {
 			while (resultset.next()) {
 				questionBank = new QuestionBank();

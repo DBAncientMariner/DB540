@@ -73,7 +73,7 @@ public class OracleDb {
 		}
 		return ResultSet;
 	}
-
+	
 	public boolean InsertQuery(String query) {
 		try {
 			if (OpenConnection()) {
@@ -164,12 +164,13 @@ public class OracleDb {
 			    proc.registerOutParameter(5, Types.INTEGER);
 			    proc.execute();
 				Conn.commit();
-				int retval = proc.getInt(1);
+				int retval = proc.getInt(5);
 				return retval;
 			}
 		}
 		catch (SQLException e)
 		{
+			e.printStackTrace();
 		    return -1;
 		}
 		

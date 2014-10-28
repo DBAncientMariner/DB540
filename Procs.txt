@@ -38,6 +38,7 @@ PROCEDURE CSC_InsertUserAttempSubmit
 ( user_id IN number,
 exercise_id IN number,
 score IN Number,
+Is_Submitted IN char,
 var_UA_surr_key OUT NUMBER
 )
 AS
@@ -49,6 +50,31 @@ where UA_USER_ID = user_id
 and UA_EXERCISE_ID = exercise_id;
 var_attemp_id := var_no_of_attemp+1;
 INSERT INTO CSC_USER_ATTEMPT (UA_ID,UA_USER_ID ,UA_EXERCISE_ID ,UA_STARTATTEMPT_DATE ,UA_SUBMITTED ,UA_SCORE,ATTEMP_ID)
-VALUES(CSC_USER_ATTEMPT_SEQUENCE.nextval,user_id,exercise_id,SYSDATE,'T',score,var_attemp_id);
+VALUES(CSC_USER_ATTEMPT_SEQUENCE.nextval,user_id,exercise_id,SYSDATE,Is_Submitted,score,var_attemp_id);
 var_UA_surr_key := CSC_USER_ATTEMPT_SEQUENCE.currval;
+END;
+
+CREATE OR REPLACE
+PROCEDURE CSC_InsertUserAttempt_final
+( user_id IN number,
+exercise_id IN number,
+score IN Number,
+Is_Submitted IN char,
+var_UA_surr_key OUT NUMBER
+)
+AS
+var_attemp_id number;
+var_no_of_attemp number;
+BEGIN
+
+Select UA_ID INTO var_UA_surr_key From CSC_USER_ATTEMPT
+where UA_EXERCISE_ID  = exercise_id
+and UA_USER_ID = user_id
+and UA_SUBMITTED = 'F';
+
+Update CSC_USER_ATTEMPT SET UA_SUBMITTED = Is_Submitted , UA_SCORE  = score
+where UA_EXERCISE_ID  = exercise_id
+and UA_USER_ID = user_id
+and UA_SUBMITTED = 'F';
+
 END;

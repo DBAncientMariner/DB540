@@ -72,7 +72,7 @@ public class ExerciseData {
 	public static void saveExercise(List<Question> exerciseQuestions, Exercise exercise) {
 		double score = 0;
 		OracleDataAdapter adp = new OracleDataAdapter();
-		int uaId = adp.InsertUserAttempSubmit(exercise.EXERCISE_ID, score, 'F');
+		int uaId = adp.InsertUserAttempSubmit(exercise.EXERCISE_ID, score, "F");
 		for (Question question : exerciseQuestions) {
 			List<Options> options = question.getOptions();
 			for (Options op : options) {
@@ -84,14 +84,14 @@ public class ExerciseData {
 	public static void submitExercise(List<Question> exerciseQuestions, Exercise exercise) {
 		double score = calculateScore(exerciseQuestions, exercise);
 		OracleDataAdapter adp = new OracleDataAdapter();
-		int uaId = adp.InsertUserAttempSubmit(exercise.EXERCISE_ID, score, 'T');
+		int uaId = adp.UpdateUserAttempSubmit(exercise.EXERCISE_ID, score, "T");
 		for (Question question : exerciseQuestions) {
 			List<Options> options = question.getOptions();
 			for (Options op : options) {
 				if(op.isMarked()) {
-					OracleDataAdapter1.InsertIntoUserAttempExercise(uaId, question.getQuestionId(), op.getAnswerId(), 'T');
+					OracleDataAdapter1.UpdateIntoUserAttempExercise(uaId, question.getQuestionId(), op.getAnswerId(), 'T');
 				} else {
-					OracleDataAdapter1.InsertIntoUserAttempExercise(uaId, question.getQuestionId(), op.getAnswerId(), 'F');
+					OracleDataAdapter1.UpdateIntoUserAttempExercise(uaId, question.getQuestionId(), op.getAnswerId(), 'F');
 				}
 			}
 		}

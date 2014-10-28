@@ -775,7 +775,7 @@ public class OracleDataAdapter {
 		return listExercise;
 	}
 	
-	public int InsertUserAttempSubmit(int exercise_id,double score)
+	public int InsertUserAttempSubmit(int exercise_id,double score, char IsSubmitted)
 	{
 		ArrayList<Object> param = new ArrayList<Object>();
 		User user = LocalSession.GetCurrentUser();
@@ -783,8 +783,9 @@ public class OracleDataAdapter {
 			param.add(user.UserId);
 			param.add(exercise_id);
 			param.add(score);
+			param.add(IsSubmitted);
 			int returnvalue = oracleDb
-					.ExecuteStoredProcedure3ParamOut(
+					.ExecuteStoredProcedure4ParamOut(
 							"CSC_InsertUserAttempSubmit", param);
 			oracleDb.CloseConnection();
 			return returnvalue;

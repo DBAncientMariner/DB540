@@ -113,8 +113,10 @@ public class Home {
 		btnAddHomework.setBounds(12, 200, 187, 33);
 		btnAddHomework.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				AddHomework addHomework = new AddHomework();
-				addHomework.setVisible(true);
+				ListHomework listHomework=new ListHomework();
+				listHomework.setVisible(true);
+				//AddHomework addHomework = new AddHomework();
+				//addHomework.setVisible(true);
 				frame.setVisible(false);
 			}
 		});

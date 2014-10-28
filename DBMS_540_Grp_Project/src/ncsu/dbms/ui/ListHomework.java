@@ -8,6 +8,7 @@ import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -21,6 +22,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import ncsu.dbms.core.*;
+
 /**
  * @author ravi
  *
@@ -28,11 +30,12 @@ import ncsu.dbms.core.*;
 public class ListHomework extends JFrame {
 
 	private JPanel contentPane;
-	private JPanel panel_Right;
+	final JPanel panel_Right = new JPanel();
 	JList jListHomework;
 	OracleDataAdapter oracleDataAdapter = new OracleDataAdapter();
 	DefaultListModel listModelHomework = new DefaultListModel();
-	ArrayList<Exercise> listExercise=new ArrayList<Exercise>();
+	ArrayList<Exercise> listExercise = new ArrayList<Exercise>();
+
 	/**
 	 * Create the frame.
 	 */
@@ -116,29 +119,58 @@ public class ListHomework extends JFrame {
 		panel_Center.add(btn_Notification);
 		DisplayAllHomework();
 	}
-	public void DisplayAllHomework()
-	{
+
+	public void DisplayAllHomework() {
 		JLabel lbl_topics = new JLabel("Select Homework");
-		lbl_topics.setBounds(10, 215, 100, 25);
+		lbl_topics.setBounds(10, 10, 100, 25);
 		panel_Right.add(lbl_topics);
 
-		GetAllTopics();
+		GetAllExerciseForCurrentCourse();
 		jListHomework = new JList(listModelHomework);
 		jListHomework.addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent arg0) {
-				
+
 			}
 		});
-		jListHomework
-				.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-		jListHomework.setBounds(10,10, 600, 600);
+		jListHomework.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		jListHomework.setBounds(10, 40, 500, 400);
 		panel_Right.add(jListHomework);
 
+		JButton btn_EditButton = new JButton("Edit");
+		btn_EditButton.setBounds(550, 50, 80, 33);
+		btn_EditButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if (jListHomework.getSelectedIndex() != 0) {
+					if(jListHomework.getSelectedIndex()!=-1)
+					{
+						int exerciseId = listExercise.get(jListHomework
+								.getSelectedIndex()).EXERCISE_ID;
+						if (User.IsFaculty(LocalSession.GetCurrentUser())) {
+							AddHomework addHomework = new AddHomework(exerciseId,
+									true);
+							addHomework.setVisible(true);
+							setVisible(false);
+						} else if (User.IsTA(LocalSession.GetCurrentUser())) {
+							AddHomework addHomework = new AddHomework(exerciseId,
+									false);
+							addHomework.setVisible(true);
+							setVisible(false);
+						}
+					}
+				}
+			}
+		});
+		panel_Right.add(btn_EditButton);
+
 	}
-	public void GetAllExerciseForCourse(int courseId)
-	{
-		ArrayList<Exercise> listExercise=new ArrayList<Exercise>();
-		oracleDatabase
+
+	public void GetAllExerciseForCurrentCourse() {
+
+		listExercise = oracleDataAdapter.GetExerciseForCourseId(LocalSession
+				.getCurrentSelectedCourseObject().CSC_COURSE_Course_ID);
+		for (Exercise exercise : listExercise) {
+			listModelHomework.addElement(exercise.EXERCISE_NAME);
+		}
 	}
 
 }

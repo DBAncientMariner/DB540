@@ -1573,4 +1573,54 @@ public class OracleDataAdapter {
 		query = query + ")";
 		return oracleDb.InsertQuery(query);
 	}
+	public ArrayList<Exercise> GetExerciseForCourseId(int courseId) {
+		Exercise exercise = new Exercise();
+		ArrayList<Exercise> listExercise = new ArrayList<Exercise>();
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		oracleDb.OpenConnection();
+		ResultSet resultset = oracleDb
+				.GetResultSet("select * from CSC_EXERCISE where  EXERCISE_COURSE="+courseId);
+		try {
+			while (resultset.next()) {
+				exercise = new Exercise();
+
+				exercise.EXERCISE_ID = resultset.getInt("EXERCISE_ID");
+				exercise.EXERCISE_NAME = resultset.getString("EXERCISE_NAME");
+				exercise.EXERCISE_COURSE = resultset.getInt("EXERCISE_COURSE");
+				exercise.EXERCISE_NAME = resultset.getString("EXERCISE_NAME");
+				exercise.EXERCISE_DIFFICULTY_RANGE1 = resultset
+						.getInt("EXERCISE_DIFFICULTY_RANGE1");
+				exercise.EXERCISE_DIFFICULTY_RANGE2 = resultset
+						.getInt("EXERCISE_DIFFICULTY_RANGE2");
+				exercise.EXERCISE_RETRYLIMIT = resultset
+						.getInt("EXERCISE_RETRYLIMIT");
+				exercise.EXERCISE_CORRECTPT = resultset
+						.getInt("EXERCISE_CORRECTPT");
+				exercise.EXERCISE_PENALTYPT = resultset
+						.getInt("EXERCISE_PENALTYPT");
+				exercise.EXERCISE_SCORINGTYPE = resultset
+						.getInt("EXERCISE_SCORINGTYPE");
+				exercise.EXERCISE_CREATEDBY = resultset
+						.getInt("EXERCISE_CREATEDBY");
+				exercise.EXERCISE_MODIFIEDBY = resultset
+						.getInt("EXERCISE_MODIFIEDBY");
+
+				try {
+					exercise.EXERCISE_STARTDATE = simpleDateFormat
+							.parse(resultset.getString("EXERCISE_STARTDATE"));
+					exercise.EXERCISE_ENDDATE = simpleDateFormat
+							.parse(resultset.getString("EXERCISE_ENDDATE"));
+					exercise.EXERCISE_LASTMODIFIEDDATE = simpleDateFormat
+							.parse(resultset
+									.getString("EXERCISE_LASTMODIFIEDDATE"));
+				} catch (Exception e) {
+				}
+				listExercise.add(exercise);
+			}
+		} catch (SQLException e) {
+		} finally {
+			oracleDb.CloseConnection();
+		}
+		return listExercise;
+	}
 }

@@ -114,7 +114,10 @@ public class AttemptExercise {
 		
 		final List<Exercise> exerciseList = ExerciseData.getExerciseList();
 		List<String> list = ExerciseData.getExerciseName(exerciseList);
-		
+		if(exerciseList == null || exerciseList.isEmpty())
+		{
+			list.add("No Active Exercise");
+		}
 		selectAssignment = new JComboBox<>(list.toArray());
 		selectAssignment.setBounds(12, 90, 187, 33);
 		selectAssignment.setSelectedIndex(index);
@@ -150,7 +153,9 @@ public class AttemptExercise {
 		btnSubmit.setBounds(12, 143, 187, 33);
 		panel_Bottom.add(btnSubmit);
 
-		openExercise(scrollpane, panel_Right, exerciseList.get(index));
+		if(exerciseList != null && !exerciseList.isEmpty()){
+			openExercise(scrollpane, panel_Right, exerciseList.get(index));
+		}
 		frame.getContentPane().add(scrollpane);
 		frame.setVisible(true);
 	}

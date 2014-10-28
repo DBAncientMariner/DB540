@@ -3,6 +3,7 @@ package ncsu.dbms.core;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -44,7 +45,7 @@ public class OracleDataAdapter1 {
 	public static List<UserAttemptExercise> GetUserAttemptExerciseForSaved(
 			int ExerciseId) {
 		UserAttemptExercise userAttemptExercise = new UserAttemptExercise();
-		List<UserAttemptExercise> listUserAttemptExercise = new LinkedList<UserAttemptExercise>();
+		List<UserAttemptExercise> listUserAttemptExercise = new ArrayList<UserAttemptExercise>();
 		User user = LocalSession.GetCurrentUser();
 		OracleDb oracleDb = new OracleDb();
 		oracleDb.OpenConnection();
@@ -55,6 +56,9 @@ public class OracleDataAdapter1 {
 						+ user.UserId
 						+ " and UA_SUBMITTED = 'F'");
 		try {
+			if(resultset == null) {
+				return listUserAttemptExercise;
+			}
 			while (resultset.next()) {
 				userAttemptExercise = new UserAttemptExercise();
 
@@ -63,8 +67,12 @@ public class OracleDataAdapter1 {
 						.getInt("UE_QUESTION_ID");
 				userAttemptExercise.UE_ANSWER_ID = resultset
 						.getInt("UE_ANSWER_ID");
-				userAttemptExercise.UE_ISSELECTED = resultset
-						.getBoolean("UE_ISSELECTED");
+				String selected = resultset.getString("UE_ISSELECTED");
+				if("t".equalsIgnoreCase(selected)) {
+					userAttemptExercise.UE_ISSELECTED = true;
+				} else {
+					userAttemptExercise.UE_ISSELECTED = false;
+				}
 				listUserAttemptExercise.add(userAttemptExercise);
 			}
 		} catch (SQLException e) {
@@ -98,7 +106,7 @@ public class OracleDataAdapter1 {
 				.GetResultSet("Select * from CSC_QUESTIONBANK where QUESTIONBANK_ID"
 						+ Q_id);
 		try {
-			while (resultset.next()) {
+			while (resultset != null && resultset.next()) {
 				questionBank = new QuestionBank();
 				SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
 						"yyyy-MM-dd");
@@ -133,9 +141,7 @@ public class OracleDataAdapter1 {
 				listQuestionBank.add(questionBank);
 			}
 		} catch (SQLException e) {
-		} finally {
-			oracleDb.CloseConnection();
-		}
+		} 
 		return listQuestionBank;
 	}
 
@@ -148,7 +154,7 @@ public class OracleDataAdapter1 {
 				.GetResultSet("Select * from CSC_ANSWERBANK where ANSWERBANK_ID="
 						+ A_id);
 		try {
-			while (resultset.next()) {
+			while (resultset != null && resultset.next()) {
 				answerBank = new AnswerBank();
 				SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
 						"yyyy-MM-dd");
@@ -173,9 +179,7 @@ public class OracleDataAdapter1 {
 				listAnswerBank.add(answerBank);
 			}
 		} catch (SQLException e) {
-		} finally {
-			oracleDb.CloseConnection();
-		}
+		} 
 		return listAnswerBank;
 	}
 }

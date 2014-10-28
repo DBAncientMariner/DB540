@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import ncsu.dbms.core.AnswerBank;
 import ncsu.dbms.core.Course;
@@ -56,17 +58,43 @@ public class ExerciseData {
 			for (UserAttemptExercise userAttemptExercise : savedAttempt) {
 				if(questionsMap.containsKey(userAttemptExercise.UE_QUESTION_ID)) {
 					List<Options> options = questionsMap.get(userAttemptExercise.UE_QUESTION_ID);
-					Options op = new Options(userAttemptExercise.UE_ANSWER_ID, false, false);
+					Options op = getOption(userAttemptExercise);
 					options.add(op);
 				} else {
 					List<Options> options = new LinkedList<Options>();
-					Options op = new Options(userAttemptExercise.UE_ANSWER_ID, false, false);
+					Options op = getOption(userAttemptExercise);
 					options.add(op);
 					questionsMap.put(userAttemptExercise.UE_QUESTION_ID, options);
 				}
 			}
+			Set<Entry<Integer, List<Options>>> entrySet = questionsMap.entrySet();
+			for (Entry<Integer, List<Options>> entry : entrySet) {
+				String questionText = "";
+				List<QuestionBank> questionBank = OracleDataAdapter1.GetQuestionBankFromQid(entry.getKey());
+				if(questionBank != null && !questionBank.isEmpty()) {
+					questionText = questionBank.get(0).QUESTIONBANK_TEXT;
+				}
+				Question q = new Question(entry.getKey(), questionText, entry.getValue(), false);
+				list.add(q);
+			}
 		}
 		return list;
+	}
+	
+	private static Options getOption(UserAttemptExercise userAttemptExercise) {
+		String correct = OracleDataAdapter1.IsCorrectAnswer(userAttemptExercise.UE_QUESTION_ID, userAttemptExercise.UE_ANSWER_ID);
+		boolean isCorrect = false;
+		if("t".equalsIgnoreCase(correct)) {
+			isCorrect = true;
+		} 
+		List<AnswerBank> answerBank = OracleDataAdapter1.GetAnswerBankFromAid(userAttemptExercise.UE_ANSWER_ID);
+		String answerText = "";
+		if(answerBank != null && !answerBank.isEmpty()) {
+			answerText = answerBank.get(0).ANSWERBANK_TEXT;
+		}
+		Options op = new Options(userAttemptExercise.UE_ANSWER_ID, false, isCorrect);
+		op.setAnswer(answerText);
+		return op;
 	}
 	
 	public static List<Question> getFreshExerciseQuestion(int exerciseId) {

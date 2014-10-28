@@ -3,16 +3,26 @@ package ncsu.dbms.core;
 import java.util.List;
 
 public class Question {
+	private int questionId;
 	private String question;
-	private List<String> options;
+	private List<Options> options;
 	private boolean isMultipleChoice;
-
-	public Question(String question, List<String> options,
+	
+	public Question(int questionId, String question, List<Options> options,
 			boolean isMultipleChoice) {
 		super();
+		this.questionId = questionId;
 		this.question = question;
 		this.options = options;
 		this.isMultipleChoice = isMultipleChoice;
+	}
+
+	public int getQuestionId() {
+		return questionId;
+	}
+
+	public void setQuestionId(int questionId) {
+		this.questionId = questionId;
 	}
 
 	public String getQuestion() {
@@ -23,11 +33,11 @@ public class Question {
 		this.question = question;
 	}
 
-	public List<String> getOptions() {
+	public List<Options> getOptions() {
 		return options;
 	}
 
-	public void setOptions(List<String> options) {
+	public void setOptions(List<Options> options) {
 		this.options = options;
 	}
 
@@ -38,4 +48,6 @@ public class Question {
 	public void setMultipleChoice(boolean isMultipleChoice) {
 		this.isMultipleChoice = isMultipleChoice;
 	}
+
+	
 }

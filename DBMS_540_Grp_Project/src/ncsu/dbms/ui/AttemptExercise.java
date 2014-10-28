@@ -18,6 +18,8 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 
+import ncsu.dbms.core.Exercise;
+import ncsu.dbms.core.Options;
 import ncsu.dbms.core.Question;
 import ncsu.dbms.db.ExerciseData;
 
@@ -26,7 +28,7 @@ public class AttemptExercise {
 	private JPanel contentPane;
 	private JFrame frame;
 	private JComboBox<Object> selectAssignment;
-	private String course;
+	private List<Question> exerciseQuestions;
 
 	/**
 	 * Launch the application.
@@ -110,7 +112,8 @@ public class AttemptExercise {
 		selectAssignmentText.setBounds(12, 50, 187, 33);
 		panel_Center.add(selectAssignmentText);
 		
-		List<String> list = ExerciseData.getAssigmentList(course);
+		List<Exercise> exerciseList = ExerciseData.getExerciseList();
+		List<String> list = ExerciseData.getExerciseName(exerciseList);
 		
 		selectAssignment = new JComboBox<>(list.toArray());
 		selectAssignment.setBounds(12, 90, 187, 33);
@@ -129,6 +132,7 @@ public class AttemptExercise {
 		btnSave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				frame.setVisible(false);
+				ExerciseData.saveExercise(exerciseQuestions);
 				new Home();
 			}
 		});
@@ -139,40 +143,51 @@ public class AttemptExercise {
 		btnSubmit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				frame.setVisible(false);
+				ExerciseData.submitExercise(exerciseQuestions);
 				new Home();
 			}
 		});
 		btnSubmit.setBounds(12, 143, 187, 33);
 		panel_Bottom.add(btnSubmit);
 
-		openExercise(scrollpane, panel_Right, selectAssignment.getSelectedItem().toString());
+		openExercise(scrollpane, panel_Right, exerciseList.get(index));
 		frame.getContentPane().add(scrollpane);
 		frame.setVisible(true);
 	}
 
-	private void openExercise(JScrollPane scrollpane, JPanel panel_Right, String assignment) {
-		List<Question> exercise = ExerciseData.getExercise(assignment);
+	private void openExercise(JScrollPane scrollpane, JPanel panel_Right, Exercise exercise) {
+		exerciseQuestions = ExerciseData.getExerciseQuestions(exercise.EXERCISE_ID);
 		panel_Right.removeAll();
-		panel_Right.setLayout(new GridLayout(exercise.size() * 5, 1));
+		panel_Right.setLayout(new GridLayout(exerciseQuestions.size() * 5, 1));
 
-		for (Question question : exercise) {
+		for (Question question : exerciseQuestions) {
 			JLabel questionText = new JLabel(question.getQuestion());
 			panel_Right.add(questionText);
 
 			if (!question.isMultipleChoice()) {
 				ButtonGroup group = new ButtonGroup();
-				for (String option : question.getOptions()) {
-					JRadioButton optionbutton = new JRadioButton(option);
+				for (final Options option : question.getOptions()) {
+					final JRadioButton optionbutton = new JRadioButton(option.getAnswer());
+					optionbutton.addActionListener(new ActionListener() {
+						
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							if (optionbutton.isSelected()) {
+								option.setMarked(true);
+							} else {
+								option.setMarked(false);
+							}
+						}
+					});
 					group.add(optionbutton);
 					panel_Right.add(optionbutton);
 				}
 			} else {
-				for (String option : question.getOptions()) {
-					JCheckBox optionbutton = new JCheckBox(option);
+				for (Options option : question.getOptions()) {
+					JCheckBox optionbutton = new JCheckBox(option.getAnswer());
 					panel_Right.add(optionbutton);
 				}
 			}
 		}
 	}
-
 }

@@ -27,8 +27,8 @@ public class OracleDb {
 
 	public OracleDb() {
 		UserName = "SYSTEM";
-		Password = "aCZ6q7F";
-		Url = "jdbc:oracle:thin:System@//AM-THINKPAD:1521/xe";
+		Password = "rambo";
+		Url = "jdbc:oracle:thin:System@//Sajal-PC:1521/xe";
 
 	}
 
@@ -169,7 +169,38 @@ public class OracleDb {
 		CloseConnection();
 		return true;
 	}
+	
 	public int ExecuteStoredProcedureExerciseReturn(String storedProcedure,ArrayList<String> Param)
+	{
+		try
+		{
+			if(OpenConnection())
+			{
+				Stmt = Conn.createStatement();
+			    CallableStatement proc =
+			    		Conn.prepareCall("{call "+storedProcedure+"(?)}");
+			    int index=1;
+			    for(String param:Param)
+			    {
+			    	 proc.setString(index, param);
+			    	 index++;
+			    }
+			    proc.registerOutParameter(1, Types.INTEGER);
+			    proc.execute();
+				Conn.commit();
+				int retval = proc.getInt(1);
+				return retval;
+			}
+		}
+		catch (SQLException e)
+		{
+		    return 0;
+		}
+		CloseConnection();
+		return 0;
+	}
+	
+	public int ExecuteStoredProcedureInsertUserAttemp(String storedProcedure,ArrayList<String> Param)
 	{
 		try
 		{

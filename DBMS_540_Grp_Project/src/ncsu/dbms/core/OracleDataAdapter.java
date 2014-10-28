@@ -775,6 +775,10 @@ public class OracleDataAdapter {
 		return listExercise;
 	}
 	
+	public boolean InsertUser_Submit(int exercise_id,Date StartDate, )
+	{
+		ArrayList<Object>
+	}
 	public ArrayList<Exercise> GetActiveExerciseForCourse(int course_id) {
 		Exercise exercise = new Exercise();
 		ArrayList<Exercise> listExercise = new ArrayList<Exercise>();

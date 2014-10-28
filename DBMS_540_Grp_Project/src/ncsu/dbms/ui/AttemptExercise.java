@@ -195,6 +195,6 @@ public class AttemptExercise {
 			}
 		}
 		
-		ExerciseData.saveExercise(exerciseQuestions, exercise);
+//		ExerciseData.saveExercise(exerciseQuestions, exercise);
 	}
 }

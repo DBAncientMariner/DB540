@@ -103,7 +103,7 @@ public class OracleDataAdapter1 {
 		OracleDb oracleDb = new OracleDb();
 		oracleDb.OpenConnection();
 		ResultSet resultset = oracleDb
-				.GetResultSet("Select * from CSC_QUESTIONBANK where QUESTIONBANK_ID"
+				.GetResultSet("Select * from CSC_QUESTIONBANK where QUESTIONBANK_ID = "
 						+ Q_id);
 		try {
 			while (resultset != null && resultset.next()) {
@@ -181,5 +181,266 @@ public class OracleDataAdapter1 {
 		} catch (SQLException e) {
 		} 
 		return listAnswerBank;
+	}
+	
+	public static int GetSetForParamQues(int Q_id) {
+		OracleDb oracleDb = new OracleDb();
+		oracleDb.OpenConnection();
+		String query = "select * from"+
+				"(select DISTINCT CSC_QB_PARAMETER_SET_ID from CSC_QB_PARAMETER_SET where CSC_QB_PARAMETER_SET_PARM_ID IN("+
+						"select CSC_VAR_PARM_SURR_KEY From CSC_VAR_PARM "+
+						"where CSC_VAR_PARM_VAR_SURR_KEY IN ( Select CSC_QB_VARIABLE_SURR_KEY From CSC_QB_VARIABLE "+
+						"where CSC_QB_VAR_Q_ID = "+Q_id+")) ORDER BY DBMS_RANDOM.RANDOM) " +
+						"where ROWNUM <= 1";
+		ResultSet resultset = oracleDb
+				.GetResultSet(query);
+
+		try {
+			int setId = resultset.getInt("CSC_QB_PARAMETER_SET_ID");
+			return setId;
+		} catch (Exception e) {
+		}
+		return -1;
+	}
+	
+	public List<AnswerBank> GetCorrectAnswerBankParam(int Set_Id, int no_of_correct) {
+		AnswerBank answerBank = new AnswerBank();
+		List<AnswerBank> listAnswerBank = new LinkedList<AnswerBank>();
+		OracleDb oracleDb = new OracleDb();
+		oracleDb.OpenConnection();
+		String query = "Select * From (Select AB.* from CSC_Answerbank AB, CSC_QB_AB_PARM QBAB where "+
+				"AB.ANSWERBANK_ID = QBAB.CSC_QB_AB_PARM_ANSWER_ID and QBAB.CSC_QB_AB_PARM_ISCORRECT = 'T' "+
+				"and QBAB.CSC_QBANK_ANSBANK_PARM_SET_ID = "+Set_Id+" ORDER BY DBMS_RANDOM.RANDOM) where ROWNUM <= "+no_of_correct;
+		ResultSet resultset = oracleDb
+				.GetResultSet(query);
+		try {
+			if(resultset == null) {
+				return listAnswerBank;
+			}
+			while (resultset.next()) {
+				answerBank = new AnswerBank();
+				SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
+						"yyyy-MM-dd");
+				answerBank.ANSWERBANK_ID = resultset.getInt("ANSWERBANK_ID");
+				answerBank.ANSWERBANK_TEXT = resultset
+						.getString("ANSWERBANK_TEXT");
+				answerBank.ANSWERBANK_EXPLANATION = resultset
+						.getString("ANSWERBANK_EXPLANATION");
+				answerBank.ANSWERBANK_CREATEDBY = resultset
+						.getInt("ANSWERBANK_CREATEDBY");
+				answerBank.ANSWERBANK_MODIFIEDBY = resultset
+						.getInt("ANSWERBANK_MODIFIEDBY");
+				try {
+					answerBank.ANSWERBANK_CREATEDDATE = simpleDateFormat
+							.parse(resultset
+									.getString("ANSWERBANK_CREATEDDATE"));
+					answerBank.ANSWERBANK_MODIFIEDDATE = simpleDateFormat
+							.parse(resultset
+									.getString("ANSWERBANK_MODIFIEDDATE"));
+				} catch (Exception e) {
+				}
+				listAnswerBank.add(answerBank);
+			}
+		} catch (SQLException e) {
+		} finally {
+			oracleDb.CloseConnection();
+		}
+		return listAnswerBank;
+	}
+	
+	public ArrayList<AnswerBank> GetInCorrectAnswerBankParam(int Set_Id, int no_of_incorrect) {
+		AnswerBank answerBank = new AnswerBank();
+		ArrayList<AnswerBank> listAnswerBank = new ArrayList<AnswerBank>();
+		OracleDb oracleDb = new OracleDb();
+		oracleDb.OpenConnection();
+		String query = "Select * From (Select AB.* from CSC_Answerbank AB, CSC_QB_AB_PARM QBAB where AB.ANSWERBANK_ID = QBAB.CSC_QB_AB_PARM_ANSWER_ID and "+ 
+				"QBAB.CSC_QB_AB_PARM_ISCORRECT = 'F' and QBAB.CSC_QBANK_ANSBANK_PARM_SET_ID = "+Set_Id+" ORDER BY DBMS_RANDOM.RANDOM) where ROWNUM <= "+no_of_incorrect;
+		
+		ResultSet resultset = oracleDb
+					.GetResultSet(query);
+		try {
+			if(resultset == null) {
+				return listAnswerBank;
+			}
+			while (resultset.next()) {
+				answerBank = new AnswerBank();
+				SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
+						"yyyy-MM-dd");
+				answerBank.ANSWERBANK_ID = resultset.getInt("ANSWERBANK_ID");
+				answerBank.ANSWERBANK_TEXT = resultset
+						.getString("ANSWERBANK_TEXT");
+				answerBank.ANSWERBANK_EXPLANATION = resultset
+						.getString("ANSWERBANK_EXPLANATION");
+				answerBank.ANSWERBANK_CREATEDBY = resultset
+						.getInt("ANSWERBANK_CREATEDBY");
+				answerBank.ANSWERBANK_MODIFIEDBY = resultset
+						.getInt("ANSWERBANK_MODIFIEDBY");
+				try {
+					answerBank.ANSWERBANK_CREATEDDATE = simpleDateFormat
+							.parse(resultset
+									.getString("ANSWERBANK_CREATEDDATE"));
+					answerBank.ANSWERBANK_MODIFIEDDATE = simpleDateFormat
+							.parse(resultset
+									.getString("ANSWERBANK_MODIFIEDDATE"));
+				} catch (Exception e) {
+				}
+				listAnswerBank.add(answerBank);
+			}
+		} catch (SQLException e) {
+		} finally {
+			oracleDb.CloseConnection();
+		}
+		return listAnswerBank;
+	}
+	
+	public ArrayList<VarParam> GetVarParamForSet(int setId) {
+		VarParam varParam = new VarParam();
+		ArrayList<VarParam> listVarParam = new ArrayList<VarParam>();
+		OracleDb oracleDb = new OracleDb();
+		oracleDb.OpenConnection();
+		String query = "select * from CSC_VAR_PARM where CSC_VAR_PARM_SURR_KEY IN (Select CSC_QB_PARAMETER_SET_PARM_ID "+
+				"From CSC_QB_PARAMETER_SET where CSC_QB_PARAMETER_SET_ID ="+ setId+")";
+		ResultSet resultset = oracleDb
+				.GetResultSet(query);
+		try {
+			while (resultset.next()) {
+				varParam = new VarParam();
+
+				varParam.CSC_VAR_PARM_SURR_KEY = resultset
+						.getInt("CSC_VAR_PARM_SURR_KEY");
+				varParam.CSC_VAR_PARM__ID = resultset
+						.getInt("CSC_VAR_PARM__ID");
+				varParam.CSC_VAR_PARM_VAR_SURR_KEY = resultset
+						.getInt("CSC_VAR_PARM_VAR_SURR_KEY");
+				varParam.CSC_VAR_PARM_VALUE = resultset
+						.getString("CSC_VAR_PARM_VALUE");
+				listVarParam.add(varParam);
+			}
+		} catch (SQLException e) {
+		} finally {
+			oracleDb.CloseConnection();
+		}
+		return listVarParam;
+	}
+	
+	public ArrayList<QbVariable> GetQbVariableFromParam(int Parm_key) {
+		QbVariable qbVariable = new QbVariable();
+		ArrayList<QbVariable> listQbVariable = new ArrayList<QbVariable>();
+		OracleDb oracleDb = new OracleDb();
+		String query = "select * from CSC_QB_VARIABLE where CSC_QB_VARIABLE_SURR_KEY IN (Select CSC_VAR_PARM_VAR_SURR_KEY "+
+				"from CSC_VAR_PARM where CSC_VAR_PARM_SURR_KEY = "+Parm_key+")";
+		oracleDb.OpenConnection();
+		ResultSet resultset = oracleDb
+				.GetResultSet(query);
+		try {
+			while (resultset.next()) {
+				qbVariable = new QbVariable();
+
+				qbVariable.CSC_QB_VARIABLE_SURR_KEY = resultset
+						.getInt("CSC_QB_VARIABLE_SURR_KEY");
+				qbVariable.CSC_QB_VARIABLE_ID = resultset
+						.getInt("CSC_QB_VARIABLE_ID");
+				qbVariable.CSC_QB_VAR_Q_ID = resultset
+						.getInt("CSC_QB_VAR_Q_ID");
+				qbVariable.CSC_QB_VARIABLE_NAME = resultset
+						.getString("CSC_QB_VARIABLE_NAME");
+				listQbVariable.add(qbVariable);
+			}
+		} catch (SQLException e) {
+		} finally {
+			oracleDb.CloseConnection();
+		}
+		return listQbVariable;
+	}
+	
+	public static String IsCorrectAnswerParam(int Set_id, int A_id) {
+		OracleDb oracleDb = new OracleDb();
+		oracleDb.OpenConnection();
+		String query = "select CSC_QB_AB_PARM_ISCORRECT from CSC_QB_AB_PARM where CSC_QBANK_ANSBANK_PARM_SET_ID = "+
+				+ Set_id + " and CSC_QB_AB_PARM_ANSWER_ID =" + A_id;
+		ResultSet resultset = oracleDb
+				.GetResultSet(query);
+
+		try {
+			String str = resultset.getString("QABANK_ISCORRECT");
+			return str;
+		} catch (Exception e) {
+		}
+		return null;
+	}
+	
+	public ArrayList<UserAttempt> GetUserAttemptForPastSubmission() {
+		UserAttempt userAttempt = new UserAttempt();
+		ArrayList<UserAttempt> listUserAttempt = new ArrayList<UserAttempt>();
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		OracleDb oracleDb = new OracleDb();
+		oracleDb.OpenConnection();
+		int course_id = LocalSession.GetCurrentSelectedCourse();
+		User user = LocalSession.GetCurrentUser(); 
+		String query = "select * from CSC_USER_ATTEMPT where UA_EXERCISE_ID IN ( Select EXERCISE_ID From CSC_EXERCISE where EXERCISE_COURSE = "+course_id+") "+
+				"and UA_USER_ID = "+user.UserId +" and UA_SUBMITTED = 'T'";
+		ResultSet resultset = oracleDb
+				.GetResultSet(query);
+		try {
+			while (resultset.next()) {
+				userAttempt = new UserAttempt();
+
+				userAttempt.UA_ID = resultset.getInt("UA_ID");
+				userAttempt.UA_USER_ID = resultset.getInt("UA_USER_ID");
+				userAttempt.UA_EXERCISE_ID = resultset.getInt("UA_EXERCISE_ID");
+				userAttempt.UA_SUBMITTED = resultset.getBoolean("UA_SUBMITTED");
+				userAttempt.UA_SCORE = resultset.getDouble("UA_SCORE");
+				try {
+					userAttempt.UA_STARTATTEMPT_DATE = simpleDateFormat
+							.parse(resultset.getString("UA_STARTATTEMPT_DATE"));
+					userAttempt.UA_LASTATTEMPT_DATE = simpleDateFormat
+							.parse(resultset.getString("UA_LASTATTEMPT_DATE"));
+					userAttempt.UA_STARTATTEMPT_DATE = simpleDateFormat
+							.parse(resultset.getString("UA_STARTATTEMPT_DATE"));
+				} catch (Exception e) {
+				}
+				listUserAttempt.add(userAttempt);
+			}
+		} catch (SQLException e) {
+		} finally {
+			oracleDb.CloseConnection();
+		}
+		return listUserAttempt;
+	}
+	
+	public static List<UserAttemptExercise> GetUserAttemptExerciseForPast(int UA_id) {
+		UserAttemptExercise userAttemptExercise = new UserAttemptExercise();
+		List<UserAttemptExercise> listUserAttemptExercise = new ArrayList<UserAttemptExercise>();
+		User user = LocalSession.GetCurrentUser();
+		OracleDb oracleDb = new OracleDb();
+		oracleDb.OpenConnection();
+		String query = "select * from CSC_USERATTEMPT_EXERCISE where UE_UA_ID = "+UA_id;
+		ResultSet resultset = oracleDb
+				.GetResultSet(query);
+		try {
+			if(resultset == null) {
+				return listUserAttemptExercise;
+			}
+			while (resultset.next()) {
+				userAttemptExercise = new UserAttemptExercise();
+
+				userAttemptExercise.UE_UA_ID = resultset.getInt("UE_UA_ID");
+				userAttemptExercise.UE_QUESTION_ID = resultset
+						.getInt("UE_QUESTION_ID");
+				userAttemptExercise.UE_ANSWER_ID = resultset
+						.getInt("UE_ANSWER_ID");
+				String selected = resultset.getString("UE_ISSELECTED");
+				if("t".equalsIgnoreCase(selected)) {
+					userAttemptExercise.UE_ISSELECTED = true;
+				} else {
+					userAttemptExercise.UE_ISSELECTED = false;
+				}
+				listUserAttemptExercise.add(userAttemptExercise);
+			}
+		} catch (SQLException e) {
+		} finally {
+			oracleDb.CloseConnection();
+		}
+		return listUserAttemptExercise;
 	}
 }

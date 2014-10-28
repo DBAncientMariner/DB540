@@ -796,10 +796,11 @@ public class OracleDataAdapter {
 	public ArrayList<Exercise> GetActiveExerciseForCourse(int course_id) {
 		Exercise exercise = new Exercise();
 		ArrayList<Exercise> listExercise = new ArrayList<Exercise>();
+		User user = LocalSession.GetCurrentUser();
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		oracleDb.OpenConnection();
 		ResultSet resultset = oracleDb
-				.GetResultSet("select * from csc_exercise where TRUNC(EXERCISE_STARTDATE) <= TRUNC(SYSDATE) AND TRUNC(EXERCISE_ENDDATE) >= TRUNC(SYSDATE) AND EXERCISE_COURSE = "+course_id+";");
+				.GetResultSet("Select EX.* from csc_exercise EX where EX.EXERCISE_RETRYLIMIT > ANY (Select count(ATTEMP_ID) From csc_user_attempt UA1 where UA1.UA_EXERCISE_ID = EX.EXERCISE_ID and UA1.UA_USER_ID = "+user.UserId+") and TRUNC(EX.EXERCISE_STARTDATE) <= TRUNC(SYSDATE) AND TRUNC(EX.EXERCISE_ENDDATE) >= TRUNC(SYSDATE) AND EXERCISE_COURSE = "+course_id+";");
 		try {
 			if(resultset == null)
 			{

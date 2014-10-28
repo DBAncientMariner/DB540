@@ -140,7 +140,6 @@ public class ListHomework extends JFrame {
 		btn_EditButton.setBounds(550, 50, 80, 33);
 		btn_EditButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				if (jListHomework.getSelectedIndex() != 0) {
 					if(jListHomework.getSelectedIndex()!=-1)
 					{
 						int exerciseId = listExercise.get(jListHomework
@@ -157,10 +156,27 @@ public class ListHomework extends JFrame {
 							setVisible(false);
 						}
 					}
-				}
 			}
 		});
 		panel_Right.add(btn_EditButton);
+		JButton btn_AddButton = new JButton("Add");
+		btn_AddButton.setBounds(550, 100, 80, 33);
+		btn_AddButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+						if (User.IsFaculty(LocalSession.GetCurrentUser())) {
+							AddHomework addHomework = new AddHomework(0,
+									true);
+							addHomework.setVisible(true);
+							setVisible(false);
+						} else if (User.IsTA(LocalSession.GetCurrentUser())) {
+							AddHomework addHomework = new AddHomework(0,
+									false);
+							addHomework.setVisible(true);
+							setVisible(false);
+						}
+			}
+		});
+		panel_Right.add(btn_AddButton);
 
 	}
 

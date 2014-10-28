@@ -1602,4 +1602,101 @@ public class OracleDataAdapter {
 		query = query + ")";
 		return oracleDb.InsertQuery(query);
 	}
+	public ArrayList<Exercise> GetExerciseForCourseId(int courseId) {
+		Exercise exercise = new Exercise();
+		ArrayList<Exercise> listExercise = new ArrayList<Exercise>();
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		oracleDb.OpenConnection();
+		ResultSet resultset = oracleDb
+				.GetResultSet("select * from CSC_EXERCISE where  EXERCISE_COURSE="
+						+ courseId);
+		try {
+			while (resultset.next()) {
+				exercise = new Exercise();
+
+				exercise.EXERCISE_ID = resultset.getInt("EXERCISE_ID");
+				exercise.EXERCISE_NAME = resultset.getString("EXERCISE_NAME");
+				exercise.EXERCISE_COURSE = resultset.getInt("EXERCISE_COURSE");
+				exercise.EXERCISE_NAME = resultset.getString("EXERCISE_NAME");
+				exercise.EXERCISE_DIFFICULTY_RANGE1 = resultset
+						.getInt("EXERCISE_DIFFICULTY_RANGE1");
+				exercise.EXERCISE_DIFFICULTY_RANGE2 = resultset
+						.getInt("EXERCISE_DIFFICULTY_RANGE2");
+				exercise.EXERCISE_RETRYLIMIT = resultset
+						.getInt("EXERCISE_RETRYLIMIT");
+				exercise.EXERCISE_CORRECTPT = resultset
+						.getInt("EXERCISE_CORRECTPT");
+				exercise.EXERCISE_PENALTYPT = resultset
+						.getInt("EXERCISE_PENALTYPT");
+				exercise.EXERCISE_SCORINGTYPE = resultset
+						.getInt("EXERCISE_SCORINGTYPE");
+				exercise.EXERCISE_CREATEDBY = resultset
+						.getInt("EXERCISE_CREATEDBY");
+				exercise.EXERCISE_MODIFIEDBY = resultset
+						.getInt("EXERCISE_MODIFIEDBY");
+
+				try {
+					exercise.EXERCISE_STARTDATE = simpleDateFormat
+							.parse(resultset.getString("EXERCISE_STARTDATE"));
+					exercise.EXERCISE_ENDDATE = simpleDateFormat
+							.parse(resultset.getString("EXERCISE_ENDDATE"));
+					exercise.EXERCISE_LASTMODIFIEDDATE = simpleDateFormat
+							.parse(resultset
+									.getString("EXERCISE_LASTMODIFIEDDATE"));
+				} catch (Exception e) {
+				}
+				listExercise.add(exercise);
+			}
+		} catch (SQLException e) {
+		} finally {
+			oracleDb.CloseConnection();
+		}
+		return listExercise;
+	}
+
+	public boolean InsertCourse(Course course) {
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-dd");
+		String query = "SELECT * FROM CSC_COURSE where CSC_COURSE_TOKEN ='"
+				+ course.CSC_COURSE_token + "'";
+		ResultSet resultset = oracleDb.GetResultSet(query);
+		try {
+			if (!resultset.next()) {
+				query = "INSERT INTO CSC_COURSE (CSC_COURSE_COURSE_ID , CSC_COURSE_COURSE_NAME ,CSC_COURSE_STARTDATE,CSC_COURSE_ENDDATE,CSC_COURSE_MAX_ENROLL_NO,CSC_COURSE_NUMBER_OF_STUDENTS,CSC_COURSE_TOKEN) "
+						+ "values(CSC_COURSE_SEQUENCE.nextval,'"+course.CSC_COURSE_Course_Name+"',"
+						+ "to_date('"+simpleDateFormat.format(course.CSC_COURSE_StartDate)+"','YYYY-MM-DD'),"
+						+ "to_date('"+simpleDateFormat.format(course.CSC_COURSE_EndDate)+"','YYYY-MM-DD'),"
+						+ ""+(course.CSC_COURSE_Max_Enroll_No)+","
+						+ ""+(course.CSC_COURSE_Number_Of_Students)+","
+						+ "'"+(course.CSC_COURSE_token)+"'"
+								+ ")";
+				if(oracleDb.InsertQuery(query))
+				{
+					//insert into CSC_CLASS
+					query = "select Max(CSC_COURSE_COURSE_ID) CSC_COURSE_COURSE_ID from csc_course ";
+					resultset = oracleDb.GetResultSet(query);
+					if(resultset.next())
+					{
+						int Max_CSC_COURSE_COURSE_ID=resultset.getInt("CSC_COURSE_COURSE_ID");
+						query = "INSERT INTO CSC_CLASS(CSC_CLASS_SURR_KEY ,CSC_CLASS_CLASS_ID,CSC_CLASS_COURSE_ID) "
+								+ "values(CSC_CLASS_SEQUENCE.nextval,1,"+Max_CSC_COURSE_COURSE_ID+")";
+						if(!oracleDb.InsertQuery(query))
+						{
+							//if failure then delete entry into csc_course
+							query = "DELETE FROM CSC_COURSE WHERE CSC_COURSE_COURSE_ID "+Max_CSC_COURSE_COURSE_ID;
+							oracleDb.InsertQuery(query);
+						}
+						else
+							return true;
+					}
+					
+				}
+			}
+			else
+				return false;
+		} catch (Exception e) {
+
+		}
+		return false;
+		
+	}
 }

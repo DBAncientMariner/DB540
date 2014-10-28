@@ -202,7 +202,7 @@ public class Home {
 		homePanel.add(lbl_AddToken);
 
 		lbl_ErrorToken = new JLabel("");
-		lbl_ErrorToken.setBounds(100, 250, 500, 30);
+		lbl_ErrorToken.setBounds(100, 300, 500, 30);
 		lbl_ErrorToken.setForeground(Color.red);
 		homePanel.add(lbl_ErrorToken);
 
@@ -269,57 +269,62 @@ public class Home {
 	private void EditCourse(JPanel panel)
 	{
 		JLabel lblCourseAdd = new JLabel("Add a course");
-		lblCourseAdd.setBounds(100, 300, 500, 30);
+		lblCourseAdd.setBounds(100, 350, 500, 30);
 		panel.add(lblCourseAdd);
 		
 		JLabel lbl_CourseName = new JLabel("Course Name");
-		lbl_CourseName.setBounds(100, 340, 150, 30);
+		lbl_CourseName.setBounds(100, 390, 150, 30);
 		panel.add(lbl_CourseName);
 
 		final JTextField txt_CourseName = new JTextField();
-		txt_CourseName.setBounds(250, 340, 150, 30);
+		txt_CourseName.setBounds(250, 390, 150, 30);
 		txt_CourseName.setToolTipText("Course Name");
 		panel.add(txt_CourseName);
 		
 		JLabel lbl_CourseStartDate = new JLabel("Course Start Date");
-		lbl_CourseStartDate.setBounds(100, 370, 150, 30);
+		lbl_CourseStartDate.setBounds(100, 420, 150, 30);
 		panel.add(lbl_CourseStartDate);
 
 		final JTextField txt_CourseStartDate = new JTextField();
-		txt_CourseStartDate.setBounds(250, 370, 150, 30);
+		txt_CourseStartDate.setBounds(250, 420, 150, 30);
 		txt_CourseStartDate.setToolTipText("Course Start Date");
 		panel.add(txt_CourseStartDate);
 		
 		
 		JLabel lbl_CourseEndDate = new JLabel("Course End Date");
-		lbl_CourseEndDate.setBounds(100, 400, 150, 30);
+		lbl_CourseEndDate.setBounds(100, 450, 150, 30);
 		panel.add(lbl_CourseEndDate);
 
 		final JTextField txt_CourseEndDate = new JTextField();
-		txt_CourseEndDate.setBounds(250, 400, 150, 30);
+		txt_CourseEndDate.setBounds(250, 450, 150, 30);
 		txt_CourseEndDate.setToolTipText("Course End Date");
 		panel.add(txt_CourseEndDate);
 		
 		JLabel lbl_MaxEnrollment = new JLabel("Max Enrollment");
-		lbl_MaxEnrollment.setBounds(100, 430, 150, 30);
+		lbl_MaxEnrollment.setBounds(100, 480, 150, 30);
 		panel.add(lbl_MaxEnrollment);
 
 		final JTextField txt_MaxEnrollment = new JTextField();
-		txt_MaxEnrollment.setBounds(250, 430, 150, 30);
+		txt_MaxEnrollment.setBounds(250, 480, 150, 30);
 		txt_MaxEnrollment.setToolTipText("Max Enrollment");
 		panel.add(txt_MaxEnrollment);
 		
 		JLabel lbl_CourseToken = new JLabel("Course Token");
-		lbl_CourseToken.setBounds(100, 460, 150, 30);
+		lbl_CourseToken.setBounds(100, 510, 150, 30);
 		panel.add(lbl_CourseToken);
 
 		final JTextField txt_CourseToken = new JTextField();
-		txt_CourseToken.setBounds(250, 460, 150, 30);
+		txt_CourseToken.setBounds(250, 510, 150, 30);
 		txt_CourseToken.setToolTipText("Course Token");
 		panel.add(txt_CourseToken);
 		
+		final JLabel lbl_CourseTokenError = new JLabel("");
+		lbl_CourseTokenError.setBounds(100, 600, 450, 30);
+		lbl_CourseTokenError.setForeground(Color.red);
+		panel.add(lbl_CourseTokenError);
+		
 		JButton btn_CreateButton=new JButton("Create Course");
-		btn_CreateButton.setBounds(250, 500, 150, 30);
+		btn_CreateButton.setBounds(250, 550, 150, 30);
 		btn_CreateButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
@@ -342,10 +347,12 @@ public class Home {
 					txt_CourseEndDate.setText("");
 					txt_MaxEnrollment.setText("");
 					txt_CourseToken.setText("");
+					lbl_CourseTokenError.setText("Course Created!");
+					AddCourse(course.CSC_COURSE_token);
 				}
 				else
 				{
-					//error
+					lbl_CourseTokenError.setText("Error");
 				}
 				}
 				catch(Exception e)

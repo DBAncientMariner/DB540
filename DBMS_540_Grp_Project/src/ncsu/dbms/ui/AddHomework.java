@@ -1,6 +1,7 @@
 package ncsu.dbms.ui;
 
 import java.awt.BorderLayout;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.ParseException;
@@ -25,7 +26,8 @@ import ncsu.dbms.core.*;
 
 public class AddHomework extends JFrame {
 
-	public int ExerciseId = 7;
+	public Object callingWindow;
+	public int ExerciseId = 0;
 	public Exercise currentExercise = new Exercise();
 	private static final long serialVersionUID = 4620833118495352591L;
 	OracleDataAdapter oracleDataAdapter = new OracleDataAdapter();
@@ -44,6 +46,7 @@ public class AddHomework extends JFrame {
 
 	JTextField txt_DifficultyRange1;
 	JTextField txt_DifficultyRange2;
+	boolean EditMode=true;
 
 	/**
 	 * Launch the application.
@@ -63,8 +66,9 @@ public class AddHomework extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public AddHomework() {
-
+	public AddHomework(int exerciseId,boolean editMode) {
+		EditMode=editMode;
+		this.ExerciseId=exerciseId;
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setBounds(100, 100, 900, 700);
 		this.setLocationRelativeTo(null);
@@ -108,6 +112,18 @@ public class AddHomework extends JFrame {
 		JButton btn_ViewSubmissions = new JButton("Past Submissions");
 		btn_ViewSubmissions.setBounds(12, 125, 187, 33);
 		panel_Center.add(btn_ViewSubmissions);
+		
+		JButton btn_ListHomework = new JButton("ListHomework");
+		btn_ListHomework.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				ListHomework listHomework=new ListHomework();
+				listHomework.setVisible(true);
+				setVisible(false);
+			}
+		});
+		btn_ListHomework.setBounds(12, 195, 187, 33);
+		panel_Center.add(btn_ListHomework);
+		
 		JLabel lbl_UserName = new JLabel("");
 		lbl_UserName.setBounds(12, 10, 187, 33);
 		panel_Top.add(lbl_UserName);
@@ -196,7 +212,7 @@ public class AddHomework extends JFrame {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(currentExercise.EXERCISE_STARTDATE);
 		int year = cal.get(Calendar.YEAR);
-		int month = cal.get(Calendar.MONTH);
+		int month = cal.get(Calendar.MONTH+1);
 		int day = cal.get(Calendar.DAY_OF_MONTH);
 
 		txt_StartDate.setText(year + "-" + month + "-" + day);
@@ -211,7 +227,7 @@ public class AddHomework extends JFrame {
 		cal = Calendar.getInstance();
 		cal.setTime(currentExercise.EXERCISE_ENDDATE);
 		year = cal.get(Calendar.YEAR);
-		month = cal.get(Calendar.MONTH);
+		month = cal.get(Calendar.MONTH+1);
 		day = cal.get(Calendar.DAY_OF_MONTH);
 		final JTextField txt_EndDate = new JTextField();
 		txt_EndDate.setText(year + "-" + month + "-" + day);
@@ -285,9 +301,14 @@ public class AddHomework extends JFrame {
 		txt_ScoringType.setBounds(340, 185, 100, 25);
 		panel_Right.add(txt_ScoringType);
 
-		JButton btn_ScoringType = new JButton("Save");
-		btn_ScoringType.addActionListener(new ActionListener() {
+		final JLabel lbl_Message = new JLabel();
+		lbl_Message.setBounds(450, 220, 100, 25);
+		panel_Right.add(lbl_Message);
+		
+		JButton btn_Save = new JButton("Save");
+		btn_Save.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				lbl_Message.setText("");
 				SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
 						"yyyy-MM-dd");
 				Exercise exercise = new Exercise();
@@ -317,11 +338,14 @@ public class AddHomework extends JFrame {
 						.getText());
 
 				SaveExercise(exercise);
-
+				lbl_Message.setText("Data Saved");
 			}
 		});
-		btn_ScoringType.setBounds(450, 185, 100, 25);
-		panel_Right.add(btn_ScoringType);
+		btn_Save.setBounds(450, 185, 100, 25);
+		panel_Right.add(btn_Save);
+		
+		btn_Save.setVisible(EditMode);
+		
 		// /
 
 		JLabel lbl_topics = new JLabel("Select Topics");

@@ -1566,5 +1566,18 @@ public class OracleDataAdapter {
 		}
 		return listExerciseTopic;
 	}
+	public boolean InsertExerciseTopic(Exercise exercise, Topic topic) {
 
+		
+		String query = "DELETE FROM  CSC_EXERCISE_TOPIC where  CSC_EXERCISE_TOPIC_EXERCISE_ID="
+				+ exercise.EXERCISE_ID;
+		ResultSet resultset = oracleDb.GetResultSet(query);
+
+		query = "INSERT INTO CSC_EXERCISE_TOPIC (CSC_EXERCISE_TOPIC_SURR_KEY ,CSC_EXERCISE_TOPIC_TOPIC_ID,CSC_EXERCISE_TOPIC_EXERCISE_ID) values(";
+		query = query + "CSC_EXERCISE_TOPIC_SEQUENCE.NextVal,"
+				+ topic.TOPIC_ID + "," + exercise.EXERCISE_ID;
+		query = query + ")";
+		return oracleDb.InsertQuery(query);
+	
+}
 }

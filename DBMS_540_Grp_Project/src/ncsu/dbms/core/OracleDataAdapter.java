@@ -289,9 +289,9 @@ public class OracleDataAdapter {
 		return ListQuestions;
 	}
 	
-	public ArrayList<AnswerBank> GetCorrectAnswerBank(int Question_id, int no_of_correct) {
+	public List<AnswerBank> GetCorrectAnswerBank(int Question_id, int no_of_correct) {
 		AnswerBank answerBank = new AnswerBank();
-		ArrayList<AnswerBank> listAnswerBank = new ArrayList<AnswerBank>();
+		List<AnswerBank> listAnswerBank = new LinkedList<AnswerBank>();
 		oracleDb.OpenConnection();
 		ResultSet resultset = oracleDb
 				.GetResultSet("Select * From (Select AB.* from CSC_Answerbank AB, CSC_QUESTIONBANK_ANSWERBANK QBAB where AB.ANSWERBANK_ID = QBAB.QABANK_ANSWER_ID and QBAB.QABANK_ISCORRECT = 'T' and QBAB.QABANK_QUESITON_ID = "+Question_id+" ORDER BY DBMS_RANDOM.RANDOM) where ROWNUM <= "+no_of_correct+";");

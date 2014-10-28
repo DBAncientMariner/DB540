@@ -55,6 +55,7 @@ public class Login {
 	 */
 	public Login() {
 		//initialize();
+		LocalSession.clearSession();
 		initializeFrameStart();
 		//initializeFrameRegistration();
 	}

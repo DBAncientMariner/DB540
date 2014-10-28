@@ -2,7 +2,8 @@ package ncsu.dbms.core;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 public class OracleDataAdapter1 {
 
@@ -23,9 +24,9 @@ public class OracleDataAdapter1 {
 			return resultset;
 	}
 	
-	public ArrayList<UserAttemptExercise> GetUserAttemptExerciseForSaved(int ExerciseId) {
+	public static List<UserAttemptExercise> GetUserAttemptExerciseForSaved(int ExerciseId) {
 		UserAttemptExercise userAttemptExercise = new UserAttemptExercise();
-		ArrayList<UserAttemptExercise> listUserAttemptExercise = new ArrayList<UserAttemptExercise>();
+		List<UserAttemptExercise> listUserAttemptExercise = new LinkedList<UserAttemptExercise>();
 		User user = LocalSession.GetCurrentUser();
 		OracleDb oracleDb = new OracleDb();
 		oracleDb.OpenConnection();

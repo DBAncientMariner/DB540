@@ -68,11 +68,11 @@ public class ExerciseData {
 		return questionsList;
 	}
 	
-	public static void saveExercise(List<Question> exerciseQuestions) {
+	public static void saveExercise(List<Question> exerciseQuestions, Exercise exercise) {
 		
 	}
 	
-	public static void submitExercise(List<Question> exerciseQuestions) {
+	public static void submitExercise(List<Question> exerciseQuestions, Exercise exercise) {
 		
 	}
 }

@@ -48,7 +48,7 @@ public class AttemptExercise {
 	/**
 	 * Create the frame.
 	 */
-	public AttemptExercise(int index) {
+	public AttemptExercise(final int index) {
 		frame = new JFrame();
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setBounds(100, 100, 900, 700);
@@ -112,7 +112,7 @@ public class AttemptExercise {
 		selectAssignmentText.setBounds(12, 50, 187, 33);
 		panel_Center.add(selectAssignmentText);
 		
-		List<Exercise> exerciseList = ExerciseData.getExerciseList();
+		final List<Exercise> exerciseList = ExerciseData.getExerciseList();
 		List<String> list = ExerciseData.getExerciseName(exerciseList);
 		
 		selectAssignment = new JComboBox<>(list.toArray());
@@ -132,7 +132,7 @@ public class AttemptExercise {
 		btnSave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				frame.setVisible(false);
-				ExerciseData.saveExercise(exerciseQuestions);
+				ExerciseData.saveExercise(exerciseQuestions, exerciseList.get(index));
 				new Home();
 			}
 		});
@@ -143,7 +143,7 @@ public class AttemptExercise {
 		btnSubmit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				frame.setVisible(false);
-				ExerciseData.submitExercise(exerciseQuestions);
+				ExerciseData.submitExercise(exerciseQuestions, exerciseList.get(index));
 				new Home();
 			}
 		});

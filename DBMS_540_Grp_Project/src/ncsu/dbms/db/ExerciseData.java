@@ -1,8 +1,10 @@
 package ncsu.dbms.db;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import ncsu.dbms.core.AnswerBank;
 import ncsu.dbms.core.Course;
@@ -13,6 +15,7 @@ import ncsu.dbms.core.OracleDataAdapter;
 import ncsu.dbms.core.OracleDataAdapter1;
 import ncsu.dbms.core.Question;
 import ncsu.dbms.core.QuestionBank;
+import ncsu.dbms.core.UserAttemptExercise;
 
 public class ExerciseData {
 
@@ -44,6 +47,29 @@ public class ExerciseData {
 	}
 	
 	public static List<Question> getExerciseQuestions(int exerciseId) {
+		List<Question> list = new LinkedList<Question>();
+		List<UserAttemptExercise> savedAttempt = OracleDataAdapter1.GetUserAttemptExerciseForSaved(exerciseId);
+		if(savedAttempt == null || savedAttempt.isEmpty()) {
+			list = getFreshExerciseQuestion(exerciseId);
+		} else {
+			Map<Integer, List<Options>> questionsMap = new HashMap<Integer, List<Options>>();
+			for (UserAttemptExercise userAttemptExercise : savedAttempt) {
+				if(questionsMap.containsKey(userAttemptExercise.UE_QUESTION_ID)) {
+					List<Options> options = questionsMap.get(userAttemptExercise.UE_QUESTION_ID);
+					Options op = new Options(userAttemptExercise.UE_ANSWER_ID, false, false);
+					options.add(op);
+				} else {
+					List<Options> options = new LinkedList<Options>();
+					Options op = new Options(userAttemptExercise.UE_ANSWER_ID, false, false);
+					options.add(op);
+					questionsMap.put(userAttemptExercise.UE_QUESTION_ID, options);
+				}
+			}
+		}
+		return list;
+	}
+	
+	public static List<Question> getFreshExerciseQuestion(int exerciseId) {
 		OracleDataAdapter adp = new OracleDataAdapter();
 		List<QuestionBank> questionBankList = adp.GetQuestionBankForExerciseId(exerciseId);
 		List<Question> questionsList = new LinkedList<Question>();
@@ -66,13 +92,14 @@ public class ExerciseData {
 			questionsList.add(q);
 		}
 		Collections.shuffle(questionsList);
+		saveExercise(questionsList, exerciseId);
 		return questionsList;
 	}
 	
-	public static void saveExercise(List<Question> exerciseQuestions, Exercise exercise) {
+	public static void saveExercise(List<Question> exerciseQuestions, int exerciseId) {
 		double score = 0;
 		OracleDataAdapter adp = new OracleDataAdapter();
-		int uaId = adp.InsertUserAttempSubmit(exercise.EXERCISE_ID, score, "F");
+		int uaId = adp.InsertUserAttempSubmit(exerciseId, score, "F");
 		for (Question question : exerciseQuestions) {
 			List<Options> options = question.getOptions();
 			for (Options op : options) {

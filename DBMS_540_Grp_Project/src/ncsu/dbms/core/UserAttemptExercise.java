@@ -8,8 +8,8 @@ package ncsu.dbms.core;
  *
  */
 public class UserAttemptExercise {
-	int UE_UA_ID =0;
-	int UE_QUESTION_ID =0;
-	int UE_ANSWER_ID =0;
-	boolean UE_ISSELECTED =false;
+	public int UE_UA_ID =0;
+	public int UE_QUESTION_ID =0;
+	public int UE_ANSWER_ID =0;
+	public boolean UE_ISSELECTED =false;
 }

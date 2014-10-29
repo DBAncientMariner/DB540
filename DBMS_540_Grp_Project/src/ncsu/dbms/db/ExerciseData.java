@@ -66,10 +66,12 @@ public class ExerciseData {
 			if(questionsMap.containsKey(userAttemptExercise.UE_QUESTION_ID)) {
 				List<Options> options = questionsMap.get(userAttemptExercise.UE_QUESTION_ID);
 				Options op = getOption(userAttemptExercise);
+				op.setMarked(userAttemptExercise.UE_ISSELECTED);
 				options.add(op);
 			} else {
 				List<Options> options = new LinkedList<Options>();
 				Options op = getOption(userAttemptExercise);
+				op.setMarked(userAttemptExercise.UE_ISSELECTED);
 				options.add(op);
 				questionsMap.put(userAttemptExercise.UE_QUESTION_ID, options);
 			}

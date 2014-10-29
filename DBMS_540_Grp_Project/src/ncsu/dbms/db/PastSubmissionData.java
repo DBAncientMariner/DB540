@@ -5,65 +5,25 @@ import java.util.List;
 
 import ncsu.dbms.core.Answer;
 import ncsu.dbms.core.CorrectAnswer;
+import ncsu.dbms.core.OracleDataAdapter1;
 import ncsu.dbms.core.UserAttempt;
 
 public class PastSubmissionData {
 	
-	public static List<String> getAllAssignments() {
-		List<String> assignments = new LinkedList<String>();
-		assignments.add("Assignment 1");
-		assignments.add("Assignment 2");
-		assignments.add("Assignment 3");
-		assignments.add("Assignment 4");
-		return assignments;
+	public static List<UserAttempt> getExercise(boolean active) {
+		List<UserAttempt> userAttemptList = OracleDataAdapter1.GetUserAttemptForPastSubmission();
+		for (UserAttempt userAttempt : userAttemptList) {
+			boolean isActive = OracleDataAdapter1.IsActive(userAttempt.getUA_EXERCISE_ID());
+			if(isActive != active) {
+				userAttemptList.remove(userAttempt);
+			}
+		}
+		return userAttemptList;
 	}
 	
-	public static List<String> getExercisesAttempted(String assignment) {
-		List<String> attempts = new LinkedList<String>();
-		attempts.add("Attempt 1");
-		attempts.add("Attempt 2");
-		attempts.add("Attempt 3");
-		return attempts;
-	}
-	
-	public static List<UserAttempt> getInctiveExercise(String userId) {
-		List<UserAttempt> allAttempts = new LinkedList<>();
-		UserAttempt ua1 = new UserAttempt();
-		ua1.setUA_EXERCISE_ID(1);
-		ua1.setUA_SCORE(100);
-		ua1.setUA_ID(1);
-		allAttempts.add(ua1);
-		UserAttempt ua2 = new UserAttempt();
-		ua2.setUA_EXERCISE_ID(1);
-		ua2.setUA_SCORE(75);
-		ua2.setUA_ID(2);
-		allAttempts.add(ua2);
-		UserAttempt ua3 = new UserAttempt();
-		ua3.setUA_EXERCISE_ID(2);
-		ua3.setUA_SCORE(80);
-		ua3.setUA_ID(1);
-		allAttempts.add(ua3);
-		return allAttempts;
-	}
-	
-	public static List<UserAttempt> getActiveExercise(String userId) {
-		List<UserAttempt> allAttempts = new LinkedList<>();
-		UserAttempt ua1 = new UserAttempt();
-		ua1.setUA_EXERCISE_ID(3);
-		ua1.setUA_SCORE(50);
-		ua1.setUA_ID(1);
-		allAttempts.add(ua1);
-		UserAttempt ua2 = new UserAttempt();
-		ua2.setUA_EXERCISE_ID(3);
-		ua2.setUA_SCORE(90);
-		ua2.setUA_ID(2);
-		allAttempts.add(ua2);
-		UserAttempt ua3 = new UserAttempt();
-		ua3.setUA_EXERCISE_ID(4);
-		ua3.setUA_SCORE(94);
-		ua3.setUA_ID(1);
-		allAttempts.add(ua3);
-		return allAttempts;
+	public static String getExerciseName(int exerciseId) {
+		String exerciseName = OracleDataAdapter1.getExerciseName(exerciseId);
+		return exerciseName;
 	}
 	
 	public static List<Answer> getExerciseWithAnswer(int UA_id, int exerciseId, boolean isActive) {

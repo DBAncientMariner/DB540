@@ -18,7 +18,14 @@ public class UserAttempt {
 	Date UA_LASTATTEMPT_DATE =new Date();
 	boolean UA_SUBMITTED =false;
 	double UA_SCORE =0.00;
+	int ATTEMP_ID;
 	
+	public int getATTEMP_ID() {
+		return ATTEMP_ID;
+	}
+	public void setATTEMP_ID(int aTTEMP_ID) {
+		ATTEMP_ID = aTTEMP_ID;
+	}
 	public int getUA_ID() {
 		return UA_ID;
 	}

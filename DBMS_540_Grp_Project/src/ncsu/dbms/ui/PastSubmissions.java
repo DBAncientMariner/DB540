@@ -1,7 +1,6 @@
 package ncsu.dbms.ui;
 
 import java.awt.Color;
-import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
@@ -14,28 +13,12 @@ import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 
 import ncsu.dbms.core.UserAttempt;
-import ncsu.dbms.db.ExerciseData;
 import ncsu.dbms.db.PastSubmissionData;
 
 public class PastSubmissions {
 
 	private JPanel contentPane;
 	private JFrame frame;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					new PastSubmissions();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
 	/**
 	 * Create the frame.
@@ -105,16 +88,23 @@ public class PastSubmissions {
 	}
 
 	private void openExercise(JPanel panel_Right) {
-		List<UserAttempt> inctiveExercise = PastSubmissionData.getInctiveExercise(null);
+		List<UserAttempt> inActiveExercise = PastSubmissionData.getExercise(false);
+		List<UserAttempt> activeExercise = PastSubmissionData.getExercise(true);
 		
 		panel_Right.setLayout(null);
 		
 		int i = 10;
-		for (final UserAttempt userAttempt : inctiveExercise) {
-			JLabel exercise = new JLabel(ExerciseData.getExerciseName(userAttempt.getUA_EXERCISE_ID()));
+		if(inActiveExercise != null && inActiveExercise.size() > 0) {
+			JLabel inactive = new JLabel("Inactive Exercise(s)");
+			inactive.setBounds(10, i, 150, 35);
+			panel_Right.add(inactive);
+			i +=45;
+		}
+		for (final UserAttempt userAttempt : inActiveExercise) {
+			JLabel exercise = new JLabel(PastSubmissionData.getExerciseName(userAttempt.getUA_EXERCISE_ID()));
 			exercise.setBounds(10, i, 110, 35);
 			panel_Right.add(exercise);
-			JLabel attempt = new JLabel("Attempt" + userAttempt.getUA_ID());
+			JLabel attempt = new JLabel("Attempt" + userAttempt.getATTEMP_ID());
 			attempt.setBounds(130, i, 110, 35);
 			panel_Right.add(attempt);
 			JButton view = new JButton("View");
@@ -124,12 +114,39 @@ public class PastSubmissions {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					frame.setVisible(false);
-					new ViewPastSubmissions(userAttempt.getUA_EXERCISE_ID(), userAttempt.getUA_ID(), true);
+					new ViewPastSubmissions(userAttempt, false);
+				}
+			});
+			panel_Right.add(view);
+			i += 45;
+		}
+		
+		if(activeExercise != null && activeExercise.size() > 0) {
+			JLabel inactive = new JLabel("Active Exercise(s)");
+			inactive.setBounds(10, i, 150, 35);
+			panel_Right.add(inactive);
+			i +=45;
+		}
+		
+		for (final UserAttempt userAttempt : activeExercise) {
+			JLabel exercise = new JLabel(PastSubmissionData.getExerciseName(userAttempt.getUA_EXERCISE_ID()));
+			exercise.setBounds(10, i, 110, 35);
+			panel_Right.add(exercise);
+			JLabel attempt = new JLabel("Attempt" + userAttempt.getATTEMP_ID());
+			attempt.setBounds(130, i, 110, 35);
+			panel_Right.add(attempt);
+			JButton view = new JButton("View");
+			view.setBounds(250, i, 70, 30);
+			view.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					frame.setVisible(false);
+					new ViewPastSubmissions(userAttempt, true);
 				}
 			});
 			panel_Right.add(view);
 			i += 45;
 		}
 	}
-
 }

@@ -35,10 +35,6 @@ public class ExerciseData {
 		return list;
 	}
 	
-	public static String getExerciseName(int id) {
-		return "Exercise";
-	}
-	
 	public static List<Exercise> getExerciseList() {
 		OracleDataAdapter adp = new OracleDataAdapter();
 		Course currentSelectedCourseObject = LocalSession.getCurrentSelectedCourseObject();

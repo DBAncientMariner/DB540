@@ -20,37 +20,21 @@ import javax.swing.border.EmptyBorder;
 
 import ncsu.dbms.core.Answer;
 import ncsu.dbms.core.CorrectAnswer;
+import ncsu.dbms.core.UserAttempt;
 import ncsu.dbms.db.PastSubmissionData;
 
 public class ViewPastSubmissions {
 
 	private JPanel contentPane;
 	private JFrame frame;
-	private int exerciseId;
-	private int userAttemptId;
+	private UserAttempt userAttempt;
 	private boolean isActive;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					new ViewPastSubmissions(1, 1, false);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
 	/**
 	 * Create the frame.
 	 */
-	public ViewPastSubmissions(int exerciseId, int userAttemptId, boolean isActive) {
-		this.exerciseId = exerciseId;
-		this.userAttemptId = userAttemptId;
+	public ViewPastSubmissions(UserAttempt userAttempt, boolean isActive) {
+		this.userAttempt = userAttempt;
 		this.isActive = isActive;
 		frame = new JFrame();
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

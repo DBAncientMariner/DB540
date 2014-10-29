@@ -7,6 +7,9 @@ public class Question {
 	private String question;
 	private List<Options> options;
 	private boolean isMultipleChoice;
+	private boolean isParameterized;
+	private List<Parameter> parameterList;
+	private QbParamSet paramset;
 	
 	public Question(int questionId, String question, List<Options> options,
 			boolean isMultipleChoice) {
@@ -16,6 +19,31 @@ public class Question {
 		this.options = options;
 		this.isMultipleChoice = isMultipleChoice;
 	}
+
+	public boolean isParameterized() {
+		return isParameterized;
+	}
+
+	public void setParameterized(boolean isParameterized) {
+		this.isParameterized = isParameterized;
+	}
+
+	public List<Parameter> getParameterList() {
+		return parameterList;
+	}
+
+	public void setParameterList(List<Parameter> parameterList) {
+		this.parameterList = parameterList;
+	}
+
+	public QbParamSet getParamset() {
+		return paramset;
+	}
+
+	public void setParamset(QbParamSet paramset) {
+		this.paramset = paramset;
+	}
+
 
 	public int getQuestionId() {
 		return questionId;
@@ -48,6 +76,4 @@ public class Question {
 	public void setMultipleChoice(boolean isMultipleChoice) {
 		this.isMultipleChoice = isMultipleChoice;
 	}
-
-	
 }

@@ -8,8 +8,8 @@ package ncsu.dbms.core;
  *
  */
 public class VarParam {
-	int CSC_VAR_PARM_SURR_KEY =0;
-	int CSC_VAR_PARM__ID =0;
-	int CSC_VAR_PARM_VAR_SURR_KEY =0;
-	String CSC_VAR_PARM_VALUE ="";
+	public int CSC_VAR_PARM_SURR_KEY =0;
+	public int CSC_VAR_PARM__ID =0;
+	public int CSC_VAR_PARM_VAR_SURR_KEY =0;
+	public String CSC_VAR_PARM_VALUE ="";
 }

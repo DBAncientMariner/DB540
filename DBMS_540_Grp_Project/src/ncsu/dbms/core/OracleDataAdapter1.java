@@ -294,9 +294,9 @@ public class OracleDataAdapter1 {
 	}
 	
 	
-	public ArrayList<VarParam> GetVarParamForSet(int setId) {
+	public List<VarParam> GetVarParamForSet(int setId) {
 		VarParam varParam = new VarParam();
-		ArrayList<VarParam> listVarParam = new ArrayList<VarParam>();
+		List<VarParam> listVarParam = new ArrayList<VarParam>();
 		OracleDb oracleDb = new OracleDb();
 		oracleDb.OpenConnection();
 		String query = "select * from CSC_VAR_PARM where CSC_VAR_PARM_SURR_KEY IN (Select CSC_QB_PARAMETER_SET_PARM_ID "+

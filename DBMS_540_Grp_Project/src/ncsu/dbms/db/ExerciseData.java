@@ -1,5 +1,6 @@
 package ncsu.dbms.db;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -15,9 +16,13 @@ import ncsu.dbms.core.LocalSession;
 import ncsu.dbms.core.Options;
 import ncsu.dbms.core.OracleDataAdapter;
 import ncsu.dbms.core.OracleDataAdapter1;
+import ncsu.dbms.core.Parameter;
+import ncsu.dbms.core.QbParamSet;
+import ncsu.dbms.core.QbVariable;
 import ncsu.dbms.core.Question;
 import ncsu.dbms.core.QuestionBank;
 import ncsu.dbms.core.UserAttemptExercise;
+import ncsu.dbms.core.VarParam;
 
 public class ExerciseData {
 
@@ -102,22 +107,60 @@ public class ExerciseData {
 		List<QuestionBank> questionBankList = adp.GetQuestionBankForExerciseId(exerciseId);
 		List<Question> questionsList = new LinkedList<Question>();
 		for (QuestionBank questionBank : questionBankList) {
-			List<Options> options = new LinkedList<Options>();
-			List<AnswerBank> correctOption = adp.GetCorrectAnswerBank(questionBank.QUESTIONBANK_ID, 1);
-			for (AnswerBank answerBank : correctOption) {
-				Options op = new Options(answerBank.ANSWERBANK_ID, false, true);
-				op.setAnswer(answerBank.ANSWERBANK_TEXT);
-				options.add(op);
+			if(questionBank.CSC_QB_IS_PARAMETERIZED) {
+				OracleDataAdapter1 adp1 = new OracleDataAdapter1();
+				int paramSet = OracleDataAdapter1.GetSetForParamQues(questionBank.QUESTIONBANK_ID);
+				
+				List<Options> options = new LinkedList<Options>();
+				List<AnswerBank> correctOption = adp1.GetCorrectAnswerBankParam(paramSet, 1);
+				for (AnswerBank answerBank : correctOption) {
+					Options op = new Options(answerBank.ANSWERBANK_ID, false, true);
+					op.setAnswer(answerBank.ANSWERBANK_TEXT);
+					options.add(op);
+				}
+				List<AnswerBank> incorrectOption = adp1.GetInCorrectAnswerBankParam(paramSet, 3);
+				for (AnswerBank answerBank : incorrectOption) {
+					Options op = new Options(answerBank.ANSWERBANK_ID, false, false);
+					op.setAnswer(answerBank.ANSWERBANK_TEXT);
+					options.add(op);
+				}
+				Collections.shuffle(options);
+				Question q = new Question(questionBank.QUESTIONBANK_ID, questionBank.QUESTIONBANK_TEXT, options, false);
+				q.setParameterized(true);
+				QbParamSet param = new QbParamSet();
+				param.CSC_QB_PARAMETER_SET_PARM_ID = paramSet;
+				q.setParamset(param);
+				ArrayList<QbVariable> variableSet = adp1.GetQbVariableForSet(questionBank.QUESTIONBANK_ID);
+				List<VarParam> paramList = adp1.GetVarParamForSet(paramSet);
+				List<Parameter> params = new LinkedList<>();
+				for (VarParam varParam : paramList) {
+					for (QbVariable qbVariable : variableSet) {
+						if(qbVariable.CSC_QB_VARIABLE_SURR_KEY == varParam.CSC_VAR_PARM_VAR_SURR_KEY) {
+							Parameter newParam = new Parameter(varParam.CSC_VAR_PARM_VALUE, varParam.CSC_VAR_PARM__ID, qbVariable.CSC_QB_VARIABLE_NAME, qbVariable.CSC_QB_VARIABLE_ID);
+							params.add(newParam);
+						}
+					}
+				}
+				questionsList.add(q);
+			} else {
+				List<Options> options = new LinkedList<Options>();
+				List<AnswerBank> correctOption = adp.GetCorrectAnswerBank(questionBank.QUESTIONBANK_ID, 1);
+				for (AnswerBank answerBank : correctOption) {
+					Options op = new Options(answerBank.ANSWERBANK_ID, false, true);
+					op.setAnswer(answerBank.ANSWERBANK_TEXT);
+					options.add(op);
+				}
+				List<AnswerBank> incorrectOption = adp.GetInCorrectAnswerBank(questionBank.QUESTIONBANK_ID, 3);
+				for (AnswerBank answerBank : incorrectOption) {
+					Options op = new Options(answerBank.ANSWERBANK_ID, false, false);
+					op.setAnswer(answerBank.ANSWERBANK_TEXT);
+					options.add(op);
+				}
+				Collections.shuffle(options);
+				Question q = new Question(questionBank.QUESTIONBANK_ID, questionBank.QUESTIONBANK_TEXT, options, false);
+				q.setParameterized(false);
+				questionsList.add(q);
 			}
-			List<AnswerBank> incorrectOption = adp.GetInCorrectAnswerBank(questionBank.QUESTIONBANK_ID, 3);
-			for (AnswerBank answerBank : incorrectOption) {
-				Options op = new Options(answerBank.ANSWERBANK_ID, false, false);
-				op.setAnswer(answerBank.ANSWERBANK_TEXT);
-				options.add(op);
-			}
-			Collections.shuffle(options);
-			Question q = new Question(questionBank.QUESTIONBANK_ID, questionBank.QUESTIONBANK_TEXT, options, false);
-			questionsList.add(q);
 		}
 		Collections.shuffle(questionsList);
 		saveExercise(questionsList, exerciseId);

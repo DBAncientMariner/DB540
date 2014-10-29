@@ -388,8 +388,9 @@ public class OracleDataAdapter1 {
 		OracleDb oracleDb = new OracleDb();
 		oracleDb.OpenConnection();
 		int course_id = LocalSession.GetCurrentSelectedCourse();
+		Course course = LocalSession.getCurrentSelectedCourseObject();
 		User user = LocalSession.GetCurrentUser(); 
-		String query = "select * from CSC_USER_ATTEMPT where UA_EXERCISE_ID IN ( Select EXERCISE_ID From CSC_EXERCISE where EXERCISE_COURSE = "+course_id+") "+
+		String query = "select * from CSC_USER_ATTEMPT where UA_EXERCISE_ID IN ( Select EXERCISE_ID From CSC_EXERCISE where EXERCISE_COURSE = "+course.CSC_COURSE_Course_ID +") "+
 				"and UA_USER_ID = "+user.UserId +" and UA_SUBMITTED = 'T'";
 		ResultSet resultset = oracleDb
 				.GetResultSet(query);
@@ -400,7 +401,15 @@ public class OracleDataAdapter1 {
 				userAttempt.UA_ID = resultset.getInt("UA_ID");
 				userAttempt.UA_USER_ID = resultset.getInt("UA_USER_ID");
 				userAttempt.UA_EXERCISE_ID = resultset.getInt("UA_EXERCISE_ID");
-				userAttempt.UA_SUBMITTED = resultset.getBoolean("UA_SUBMITTED");
+				String submit = resultset.getString("UA_SUBMITTED");
+				if("T".equalsIgnoreCase(submit)){
+					userAttempt.UA_SUBMITTED = true;
+				}
+				else
+				{
+					userAttempt.UA_SUBMITTED = false;
+							
+				}
 				userAttempt.UA_SCORE = resultset.getDouble("UA_SCORE");
 				userAttempt.ATTEMP_ID = resultset.getInt("ATTEMP_ID");
 				try {

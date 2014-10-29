@@ -107,8 +107,8 @@ public class Login {
 			public void actionPerformed(ActionEvent arg0) {
 				lbl_ErrorMessage.setText("");
 				//testing
-				txt_Password.setText("sgarg5");
-				txt_LoginName.setText("sgarg5");
+				//txt_Password.setText("sgarg5");
+				//txt_LoginName.setText("sgarg5");
 				//testing
 				if(!txt_Password.getText().trim().equalsIgnoreCase("") && !txt_LoginName.getText().trim().equalsIgnoreCase(""))
 				{

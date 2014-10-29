@@ -293,6 +293,7 @@ public class OracleDataAdapter1 {
 		return listAnswerBank;
 	}
 	
+	
 	public ArrayList<VarParam> GetVarParamForSet(int setId) {
 		VarParam varParam = new VarParam();
 		ArrayList<VarParam> listVarParam = new ArrayList<VarParam>();
@@ -442,5 +443,33 @@ public class OracleDataAdapter1 {
 			oracleDb.CloseConnection();
 		}
 		return listUserAttemptExercise;
+	}
+	
+	public ArrayList<QbVariable> GetQbVariableForSet(int Q_id) {
+		QbVariable qbVariable = new QbVariable();
+		ArrayList<QbVariable> listQbVariable = new ArrayList<QbVariable>();
+		OracleDb oracleDb =  new OracleDb();
+		oracleDb.OpenConnection();
+		ResultSet resultset = oracleDb
+				.GetResultSet("Select * from CSC_QB_VARIABLE where CSC_QB_VAR_Q_ID ="+Q_id);
+		try {
+			while (resultset.next()) {
+				qbVariable = new QbVariable();
+
+				qbVariable.CSC_QB_VARIABLE_SURR_KEY = resultset
+						.getInt("CSC_QB_VARIABLE_SURR_KEY");
+				qbVariable.CSC_QB_VARIABLE_ID = resultset
+						.getInt("CSC_QB_VARIABLE_ID");
+				qbVariable.CSC_QB_VAR_Q_ID = resultset
+						.getInt("CSC_QB_VAR_Q_ID");
+				qbVariable.CSC_QB_VARIABLE_NAME = resultset
+						.getString("CSC_QB_VARIABLE_NAME");
+				listQbVariable.add(qbVariable);
+			}
+		} catch (SQLException e) {
+		} finally {
+			oracleDb.CloseConnection();
+		}
+		return listQbVariable;
 	}
 }

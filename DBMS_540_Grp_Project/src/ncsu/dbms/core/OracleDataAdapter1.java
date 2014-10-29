@@ -489,4 +489,27 @@ public class OracleDataAdapter1 {
 						"Values("+ua_id+","+Q_id+","+Set_id+")");
 		return resultset;
 	}
+	
+	public static int GetSetForUSERATTEMPTEXERCISEPRM(int UA_Id, int Q_id) {
+		OracleDb oracleDb = new OracleDb();
+		oracleDb.OpenConnection();
+		String query = "select CSC_UA_EX_PARM_SET_ID from CSC_USERATTEMPT_EXERCISE_PRM where CSC_UA_EX_UA_ID ="+UA_Id+
+				" and CSC_UA_EX_QUES_ID =" +Q_id;
+		ResultSet resultset = oracleDb
+				.GetResultSet(query);
+
+		int setId = -1;
+		try {
+			while(resultset != null && resultset.next()) {
+				setId = resultset.getInt("CSC_UA_EX_PARM_SET_ID");
+				break;
+			}
+				return setId;
+		} catch (Exception e) {
+			System.out.println(e);
+		} finally {
+			oracleDb.CloseConnection();
+		}
+		return setId;
+	}
 }

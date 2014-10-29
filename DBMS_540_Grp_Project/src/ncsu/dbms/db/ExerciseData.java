@@ -21,6 +21,7 @@ import ncsu.dbms.core.QbVariable;
 import ncsu.dbms.core.Question;
 import ncsu.dbms.core.QuestionBank;
 import ncsu.dbms.core.User;
+import ncsu.dbms.core.UserAttempt;
 import ncsu.dbms.core.UserAttemptExercise;
 import ncsu.dbms.core.VarParam;
 
@@ -255,11 +256,12 @@ public class ExerciseData {
 		return score;
 	}
 	
-//	public static void main(String args[]) {
-//		User u = new User();
-//		u.UserId = 12;
-//		LocalSession.SetCurrentUser(u);
-//		int uaId = OracleDataAdapter1.GetUAIdForExId(2);
-//	}
+	/*public static void main(String args[]) {
+		User u = new User();
+		u.UserId = 12;
+		LocalSession.SetCurrentUser(u);
+		LocalSession.SetCurrentSelectedCourse(courseId);
+		List<UserAttempt> abc = OracleDataAdapter1.GetUserAttemptForPastSubmission();
+	}*/
 }
 

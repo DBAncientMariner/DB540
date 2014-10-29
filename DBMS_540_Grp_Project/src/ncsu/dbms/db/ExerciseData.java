@@ -1,6 +1,5 @@
 package ncsu.dbms.db;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -80,12 +79,40 @@ public class ExerciseData {
 					questionText = questionBank.get(0).QUESTIONBANK_TEXT;
 				}
 				Question q = new Question(entry.getKey(), questionText, entry.getValue(), false);
+				boolean isParameterized = false;
+				if(questionBank != null && !questionBank.isEmpty()) {
+					isParameterized = questionBank.get(0).CSC_QB_IS_PARAMETERIZED;
+				}
+				if(isParameterized) {
+					int uaId = OracleDataAdapter1.GetUAIdForExId(exerciseId);
+					int paramSetId = OracleDataAdapter1.GetSetForUSERATTEMPTEXERCISEPRM(uaId, entry.getKey());
+					List<Parameter> parameterList = getParameters(entry.getKey(), paramSetId);
+					q.setParameterList(parameterList);
+					QbParamSet set = new QbParamSet();
+					set.CSC_QB_PARAMETER_SET_PARM_ID = paramSetId;
+				}
+				q.setParameterized(isParameterized);
+				updateCorrectAnswersForParameterizedQuestions(q);
 				list.add(q);
 			}
 		}
 		return list;
 	}
 	
+	private static void updateCorrectAnswersForParameterizedQuestions(Question q) {
+		if(q.isParameterized()) {
+			List<Options> options = q.getOptions();
+			for (Options op : options) {
+				String isCorrectAnswerParam = OracleDataAdapter1.IsCorrectAnswerParam(q.getParamset().CSC_QB_PARAMETER_SET_PARM_ID, op.getAnswerId());
+				if("t".equalsIgnoreCase(isCorrectAnswerParam)) {
+					op.setCorrect(true);
+				} else {
+					op.setCorrect(false);
+				}
+			}
+		}
+	}
+
 	private static Options getOption(UserAttemptExercise userAttemptExercise) {
 		String correct = OracleDataAdapter1.IsCorrectAnswer(userAttemptExercise.UE_QUESTION_ID, userAttemptExercise.UE_ANSWER_ID);
 		boolean isCorrect = false;

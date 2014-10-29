@@ -521,14 +521,14 @@ public class OracleDataAdapter1 {
 		OracleDb oracleDb = new OracleDb();
 		oracleDb.OpenConnection();
 		User user = LocalSession.GetCurrentUser();
-		String query = "Select UA_ID from CSC_USER_ATTEMPT where UA_SUBMITTED = 'F' and UA_USER_ID = "+user.UserId+"and UA_EXERCISE_ID ="+Exercise_Id ;
+		String query = "Select UA_ID from CSC_USER_ATTEMPT where UA_SUBMITTED = 'F' and UA_USER_ID = "+user.UserId+" and UA_EXERCISE_ID ="+Exercise_Id ;
 		ResultSet resultset = oracleDb
 				.GetResultSet(query);
 
 		int UA_Id = -1;
 		try {
 			while(resultset != null && resultset.next()) {
-				UA_Id = resultset.getInt("CSC_UA_EX_PARM_SET_ID");
+				UA_Id = resultset.getInt("UA_ID");
 				break;
 			}
 				return UA_Id;

@@ -20,6 +20,7 @@ import ncsu.dbms.core.QbParamSet;
 import ncsu.dbms.core.QbVariable;
 import ncsu.dbms.core.Question;
 import ncsu.dbms.core.QuestionBank;
+import ncsu.dbms.core.User;
 import ncsu.dbms.core.UserAttemptExercise;
 import ncsu.dbms.core.VarParam;
 
@@ -90,9 +91,11 @@ public class ExerciseData {
 					q.setParameterList(parameterList);
 					QbParamSet set = new QbParamSet();
 					set.CSC_QB_PARAMETER_SET_PARM_ID = paramSetId;
+					q.setParamset(set);
+					updateCorrectAnswersForParameterizedQuestions(q);
 				}
 				q.setParameterized(isParameterized);
-				updateCorrectAnswersForParameterizedQuestions(q);
+				
 				list.add(q);
 			}
 		}
@@ -251,4 +254,12 @@ public class ExerciseData {
 		}
 		return score;
 	}
+	
+//	public static void main(String args[]) {
+//		User u = new User();
+//		u.UserId = 12;
+//		LocalSession.SetCurrentUser(u);
+//		int uaId = OracleDataAdapter1.GetUAIdForExId(2);
+//	}
 }
+

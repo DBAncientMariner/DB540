@@ -512,4 +512,27 @@ public class OracleDataAdapter1 {
 		}
 		return setId;
 	}
+	
+	public static int GetUAIdForExId(int Exercise_Id) {
+		OracleDb oracleDb = new OracleDb();
+		oracleDb.OpenConnection();
+		User user = LocalSession.GetCurrentUser();
+		String query = "Select UA_ID from CSC_USER_ATTEMPT where UA_SUBMITTED = 'F' and UA_USER_ID = "+user.UserId+"and UA_EXERCISE_ID ="+Exercise_Id ;
+		ResultSet resultset = oracleDb
+				.GetResultSet(query);
+
+		int UA_Id = -1;
+		try {
+			while(resultset != null && resultset.next()) {
+				UA_Id = resultset.getInt("CSC_UA_EX_PARM_SET_ID");
+				break;
+			}
+				return UA_Id;
+		} catch (Exception e) {
+			System.out.println(e);
+		} finally {
+			oracleDb.CloseConnection();
+		}
+		return UA_Id;
+	}
 }

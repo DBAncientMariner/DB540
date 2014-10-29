@@ -141,6 +141,7 @@ public class ExerciseData {
 						}
 					}
 				}
+				q.setParameterList(params);
 				questionsList.add(q);
 			} else {
 				List<Options> options = new LinkedList<Options>();

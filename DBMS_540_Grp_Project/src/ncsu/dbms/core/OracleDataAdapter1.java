@@ -195,12 +195,19 @@ public class OracleDataAdapter1 {
 		ResultSet resultset = oracleDb
 				.GetResultSet(query);
 
+		int setId = -1;
 		try {
-			int setId = resultset.getInt("CSC_QB_PARAMETER_SET_ID");
-			return setId;
+			while(resultset != null && resultset.next()) {
+				setId = resultset.getInt("CSC_QB_PARAMETER_SET_ID");
+				break;
+			}
+				return setId;
 		} catch (Exception e) {
+			System.out.println(e);
+		} finally {
+			oracleDb.CloseConnection();
 		}
-		return -1;
+		return setId;
 	}
 	
 	public List<AnswerBank> GetCorrectAnswerBankParam(int Set_Id, int no_of_correct) {

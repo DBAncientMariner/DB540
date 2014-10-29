@@ -10,6 +10,8 @@ public class Question {
 	private boolean isParameterized;
 	private List<Parameter> parameterList;
 	private QbParamSet paramset;
+	private String questionExplanation;
+	private String questionHint;
 	
 	public Question(int questionId, String question, List<Options> options,
 			boolean isMultipleChoice) {
@@ -18,6 +20,24 @@ public class Question {
 		this.question = question;
 		this.options = options;
 		this.isMultipleChoice = isMultipleChoice;
+		isMultipleChoice = false;
+		isParameterized = false;
+	}
+
+	public String getQuestionExplanation() {
+		return questionExplanation;
+	}
+
+	public void setQuestionExplanation(String questionExplanation) {
+		this.questionExplanation = questionExplanation;
+	}
+
+	public String getQuestionHint() {
+		return questionHint;
+	}
+
+	public void setQuestionHint(String questionHint) {
+		this.questionHint = questionHint;
 	}
 
 	public boolean isParameterized() {
@@ -43,7 +63,6 @@ public class Question {
 	public void setParamset(QbParamSet paramset) {
 		this.paramset = paramset;
 	}
-
 
 	public int getQuestionId() {
 		return questionId;

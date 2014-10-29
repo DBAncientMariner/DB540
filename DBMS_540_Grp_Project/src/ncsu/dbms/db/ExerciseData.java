@@ -20,8 +20,6 @@ import ncsu.dbms.core.QbParamSet;
 import ncsu.dbms.core.QbVariable;
 import ncsu.dbms.core.Question;
 import ncsu.dbms.core.QuestionBank;
-import ncsu.dbms.core.User;
-import ncsu.dbms.core.UserAttempt;
 import ncsu.dbms.core.UserAttemptExercise;
 import ncsu.dbms.core.VarParam;
 
@@ -56,47 +54,51 @@ public class ExerciseData {
 		if(savedAttempt == null || savedAttempt.isEmpty()) {
 			list = getFreshExerciseQuestion(exerciseId);
 		} else {
-			Map<Integer, List<Options>> questionsMap = new HashMap<Integer, List<Options>>();
-			for (UserAttemptExercise userAttemptExercise : savedAttempt) {
-				if(questionsMap.containsKey(userAttemptExercise.UE_QUESTION_ID)) {
-					List<Options> options = questionsMap.get(userAttemptExercise.UE_QUESTION_ID);
-					Options op = getOption(userAttemptExercise);
-					options.add(op);
-				} else {
-					List<Options> options = new LinkedList<Options>();
-					Options op = getOption(userAttemptExercise);
-					options.add(op);
-					questionsMap.put(userAttemptExercise.UE_QUESTION_ID, options);
-				}
-			}
-			Set<Entry<Integer, List<Options>>> entrySet = questionsMap.entrySet();
-			for (Entry<Integer, List<Options>> entry : entrySet) {
-				String questionText = "";
-				List<QuestionBank> questionBank = OracleDataAdapter1.GetQuestionBankFromQid(entry.getKey());
-				if(questionBank != null && !questionBank.isEmpty()) {
-					questionText = questionBank.get(0).QUESTIONBANK_TEXT;
-				}
-				Question q = new Question(entry.getKey(), questionText, entry.getValue(), false);
-				boolean isParameterized = false;
-				if(questionBank != null && !questionBank.isEmpty()) {
-					isParameterized = questionBank.get(0).CSC_QB_IS_PARAMETERIZED;
-				}
-				if(isParameterized) {
-					int uaId = OracleDataAdapter1.GetUAIdForExId(exerciseId);
-					int paramSetId = OracleDataAdapter1.GetSetForUSERATTEMPTEXERCISEPRM(uaId, entry.getKey());
-					List<Parameter> parameterList = getParameters(entry.getKey(), paramSetId);
-					q.setParameterList(parameterList);
-					QbParamSet set = new QbParamSet();
-					set.CSC_QB_PARAMETER_SET_PARM_ID = paramSetId;
-					q.setParamset(set);
-					updateCorrectAnswersForParameterizedQuestions(q);
-				}
-				q.setParameterized(isParameterized);
-				
-				list.add(q);
-			}
+			list = getQuestionsFromUserAttemptExercise(exerciseId, savedAttempt);
 		}
 		return list;
+	}
+
+	public static List<Question> getQuestionsFromUserAttemptExercise(int exerciseId, List<UserAttemptExercise> userAttemptExerciseList) {
+		List<Question> questionList = new LinkedList<Question>();
+		Map<Integer, List<Options>> questionsMap = new HashMap<Integer, List<Options>>();
+		for (UserAttemptExercise userAttemptExercise : userAttemptExerciseList) {
+			if(questionsMap.containsKey(userAttemptExercise.UE_QUESTION_ID)) {
+				List<Options> options = questionsMap.get(userAttemptExercise.UE_QUESTION_ID);
+				Options op = getOption(userAttemptExercise);
+				options.add(op);
+			} else {
+				List<Options> options = new LinkedList<Options>();
+				Options op = getOption(userAttemptExercise);
+				options.add(op);
+				questionsMap.put(userAttemptExercise.UE_QUESTION_ID, options);
+			}
+		}
+		Set<Entry<Integer, List<Options>>> entrySet = questionsMap.entrySet();
+		for (Entry<Integer, List<Options>> entry : entrySet) {
+			List<QuestionBank> questionBank = OracleDataAdapter1.GetQuestionBankFromQid(entry.getKey());
+			Question q = new Question(entry.getKey(), "", entry.getValue(), false);
+			if(questionBank != null && !questionBank.isEmpty()) {
+				q.setQuestion(questionBank.get(0).QUESTIONBANK_TEXT);
+				q.setParameterized(questionBank.get(0).CSC_QB_IS_PARAMETERIZED);
+				q.setQuestionExplanation(questionBank.get(0).QUESTIONBANK_EXPLANATION);
+				q.setQuestionHint(questionBank.get(0).QUESTIONBANK_HINT);
+			}
+			
+			if(q.isParameterized()) {
+				int uaId = OracleDataAdapter1.GetUAIdForExId(exerciseId);
+				int paramSetId = OracleDataAdapter1.GetSetForUSERATTEMPTEXERCISEPRM(uaId, entry.getKey());
+				List<Parameter> parameterList = getParameters(entry.getKey(), paramSetId);
+				q.setParameterList(parameterList);
+				QbParamSet set = new QbParamSet();
+				set.CSC_QB_PARAMETER_SET_PARM_ID = paramSetId;
+				q.setParamset(set);
+				updateCorrectAnswersForParameterizedQuestions(q);
+			}
+
+			questionList.add(q);
+		}
+		return questionList;
 	}
 	
 	private static void updateCorrectAnswersForParameterizedQuestions(Question q) {

@@ -20,6 +20,7 @@ import javax.swing.border.EmptyBorder;
 
 import ncsu.dbms.core.Answer;
 import ncsu.dbms.core.CorrectAnswer;
+import ncsu.dbms.core.Question;
 import ncsu.dbms.core.UserAttempt;
 import ncsu.dbms.db.PastSubmissionData;
 
@@ -112,89 +113,89 @@ public class ViewPastSubmissions {
 	}
 
 	private void openExercise(JPanel panel_Right) {
-		List<Answer> exercise = PastSubmissionData.getExerciseWithAnswer(userAttemptId, exerciseId, isActive);
+		List<Question> questionList = PastSubmissionData.getExerciseAttempt(userAttempt);
 
-		panel_Right.setLayout(new GridLayout(exercise.size() * 7, 1));
-
-		for (Answer answer : exercise) {
-			JLabel questionText = new JLabel(answer.getQuestion());
-			panel_Right.add(questionText);
-
-			boolean isCorrect = true;
-			String explanation = "";
-			List<Integer> correctAnswer = new LinkedList<Integer>();
-			int i = 1;
-			if (!answer.isMultipleChoice()) {
-				ButtonGroup group = new ButtonGroup();
-				for (CorrectAnswer option : answer.getOptions()) {
-					JRadioButton optionbutton = new JRadioButton(option.getOption());
-					if(option.isMarked()) {
-						optionbutton.setSelected(true);
-					}
-					if(option.isCorrect()) {
-						correctAnswer.add(i);
-					}
-					if(option.isCorrect() != option.isMarked()) {
-						isCorrect = false;
-						if(option.isCorrect()) {
-							if(isActive && option.isCorrect()) {
-								explanation = option.getShortExplanation();
-							} else {
-								explanation = option.getDetailExplanation();
-							}
-						}
-					}
-					i++;
-					group.add(optionbutton);
-					panel_Right.add(optionbutton);
-				}
-				
-			} else {
-				for (CorrectAnswer option : answer.getOptions()) {
-					JCheckBox optionbutton = new JCheckBox(option.getOption());
-					if(option.isMarked()) {
-						optionbutton.setSelected(true);
-					}
-					if(option.isCorrect()) {
-						correctAnswer.add(i);
-					}
-					if(option.isCorrect() != option.isMarked()) {
-						isCorrect = false;
-						if(option.isCorrect()) {
-							if(isActive && option.isCorrect()) {
-								explanation = option.getShortExplanation();
-							} else {
-								explanation = option.getDetailExplanation();
-							}
-						}
-					}
-					i++;
-					panel_Right.add(optionbutton);
-				}
-			}
-			if(isActive) {
-				if(isCorrect) {
-					JLabel correct = new JLabel("Correct Answer");
-					panel_Right.add(correct);
-				} else {
-					JLabel correct = new JLabel("Incorrect Answer");
-					panel_Right.add(correct);
-				}
-			} else {
-				if(isCorrect) {
-					JLabel correct = new JLabel("Correct Answer");
-					panel_Right.add(correct);
-				} else {
-					String cString = "" + correctAnswer.get(0);
-					for(int j = 1; j < correctAnswer.size(); j++) {
-						cString = cString + ", " + correctAnswer.get(j);
-					}
-					JLabel correct = new JLabel("Correct answer is " + cString);
-					panel_Right.add(correct);
-				}
-			}
-			JLabel explanationLabel = new JLabel(explanation);
-			panel_Right.add(explanationLabel);
-		}
+//		panel_Right.setLayout(new GridLayout(exercise.size() * 7, 1));
+//
+//		for (Answer answer : exercise) {
+//			JLabel questionText = new JLabel(answer.getQuestion());
+//			panel_Right.add(questionText);
+//
+//			boolean isCorrect = true;
+//			String explanation = "";
+//			List<Integer> correctAnswer = new LinkedList<Integer>();
+//			int i = 1;
+//			if (!answer.isMultipleChoice()) {
+//				ButtonGroup group = new ButtonGroup();
+//				for (CorrectAnswer option : answer.getOptions()) {
+//					JRadioButton optionbutton = new JRadioButton(option.getOption());
+//					if(option.isMarked()) {
+//						optionbutton.setSelected(true);
+//					}
+//					if(option.isCorrect()) {
+//						correctAnswer.add(i);
+//					}
+//					if(option.isCorrect() != option.isMarked()) {
+//						isCorrect = false;
+//						if(option.isCorrect()) {
+//							if(isActive && option.isCorrect()) {
+//								explanation = option.getShortExplanation();
+//							} else {
+//								explanation = option.getDetailExplanation();
+//							}
+//						}
+//					}
+//					i++;
+//					group.add(optionbutton);
+//					panel_Right.add(optionbutton);
+//				}
+//				
+//			} else {
+//				for (CorrectAnswer option : answer.getOptions()) {
+//					JCheckBox optionbutton = new JCheckBox(option.getOption());
+//					if(option.isMarked()) {
+//						optionbutton.setSelected(true);
+//					}
+//					if(option.isCorrect()) {
+//						correctAnswer.add(i);
+//					}
+//					if(option.isCorrect() != option.isMarked()) {
+//						isCorrect = false;
+//						if(option.isCorrect()) {
+//							if(isActive && option.isCorrect()) {
+//								explanation = option.getShortExplanation();
+//							} else {
+//								explanation = option.getDetailExplanation();
+//							}
+//						}
+//					}
+//					i++;
+//					panel_Right.add(optionbutton);
+//				}
+//			}
+//			if(isActive) {
+//				if(isCorrect) {
+//					JLabel correct = new JLabel("Correct Answer");
+//					panel_Right.add(correct);
+//				} else {
+//					JLabel correct = new JLabel("Incorrect Answer");
+//					panel_Right.add(correct);
+//				}
+//			} else {
+//				if(isCorrect) {
+//					JLabel correct = new JLabel("Correct Answer");
+//					panel_Right.add(correct);
+//				} else {
+//					String cString = "" + correctAnswer.get(0);
+//					for(int j = 1; j < correctAnswer.size(); j++) {
+//						cString = cString + ", " + correctAnswer.get(j);
+//					}
+//					JLabel correct = new JLabel("Correct answer is " + cString);
+//					panel_Right.add(correct);
+//				}
+//			}
+//			JLabel explanationLabel = new JLabel(explanation);
+//			panel_Right.add(explanationLabel);
+//		}
 	}
 }

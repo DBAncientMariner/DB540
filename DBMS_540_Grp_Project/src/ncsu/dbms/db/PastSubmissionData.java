@@ -6,7 +6,9 @@ import java.util.List;
 import ncsu.dbms.core.Answer;
 import ncsu.dbms.core.CorrectAnswer;
 import ncsu.dbms.core.OracleDataAdapter1;
+import ncsu.dbms.core.Question;
 import ncsu.dbms.core.UserAttempt;
+import ncsu.dbms.core.UserAttemptExercise;
 
 public class PastSubmissionData {
 	
@@ -24,6 +26,12 @@ public class PastSubmissionData {
 	public static String getExerciseName(int exerciseId) {
 		String exerciseName = OracleDataAdapter1.getExerciseName(exerciseId);
 		return exerciseName;
+	}
+	
+	public static List<Question> getExerciseAttempt(UserAttempt userAttempt) {
+		List<UserAttemptExercise> userAttemptExerciseList = OracleDataAdapter1.GetUserAttemptExerciseForPast(userAttempt.getUA_ID());
+		List<Question> questionList = ExerciseData.getQuestionsFromUserAttemptExercise(userAttempt.getUA_EXERCISE_ID(), userAttemptExerciseList);
+		return questionList;
 	}
 	
 	public static List<Answer> getExerciseWithAnswer(int UA_id, int exerciseId, boolean isActive) {

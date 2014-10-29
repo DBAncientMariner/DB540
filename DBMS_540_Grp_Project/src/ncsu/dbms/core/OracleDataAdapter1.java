@@ -479,4 +479,14 @@ public class OracleDataAdapter1 {
 		}
 		return listQbVariable;
 	}
+	
+	public static boolean CSC_USERATTEMPT_EXERCISE_PRM(int ua_id, int Q_id,
+			int Set_id) {
+		OracleDb oracleDb = new OracleDb();
+		oracleDb.OpenConnection();
+		boolean resultset = oracleDb
+				.InsertQuery("Insert into CSC_USERATTEMPT_EXERCISE_PRM(CSC_UA_EX_UA_ID,CSC_UA_EX_QUES_ID,CSC_UA_EX_PARM_SET_ID) "+
+						"Values("+ua_id+","+Q_id+","+Set_id+")");
+		return resultset;
+	}
 }

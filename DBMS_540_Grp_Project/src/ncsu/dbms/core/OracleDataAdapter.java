@@ -1257,7 +1257,7 @@ public class OracleDataAdapter {
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		oracleDb.OpenConnection();
 		ResultSet resultset = oracleDb
-				.GetResultSet("select * from CSC_USER_ATTEMPT UT,CSC_EXERCISE EX where UT.UA_EXERCISE_ID = EX.EXERCISE_ID and EX.EXERCISE_COURSE = "+course_id+" and UT.UA_USER_ID = "+user.UserId+";");
+				.GetResultSet("select * from CSC_USER_ATTEMPT UT,CSC_EXERCISE EX where UT.UA_EXERCISE_ID = EX.EXERCISE_ID and EX.EXERCISE_COURSE = "+course_id+" and UT.UA_SUBMITTED = 'T'and UT.UA_USER_ID = "+user.UserId);
 		try {
 			if(resultset == null) {
 				return listUserAttempt;
@@ -1268,7 +1268,15 @@ public class OracleDataAdapter {
 				userAttempt.UA_ID = resultset.getInt("UA_ID");
 				userAttempt.UA_USER_ID = resultset.getInt("UA_USER_ID");
 				userAttempt.UA_EXERCISE_ID = resultset.getInt("UA_EXERCISE_ID");
-				userAttempt.UA_SUBMITTED = resultset.getBoolean("UA_SUBMITTED");
+				String submit = resultset.getString("UA_SUBMITTED");
+				if("T".equalsIgnoreCase(submit))
+				{
+					userAttempt.UA_SUBMITTED = true;
+				}
+				else
+				{
+					userAttempt.UA_SUBMITTED = false;
+				}
 				userAttempt.UA_SCORE = resultset.getDouble("UA_SCORE");
 				try {
 					userAttempt.UA_STARTATTEMPT_DATE = simpleDateFormat

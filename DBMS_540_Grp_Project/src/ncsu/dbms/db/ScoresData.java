@@ -8,7 +8,7 @@ import ncsu.dbms.core.OracleDataAdapter;
 import ncsu.dbms.core.UserAttempt;
 
 public class ScoresData {
-	public static List<UserAttempt> getAllAttempts(String userId) {
+	public static List<UserAttempt> getAllAttempts() {
 //		List<UserAttempt> allAttempts = new LinkedList<>();
 //		UserAttempt ua1 = new UserAttempt();
 //		ua1.setUA_EXERCISE_ID(1);

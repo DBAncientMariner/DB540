@@ -103,7 +103,7 @@ public class ViewScore {
 	}
 
 	private void openExercise(JPanel panel_Right) {
-		List<UserAttempt> allAttempts = ScoresData.getAllAttempts(null);
+		List<UserAttempt> allAttempts = ScoresData.getAllAttempts();
 				
 		panel_Right.setLayout(null);
 

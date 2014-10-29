@@ -130,17 +130,7 @@ public class ExerciseData {
 				QbParamSet param = new QbParamSet();
 				param.CSC_QB_PARAMETER_SET_PARM_ID = paramSet;
 				q.setParamset(param);
-				ArrayList<QbVariable> variableSet = adp1.GetQbVariableForSet(questionBank.QUESTIONBANK_ID);
-				List<VarParam> paramList = adp1.GetVarParamForSet(paramSet);
-				List<Parameter> params = new LinkedList<>();
-				for (VarParam varParam : paramList) {
-					for (QbVariable qbVariable : variableSet) {
-						if(qbVariable.CSC_QB_VARIABLE_SURR_KEY == varParam.CSC_VAR_PARM_VAR_SURR_KEY) {
-							Parameter newParam = new Parameter(varParam.CSC_VAR_PARM_VALUE, varParam.CSC_VAR_PARM__ID, qbVariable.CSC_QB_VARIABLE_NAME, qbVariable.CSC_QB_VARIABLE_ID);
-							params.add(newParam);
-						}
-					}
-				}
+				List<Parameter> params = getParameters(questionBank.QUESTIONBANK_ID, paramSet);
 				q.setParameterList(params);
 				questionsList.add(q);
 			} else {
@@ -167,12 +157,30 @@ public class ExerciseData {
 		saveExercise(questionsList, exerciseId);
 		return questionsList;
 	}
+
+	private static List<Parameter> getParameters(int questionId, int paramSet) {
+		List<QbVariable> variableSet = OracleDataAdapter1.GetQbVariableForSet(questionId);
+		List<VarParam> paramList = OracleDataAdapter1.GetVarParamForSet(paramSet);
+		List<Parameter> params = new LinkedList<>();
+		for (VarParam varParam : paramList) {
+			for (QbVariable qbVariable : variableSet) {
+				if(qbVariable.CSC_QB_VARIABLE_SURR_KEY == varParam.CSC_VAR_PARM_VAR_SURR_KEY) {
+					Parameter newParam = new Parameter(varParam.CSC_VAR_PARM_VALUE, varParam.CSC_VAR_PARM__ID, qbVariable.CSC_QB_VARIABLE_NAME, qbVariable.CSC_QB_VARIABLE_ID);
+					params.add(newParam);
+				}
+			}
+		}
+		return params;
+	}
 	
 	public static void saveExercise(List<Question> exerciseQuestions, int exerciseId) {
 		double score = 0;
 		OracleDataAdapter adp = new OracleDataAdapter();
 		int uaId = adp.InsertUserAttempSubmit(exerciseId, score, "F");
 		for (Question question : exerciseQuestions) {
+			if(question.isParameterized()) {
+				OracleDataAdapter1.CSC_USERATTEMPT_EXERCISE_PRM(uaId, question.getQuestionId(), question.getParamset().CSC_QB_PARAMETER_SET_PARM_ID);
+			}
 			List<Options> options = question.getOptions();
 			for (Options op : options) {
 				OracleDataAdapter1.InsertIntoUserAttempExercise(uaId, question.getQuestionId(), op.getAnswerId(), 'F');

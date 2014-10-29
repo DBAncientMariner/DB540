@@ -301,7 +301,7 @@ public class OracleDataAdapter1 {
 	}
 	
 	
-	public List<VarParam> GetVarParamForSet(int setId) {
+	public static List<VarParam> GetVarParamForSet(int setId) {
 		VarParam varParam = new VarParam();
 		List<VarParam> listVarParam = new ArrayList<VarParam>();
 		OracleDb oracleDb = new OracleDb();
@@ -452,9 +452,9 @@ public class OracleDataAdapter1 {
 		return listUserAttemptExercise;
 	}
 	
-	public ArrayList<QbVariable> GetQbVariableForSet(int Q_id) {
+	public static List<QbVariable> GetQbVariableForSet(int Q_id) {
 		QbVariable qbVariable = new QbVariable();
-		ArrayList<QbVariable> listQbVariable = new ArrayList<QbVariable>();
+		List<QbVariable> listQbVariable = new ArrayList<QbVariable>();
 		OracleDb oracleDb =  new OracleDb();
 		oracleDb.OpenConnection();
 		ResultSet resultset = oracleDb

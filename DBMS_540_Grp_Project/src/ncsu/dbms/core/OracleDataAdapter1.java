@@ -90,8 +90,10 @@ public class OracleDataAdapter1 {
 						+ Q_id + " and QABANK_ANSWER_ID =" + A_id);
 
 		try {
+			while(resultset != null && resultset.next()) {
 			String str = resultset.getString("QABANK_ISCORRECT");
 			return str;
+			}
 		} catch (Exception e) {
 		}
 		return null;
@@ -370,8 +372,10 @@ public class OracleDataAdapter1 {
 				.GetResultSet(query);
 
 		try {
+			while(resultset != null && resultset.next()) {
 			String str = resultset.getString("QABANK_ISCORRECT");
 			return str;
+			}
 		} catch (Exception e) {
 		}
 		return null;

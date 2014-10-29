@@ -20,7 +20,6 @@ import javax.swing.border.EmptyBorder;
 
 import ncsu.dbms.core.Exercise;
 import ncsu.dbms.core.Options;
-import ncsu.dbms.core.Parameter;
 import ncsu.dbms.core.Question;
 import ncsu.dbms.db.ExerciseData;
 
@@ -167,14 +166,8 @@ public class AttemptExercise {
 		panel_Right.setLayout(new GridLayout(exerciseQuestions.size() * 5, 1));
 
 		for (Question question : exerciseQuestions) {
-			StringBuilder sb = new StringBuilder();
-			sb.append(question.getQuestion());
-			if(question.isParameterized()) {
-				for (Parameter param : question.getParameterList()) {
-					sb.append(param.getVariableName() + ":" + param.getParameterText());
-				}
-			}
-			JLabel questionText = new JLabel(sb.toString());
+			String text = ExerciseData.getQuestionText(question);
+			JLabel questionText = new JLabel(text);
 			panel_Right.add(questionText);
 
 			if (!question.isMultipleChoice()) {

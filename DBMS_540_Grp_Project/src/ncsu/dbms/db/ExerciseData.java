@@ -256,6 +256,17 @@ public class ExerciseData {
 		return score;
 	}
 	
+	public static String getQuestionText(Question question) {
+		StringBuilder sb = new StringBuilder();
+		sb.append(question.getQuestion());
+		if(question.isParameterized()) {
+			for (Parameter param : question.getParameterList()) {
+				sb.append(param.getVariableName() + ":" + param.getParameterText());
+			}
+		}
+		return sb.toString();
+	}
+	
 	/*public static void main(String args[]) {
 		User u = new User();
 		u.UserId = 12;

@@ -402,18 +402,19 @@ public class OracleDataAdapter1 {
 				userAttempt.UA_EXERCISE_ID = resultset.getInt("UA_EXERCISE_ID");
 				userAttempt.UA_SUBMITTED = resultset.getBoolean("UA_SUBMITTED");
 				userAttempt.UA_SCORE = resultset.getDouble("UA_SCORE");
+				userAttempt.ATTEMP_ID = resultset.getInt("ATTEMP_ID");
 				try {
 					userAttempt.UA_STARTATTEMPT_DATE = simpleDateFormat
 							.parse(resultset.getString("UA_STARTATTEMPT_DATE"));
 					userAttempt.UA_LASTATTEMPT_DATE = simpleDateFormat
 							.parse(resultset.getString("UA_LASTATTEMPT_DATE"));
-					userAttempt.UA_STARTATTEMPT_DATE = simpleDateFormat
-							.parse(resultset.getString("UA_STARTATTEMPT_DATE"));
 				} catch (Exception e) {
+					System.out.println(e);
 				}
 				listUserAttempt.add(userAttempt);
 			}
 		} catch (SQLException e) {
+			System.out.println(e);
 		} finally {
 			oracleDb.CloseConnection();
 		}
@@ -555,7 +556,29 @@ public class OracleDataAdapter1 {
 				return true;
 			}
 		} catch (Exception e) {
+			System.out.println(e);
+		} finally {
+			oracleDb.CloseConnection();
 		}
 		return false;
+	}
+	
+	public static String getExerciseName(int exercise_Id) {
+		OracleDb oracleDb = new OracleDb();
+		oracleDb.OpenConnection();
+		String query = "select EXERCISE_NAME from CSC_EXERCISE where EXERCISE_ID = "+exercise_Id;
+		ResultSet resultset = oracleDb.GetResultSet(query);
+
+		try {
+			while(resultset != null && resultset.next()) {
+				String name = resultset.getString("EXERCISE_NAME");
+				return name;
+			}
+		} catch (Exception e) {
+			System.out.println(e);
+		} finally {
+			oracleDb.CloseConnection();
+		}
+		return "";
 	}
 }

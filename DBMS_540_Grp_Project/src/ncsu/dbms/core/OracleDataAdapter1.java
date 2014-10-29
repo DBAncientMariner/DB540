@@ -381,9 +381,9 @@ public class OracleDataAdapter1 {
 		return null;
 	}
 	
-	public ArrayList<UserAttempt> GetUserAttemptForPastSubmission() {
+	public static List<UserAttempt> GetUserAttemptForPastSubmission() {
 		UserAttempt userAttempt = new UserAttempt();
-		ArrayList<UserAttempt> listUserAttempt = new ArrayList<UserAttempt>();
+		List<UserAttempt> listUserAttempt = new ArrayList<UserAttempt>();
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		OracleDb oracleDb = new OracleDb();
 		oracleDb.OpenConnection();
@@ -538,5 +538,24 @@ public class OracleDataAdapter1 {
 			oracleDb.CloseConnection();
 		}
 		return UA_Id;
+	}
+	
+	public static boolean IsActive(int Exercise_Id) {
+		OracleDb oracleDb = new OracleDb();
+		oracleDb.OpenConnection();
+		ResultSet resultset = oracleDb
+				.GetResultSet("select count(*) from Csc_Exercise where EXERCISE_ENDDATE >= SYSDATE AND EXERCISE_STARTDATE<= SYSDATE and EXERCISE_ID ="  + Exercise_Id);
+
+		try {
+			while(resultset != null && resultset.next()) {
+			int count = resultset.getInt("COUNT(*)");
+			if(count == 0)
+				return false;
+			else
+				return true;
+			}
+		} catch (Exception e) {
+		}
+		return false;
 	}
 }

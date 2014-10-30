@@ -116,11 +116,10 @@ public class Home {
 		btnAddHomework.setBounds(12, 200, 187, 33);
 		btnAddHomework.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				if(listCourses.getSelectedIndex()>=0)
-				{
-				ListHomework listHomework=new ListHomework();
-				listHomework.setVisible(true);
-				frame.setVisible(false);
+				if (listCourses.getSelectedIndex() >= 0 && (User.IsFaculty(LocalSession.GetCurrentUser())  || User.IsTA(LocalSession.GetCurrentUser()))) {
+					ListHomework listHomework = new ListHomework();
+					listHomework.setVisible(true);
+					frame.setVisible(false);
 				}
 			}
 		});
@@ -130,14 +129,16 @@ public class Home {
 		btnReport.setBounds(12, 240, 187, 33);
 		btnReport.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				Report report=new Report();
-				report.setVisible(true);
-				frame.setVisible(false);
+				if (User.IsFaculty(LocalSession.GetCurrentUser()) || User.IsTA(LocalSession.GetCurrentUser())) {
+					Report report = new Report();
+					report.setVisible(true);
+					frame.setVisible(false);
+				}
+				
 			}
 		});
 		panel_Center.add(btnReport);
-		
-		
+
 		JPanel panel_Bottom = new JPanel();
 		panel_Bottom.setBounds(12, 390, 211, 224);
 		contentPane.add(panel_Bottom);
@@ -177,8 +178,7 @@ public class Home {
 
 		OpenHomePage(panel_Right);
 
-		if(User.IsFaculty(LocalSession.GetCurrentUser()))
-		{
+		if (User.IsFaculty(LocalSession.GetCurrentUser())) {
 			EditCourse(panel_Right);
 		}
 		frame.setVisible(true);
@@ -279,12 +279,12 @@ public class Home {
 		}
 		LocalSession.CourseListModel = listCourse;
 	}
-	private void EditCourse(JPanel panel)
-	{
+
+	private void EditCourse(JPanel panel) {
 		JLabel lblCourseAdd = new JLabel("Add a course");
 		lblCourseAdd.setBounds(100, 350, 500, 30);
 		panel.add(lblCourseAdd);
-		
+
 		JLabel lbl_CourseName = new JLabel("Course Name");
 		lbl_CourseName.setBounds(100, 390, 150, 30);
 		panel.add(lbl_CourseName);
@@ -293,7 +293,7 @@ public class Home {
 		txt_CourseName.setBounds(250, 390, 150, 30);
 		txt_CourseName.setToolTipText("Course Name");
 		panel.add(txt_CourseName);
-		
+
 		JLabel lbl_CourseStartDate = new JLabel("Course Start Date");
 		lbl_CourseStartDate.setBounds(100, 420, 150, 30);
 		panel.add(lbl_CourseStartDate);
@@ -302,8 +302,7 @@ public class Home {
 		txt_CourseStartDate.setBounds(250, 420, 150, 30);
 		txt_CourseStartDate.setToolTipText("Course Start Date");
 		panel.add(txt_CourseStartDate);
-		
-		
+
 		JLabel lbl_CourseEndDate = new JLabel("Course End Date");
 		lbl_CourseEndDate.setBounds(100, 450, 150, 30);
 		panel.add(lbl_CourseEndDate);
@@ -312,7 +311,7 @@ public class Home {
 		txt_CourseEndDate.setBounds(250, 450, 150, 30);
 		txt_CourseEndDate.setToolTipText("Course End Date");
 		panel.add(txt_CourseEndDate);
-		
+
 		JLabel lbl_MaxEnrollment = new JLabel("Max Enrollment");
 		lbl_MaxEnrollment.setBounds(100, 480, 150, 30);
 		panel.add(lbl_MaxEnrollment);
@@ -321,7 +320,7 @@ public class Home {
 		txt_MaxEnrollment.setBounds(250, 480, 150, 30);
 		txt_MaxEnrollment.setToolTipText("Max Enrollment");
 		panel.add(txt_MaxEnrollment);
-		
+
 		JLabel lbl_CourseToken = new JLabel("Course Token");
 		lbl_CourseToken.setBounds(100, 510, 150, 30);
 		panel.add(lbl_CourseToken);
@@ -330,56 +329,50 @@ public class Home {
 		txt_CourseToken.setBounds(250, 510, 150, 30);
 		txt_CourseToken.setToolTipText("Course Token");
 		panel.add(txt_CourseToken);
-		
+
 		final JLabel lbl_CourseTokenError = new JLabel("");
 		lbl_CourseTokenError.setBounds(100, 600, 450, 30);
 		lbl_CourseTokenError.setForeground(Color.red);
 		panel.add(lbl_CourseTokenError);
-		
-		JButton btn_CreateButton=new JButton("Create Course");
+
+		JButton btn_CreateButton = new JButton("Create Course");
 		btn_CreateButton.setBounds(250, 550, 150, 30);
 		btn_CreateButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
 						"yyyy-MM-dd");
-				Course course=new Course();
-				course.CSC_COURSE_Course_Name=txt_CourseName.getText();
-				try
-				{
-				course.CSC_COURSE_StartDate=simpleDateFormat.parse(txt_CourseStartDate.getText());
-				course.CSC_COURSE_EndDate=simpleDateFormat.parse(txt_CourseEndDate.getText());
-				course.CSC_COURSE_Max_Enroll_No=Integer.parseInt(txt_MaxEnrollment.getText());
-				course.CSC_COURSE_Number_Of_Students=0;
-				course.CSC_COURSE_token=txt_CourseToken.getText();
-				OracleDataAdapter oracleDataAdapter = new OracleDataAdapter();
-				
-				if(oracleDataAdapter.InsertCourse(course))
-				{
-					txt_CourseName.setText("");
-					txt_CourseStartDate.setText("");
-					txt_CourseEndDate.setText("");
-					txt_MaxEnrollment.setText("");
-					txt_CourseToken.setText("");
-					lbl_CourseTokenError.setText("Course Created!");
-					AddCourse(course.CSC_COURSE_token);
+				Course course = new Course();
+				course.CSC_COURSE_Course_Name = txt_CourseName.getText();
+				try {
+					course.CSC_COURSE_StartDate = simpleDateFormat
+							.parse(txt_CourseStartDate.getText());
+					course.CSC_COURSE_EndDate = simpleDateFormat
+							.parse(txt_CourseEndDate.getText());
+					course.CSC_COURSE_Max_Enroll_No = Integer
+							.parseInt(txt_MaxEnrollment.getText());
+					course.CSC_COURSE_Number_Of_Students = 0;
+					course.CSC_COURSE_token = txt_CourseToken.getText();
+					OracleDataAdapter oracleDataAdapter = new OracleDataAdapter();
+
+					if (oracleDataAdapter.InsertCourse(course)) {
+						txt_CourseName.setText("");
+						txt_CourseStartDate.setText("");
+						txt_CourseEndDate.setText("");
+						txt_MaxEnrollment.setText("");
+						txt_CourseToken.setText("");
+						lbl_CourseTokenError.setText("Course Created!");
+						AddCourse(course.CSC_COURSE_token);
+					} else {
+						lbl_CourseTokenError.setText("Error");
+					}
+				} catch (Exception e) {
+
 				}
-				else
-				{
-					lbl_CourseTokenError.setText("Error");
-				}
-				}
-				catch(Exception e)
-				{
-					
-				}
-				
-				
-				//create course
+
+				// create course
 			}
 		});
 		panel.add(btn_CreateButton);
-		
-		
-		
+
 	}
 }

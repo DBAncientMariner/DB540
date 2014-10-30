@@ -46,7 +46,7 @@ public class AddHomework extends JFrame {
 
 	JTextField txt_DifficultyRange1;
 	JTextField txt_DifficultyRange2;
-	boolean EditMode=true;
+	boolean EditMode = true;
 
 	/**
 	 * Launch the application.
@@ -66,9 +66,9 @@ public class AddHomework extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public AddHomework(int exerciseId,boolean editMode) {
-		EditMode=editMode;
-		this.ExerciseId=exerciseId;
+	public AddHomework(int exerciseId, boolean editMode) {
+		EditMode = editMode;
+		this.ExerciseId = exerciseId;
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setBounds(100, 100, 900, 700);
 		this.setLocationRelativeTo(null);
@@ -95,35 +95,18 @@ public class AddHomework extends JFrame {
 		panel_Center.setBounds(12, 141, 211, 236);
 		contentPane.add(panel_Center);
 		panel_Center.setLayout(null);
-		JButton btn_ViewScore = new JButton("ViewScore");
-		btn_ViewScore.setBounds(12, 47, 187, 33);
-		panel_Center.add(btn_ViewScore);
 
-		JButton btn_AttemptHomework = new JButton("Attempt Homework");
-		btn_AttemptHomework.setBounds(12, 83, 187, 33);
-		btn_AttemptHomework.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				new AttemptExercise(0);
-				setVisible(false);
-			}
-		});
-		panel_Center.add(btn_AttemptHomework);
-
-		JButton btn_ViewSubmissions = new JButton("Past Submissions");
-		btn_ViewSubmissions.setBounds(12, 125, 187, 33);
-		panel_Center.add(btn_ViewSubmissions);
-		
 		JButton btn_ListHomework = new JButton("ListHomework");
 		btn_ListHomework.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				ListHomework listHomework=new ListHomework();
+				ListHomework listHomework = new ListHomework();
 				listHomework.setVisible(true);
 				setVisible(false);
 			}
 		});
 		btn_ListHomework.setBounds(12, 195, 187, 33);
 		panel_Center.add(btn_ListHomework);
-		
+
 		JLabel lbl_UserName = new JLabel("");
 		lbl_UserName.setBounds(12, 10, 187, 33);
 		panel_Top.add(lbl_UserName);
@@ -148,16 +131,6 @@ public class AddHomework extends JFrame {
 		});
 		panel_Top.add(btn_Logout);
 		// add notification
-		JButton btn_Notification = new JButton("Notification");
-		btn_Notification.setBounds(12, 161, 187, 33);
-		btn_Notification.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				Notification notification = new Notification();
-				notification.setVisible(true);
-				setVisible(false);
-			}
-		});
-		panel_Center.add(btn_Notification);
 		DisplayAllTopic();
 
 		// if(User.IsFaculty(LocalSession.GetCurrentUser()))
@@ -212,7 +185,7 @@ public class AddHomework extends JFrame {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(currentExercise.EXERCISE_STARTDATE);
 		int year = cal.get(Calendar.YEAR);
-		int month = cal.get(Calendar.MONTH+1);
+		int month = cal.get(Calendar.MONTH + 1);
 		int day = cal.get(Calendar.DAY_OF_MONTH);
 
 		txt_StartDate.setText(year + "-" + month + "-" + day);
@@ -227,7 +200,7 @@ public class AddHomework extends JFrame {
 		cal = Calendar.getInstance();
 		cal.setTime(currentExercise.EXERCISE_ENDDATE);
 		year = cal.get(Calendar.YEAR);
-		month = cal.get(Calendar.MONTH+1);
+		month = cal.get(Calendar.MONTH + 1);
 		day = cal.get(Calendar.DAY_OF_MONTH);
 		final JTextField txt_EndDate = new JTextField();
 		txt_EndDate.setText(year + "-" + month + "-" + day);
@@ -304,7 +277,7 @@ public class AddHomework extends JFrame {
 		final JLabel lbl_Message = new JLabel();
 		lbl_Message.setBounds(450, 220, 100, 25);
 		panel_Right.add(lbl_Message);
-		
+
 		JButton btn_Save = new JButton("Save");
 		btn_Save.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -343,9 +316,9 @@ public class AddHomework extends JFrame {
 		});
 		btn_Save.setBounds(450, 185, 100, 25);
 		panel_Right.add(btn_Save);
-		
+
 		btn_Save.setVisible(EditMode);
-		
+
 		// /
 
 		JLabel lbl_topics = new JLabel("Select Topics");

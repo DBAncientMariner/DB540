@@ -68,23 +68,7 @@ public class Notification extends JFrame {
 		panel_Center.setBounds(12, 141, 211, 236);
 		contentPane.add(panel_Center);
 		panel_Center.setLayout(null);
-		JButton btn_ViewScore = new JButton("ViewScore");
-		btn_ViewScore.setBounds(12, 47, 187, 33);
-		panel_Center.add(btn_ViewScore);
 		
-		JButton btn_AttemptHomework = new JButton("Attempt Homework");
-		btn_AttemptHomework.setBounds(12, 83, 187, 33);
-		btn_AttemptHomework.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				new AttemptExercise(0);
-				setVisible(false);
-			}
-		});
-		panel_Center.add(btn_AttemptHomework);
-		
-		JButton btn_ViewSubmissions = new JButton("Past Submissions");
-		btn_ViewSubmissions.setBounds(12, 125, 187, 33);
-		panel_Center.add(btn_ViewSubmissions);
 		JLabel lbl_UserName=new JLabel("");
 		lbl_UserName.setBounds(12, 10, 187, 33);
 		panel_Top.add(lbl_UserName);
@@ -109,10 +93,6 @@ public class Notification extends JFrame {
 		});
 		panel_Top.add(btn_Logout);
 		//add notification
-		JButton btn_Notification = new JButton("Notification");
-		btn_Notification.enableInputMethods(false);
-		btn_Notification.setBounds(12, 161, 187, 33);
-		panel_Center.add(btn_Notification);
 		
 		if(User.IsFaculty(LocalSession.GetCurrentUser()))
 			GetNotificationFaculty();

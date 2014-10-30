@@ -1,11 +1,14 @@
 package ncsu.dbms.core;
 
+/**
+ * @author parth
+ */
 public class Parameter {
 	private String parameterText;
 	private int paramId;
 	private String variableName;
 	private int variableId;
-	
+
 	public Parameter(String parameterText, int paramId, String variableName,
 			int variableId) {
 		super();
@@ -46,5 +49,4 @@ public class Parameter {
 	public void setVariableId(int variableId) {
 		this.variableId = variableId;
 	}
-	
 }

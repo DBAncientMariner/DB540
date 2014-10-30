@@ -28,7 +28,8 @@ public class User {
 	public String user_id_char="";
 	public ArrayList<UserRole> UserRoles=new ArrayList<UserRole>();
 	public ArrayList<Course> UserCourses=new ArrayList<Course>();
-	
+	public double AverageScore=0;
+	public String ExerciseName="";
 	
 	public static boolean IsActiveUser(String userName, String password)
 	{

@@ -41,7 +41,7 @@ public class OracleDb {
 				}
 				Conn = DriverManager.getConnection(Url, UserName, Password);
 			}
-			
+
 		} catch (SQLException e) {
 			return false;
 		}
@@ -52,10 +52,12 @@ public class OracleDb {
 		try {
 			if (ResultSet != null)
 				ResultSet.close();
-			if(Stmt!=null)
+			if (Stmt != null)
 				Stmt.close();
-			Conn.commit();
-			Conn.close();
+			if (!Conn.isClosed()) {
+				Conn.commit();
+				Conn.close();
+			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -73,7 +75,7 @@ public class OracleDb {
 		}
 		return ResultSet;
 	}
-	
+
 	public boolean InsertQuery(String query) {
 		try {
 			if (OpenConnection()) {
@@ -90,203 +92,168 @@ public class OracleDb {
 		return true;
 	}
 
-	//no output stored procedure.
-	public boolean ExecuteStoredProcedure2Param(String storedProcedure,ArrayList<Object> Param)
-	{
-		try
-		{
-			if(OpenConnection())
-			{
+	// no output stored procedure.
+	public boolean ExecuteStoredProcedure2Param(String storedProcedure,
+			ArrayList<Object> Param) {
+		try {
+			if (OpenConnection()) {
 				Stmt = Conn.createStatement();
-			    CallableStatement proc =
-			    		Conn.prepareCall("{call "+storedProcedure+"(?, ?)}");
-			    int index=1;
-			    for(Object param:Param)
-			    {
-			    	 proc.setObject(index, param);
-			    	 index++;
-			    }
-			    proc.execute();
+				CallableStatement proc = Conn.prepareCall("{call "
+						+ storedProcedure + "(?, ?)}");
+				int index = 1;
+				for (Object param : Param) {
+					proc.setObject(index, param);
+					index++;
+				}
+				proc.execute();
 				Conn.commit();
 			}
-		}
-		catch (SQLException e)
-		{
-		    return false;
+		} catch (SQLException e) {
+			return false;
 		}
 		CloseConnection();
 		return true;
 	}
-	
-	public boolean ExecuteStoredProcedure3Param(String storedProcedure,ArrayList<Object> Param)
-	{
-		try
-		{
-			if(OpenConnection())
-			{
+
+	public boolean ExecuteStoredProcedure3Param(String storedProcedure,
+			ArrayList<Object> Param) {
+		try {
+			if (OpenConnection()) {
 				Stmt = Conn.createStatement();
-			    CallableStatement proc =
-			    		Conn.prepareCall("{call "+storedProcedure+"(?, ?,?)}");
-			    int index=1;
-			    for(Object param:Param)
-			    {
-			    	 proc.setObject(index, param);
-			    	 index++;
-			    }
-			    proc.execute();
+				CallableStatement proc = Conn.prepareCall("{call "
+						+ storedProcedure + "(?, ?,?)}");
+				int index = 1;
+				for (Object param : Param) {
+					proc.setObject(index, param);
+					index++;
+				}
+				proc.execute();
 				Conn.commit();
 			}
-		}
-		catch (SQLException e)
-		{
-		    return false;
+		} catch (SQLException e) {
+			return false;
 		}
 		CloseConnection();
 		return true;
 	}
-	
-	public int ExecuteStoredProcedure4ParamOut(String storedProcedure,ArrayList<Object> Param)
-	{
-		try
-		{
-			if(OpenConnection())
-			{
+
+	public int ExecuteStoredProcedure4ParamOut(String storedProcedure,
+			ArrayList<Object> Param) {
+		try {
+			if (OpenConnection()) {
 				Stmt = Conn.createStatement();
-			    CallableStatement proc =
-			    		Conn.prepareCall("{call "+storedProcedure+"(?, ?,?,?,?)}");
-			    int index=1;
-			    for(Object param:Param)
-			    {
-			    	 proc.setObject(index, param);
-			    	 index++;
-			    }
-			    
-			    proc.registerOutParameter(5, Types.INTEGER);
-			    proc.execute();
+				CallableStatement proc = Conn.prepareCall("{call "
+						+ storedProcedure + "(?, ?,?,?,?)}");
+				int index = 1;
+				for (Object param : Param) {
+					proc.setObject(index, param);
+					index++;
+				}
+
+				proc.registerOutParameter(5, Types.INTEGER);
+				proc.execute();
 				Conn.commit();
 				int retval = proc.getInt(5);
 				return retval;
 			}
-		}
-		catch (SQLException e)
-		{
+		} catch (SQLException e) {
 			e.printStackTrace();
-		    return -1;
+			return -1;
 		}
-		
+
 		CloseConnection();
 		return -1;
 	}
-	
-	public boolean ExecuteStoredProcedure4Param(String storedProcedure,ArrayList<Object> Param)
-	{
-		try
-		{
-			if(OpenConnection())
-			{
+
+	public boolean ExecuteStoredProcedure4Param(String storedProcedure,
+			ArrayList<Object> Param) {
+		try {
+			if (OpenConnection()) {
 				Stmt = Conn.createStatement();
-			    CallableStatement proc =
-			    		Conn.prepareCall("{call "+storedProcedure+"(?, ?,?,?)}");
-			    int index=1;
-			    for(Object param:Param)
-			    {
-			    	 proc.setObject(index, param);
-			    	 index++;
-			    }
-			    proc.execute();
+				CallableStatement proc = Conn.prepareCall("{call "
+						+ storedProcedure + "(?, ?,?,?)}");
+				int index = 1;
+				for (Object param : Param) {
+					proc.setObject(index, param);
+					index++;
+				}
+				proc.execute();
 				Conn.commit();
 			}
-		}
-		catch (SQLException e)
-		{
-		    return false;
+		} catch (SQLException e) {
+			return false;
 		}
 		CloseConnection();
 		return true;
 	}
-	
-	public boolean ExecuteStoredProcedure1Param(String storedProcedure,ArrayList<String> Param)
-	{
-		try
-		{
-			if(OpenConnection())
-			{
+
+	public boolean ExecuteStoredProcedure1Param(String storedProcedure,
+			ArrayList<String> Param) {
+		try {
+			if (OpenConnection()) {
 				Stmt = Conn.createStatement();
-			    CallableStatement proc =
-			    		Conn.prepareCall("{call "+storedProcedure+"(?)}");
-			    int index=1;
-			    for(String param:Param)
-			    {
-			    	 proc.setString(index, param);
-			    	 index++;
-			    }
-			    proc.execute();
+				CallableStatement proc = Conn.prepareCall("{call "
+						+ storedProcedure + "(?)}");
+				int index = 1;
+				for (String param : Param) {
+					proc.setString(index, param);
+					index++;
+				}
+				proc.execute();
 				Conn.commit();
 			}
-		}
-		catch (SQLException e)
-		{
-		    return false;
+		} catch (SQLException e) {
+			return false;
 		}
 		CloseConnection();
 		return true;
 	}
-	
-	public int ExecuteStoredProcedureExerciseReturn(String storedProcedure,ArrayList<String> Param)
-	{
-		try
-		{
-			if(OpenConnection())
-			{
+
+	public int ExecuteStoredProcedureExerciseReturn(String storedProcedure,
+			ArrayList<String> Param) {
+		try {
+			if (OpenConnection()) {
 				Stmt = Conn.createStatement();
-			    CallableStatement proc =
-			    		Conn.prepareCall("{call "+storedProcedure+"(?)}");
-			    int index=1;
-			    for(String param:Param)
-			    {
-			    	 proc.setString(index, param);
-			    	 index++;
-			    }
-			    proc.registerOutParameter(1, Types.INTEGER);
-			    proc.execute();
+				CallableStatement proc = Conn.prepareCall("{call "
+						+ storedProcedure + "(?)}");
+				int index = 1;
+				for (String param : Param) {
+					proc.setString(index, param);
+					index++;
+				}
+				proc.registerOutParameter(1, Types.INTEGER);
+				proc.execute();
 				Conn.commit();
 				int retval = proc.getInt(1);
 				return retval;
 			}
-		}
-		catch (SQLException e)
-		{
-		    return 0;
+		} catch (SQLException e) {
+			return 0;
 		}
 		CloseConnection();
 		return 0;
 	}
-	
-	public int ExecuteStoredProcedureInsertUserAttemp(String storedProcedure,ArrayList<String> Param)
-	{
-		try
-		{
-			if(OpenConnection())
-			{
+
+	public int ExecuteStoredProcedureInsertUserAttemp(String storedProcedure,
+			ArrayList<String> Param) {
+		try {
+			if (OpenConnection()) {
 				Stmt = Conn.createStatement();
-			    CallableStatement proc =
-			    		Conn.prepareCall("{call "+storedProcedure+"(?)}");
-			    int index=1;
-			    for(String param:Param)
-			    {
-			    	 proc.setString(index, param);
-			    	 index++;
-			    }
-			    proc.registerOutParameter(1, Types.INTEGER);
-			    proc.execute();
+				CallableStatement proc = Conn.prepareCall("{call "
+						+ storedProcedure + "(?)}");
+				int index = 1;
+				for (String param : Param) {
+					proc.setString(index, param);
+					index++;
+				}
+				proc.registerOutParameter(1, Types.INTEGER);
+				proc.execute();
 				Conn.commit();
 				int retval = proc.getInt(1);
 				return retval;
 			}
-		}
-		catch (SQLException e)
-		{
-		    return 0;
+		} catch (SQLException e) {
+			return 0;
 		}
 		CloseConnection();
 		return 0;

@@ -64,7 +64,7 @@ public class Home {
 		contentPane.setLayout(null);
 
 		JPanel panel_Center = new JPanel();
-		panel_Center.setBounds(12, 141, 211, 236);
+		panel_Center.setBounds(12, 141, 211, 280);
 		contentPane.add(panel_Center);
 		panel_Center.setLayout(null);
 
@@ -116,15 +116,28 @@ public class Home {
 		btnAddHomework.setBounds(12, 200, 187, 33);
 		btnAddHomework.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				if(listCourses.getSelectedIndex()>=0)
+				{
 				ListHomework listHomework=new ListHomework();
 				listHomework.setVisible(true);
-				//AddHomework addHomework = new AddHomework();
-				//addHomework.setVisible(true);
 				frame.setVisible(false);
+				}
 			}
 		});
 		panel_Center.add(btnAddHomework);
 
+		JButton btnReport = new JButton("Report");
+		btnReport.setBounds(12, 240, 187, 33);
+		btnReport.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Report report=new Report();
+				report.setVisible(true);
+				frame.setVisible(false);
+			}
+		});
+		panel_Center.add(btnReport);
+		
+		
 		JPanel panel_Bottom = new JPanel();
 		panel_Bottom.setBounds(12, 390, 211, 224);
 		contentPane.add(panel_Bottom);

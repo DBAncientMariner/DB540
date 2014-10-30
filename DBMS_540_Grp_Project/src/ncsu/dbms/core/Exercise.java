@@ -25,5 +25,6 @@ public class Exercise {
 	public Date EXERCISE_CREATEDDATE =new Date();
 	public int EXERCISE_MODIFIEDBY =0;
 	public Date EXERCISE_LASTMODIFIEDDATE =new Date();
-	public int EXERCISE_COURSE=0; 
+	public int EXERCISE_COURSE=0;
+	public int AverageAttempt=0;
 }

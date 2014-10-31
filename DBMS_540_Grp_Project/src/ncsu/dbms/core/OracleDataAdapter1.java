@@ -847,7 +847,7 @@ public class OracleDataAdapter1 {
 		return topicList;
 	}
 	
-	public ArrayList<Course> GetCourseAsStudent(int user_id) {
+	public static ArrayList<Course> GetCourseAsStudent(int user_id) {
 
 		Course course = new Course();
 		ArrayList<Course> listCourse = new ArrayList<Course>();
@@ -894,7 +894,7 @@ public class OracleDataAdapter1 {
 
 	}
 	
-	public ArrayList<Course> GetCourseAsTA(int user_id) {
+	public static ArrayList<Course> GetCourseAsTA(int user_id) {
 
 		Course course = new Course();
 		ArrayList<Course> listCourse = new ArrayList<Course>();

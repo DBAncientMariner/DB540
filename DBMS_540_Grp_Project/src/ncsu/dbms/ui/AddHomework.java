@@ -182,9 +182,9 @@ public class AddHomework extends JFrame {
 
 		final JTextField txt_StartDate = new JTextField();
 
-
-		SimpleDateFormat simpleDateFormat1=new SimpleDateFormat("yyyy-MM-dd");
-		txt_StartDate.setText(simpleDateFormat1.format(currentExercise.EXERCISE_STARTDATE));
+		SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
+		txt_StartDate.setText(simpleDateFormat1
+				.format(currentExercise.EXERCISE_STARTDATE));
 		txt_StartDate.setToolTipText("Start Date (yyyy-MM-dd");
 		txt_StartDate.setBounds(120, 80, 100, 25);
 		panel_Right.add(txt_StartDate);
@@ -194,7 +194,8 @@ public class AddHomework extends JFrame {
 		panel_Right.add(lbl_EndDate);
 
 		final JTextField txt_EndDate = new JTextField();
-		txt_EndDate.setText(simpleDateFormat1.format(currentExercise.EXERCISE_ENDDATE));
+		txt_EndDate.setText(simpleDateFormat1
+				.format(currentExercise.EXERCISE_ENDDATE));
 		txt_EndDate.setToolTipText("End Date (yyyy-MM-dd");
 		txt_EndDate.setBounds(340, 80, 100, 25);
 		panel_Right.add(txt_EndDate);
@@ -269,46 +270,48 @@ public class AddHomework extends JFrame {
 		lbl_Message.setBounds(450, 220, 100, 25);
 		panel_Right.add(lbl_Message);
 
-		JButton btn_Save = new JButton("Save");
-		btn_Save.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				lbl_Message.setText("");
-				SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
-						"yyyy-MM-dd");
-				Exercise exercise = new Exercise();
-				exercise.EXERCISE_NAME = txt_ExerciseName.getText();
-				exercise.EXERCISE_COURSE = selectedCourse.CSC_COURSE_Course_ID;
-				exercise.EXERCISE_DIFFICULTY_RANGE1 = Integer
-						.parseInt(txt_DifficultyRange1.getText());
-				exercise.EXERCISE_DIFFICULTY_RANGE2 = Integer
-						.parseInt(txt_DifficultyRange2.getText());
-				exercise.EXERCISE_CORRECTPT = Integer.parseInt(txt_CorrectPoint
-						.getText());
-				exercise.EXERCISE_PENALTYPT = Integer.parseInt(txt_PenaltyPoint
-						.getText());
-				exercise.EXERCISE_SCORINGTYPE = Integer
-						.parseInt(txt_ScoringType.getText());
-				exercise.EXERCISE_CREATEDBY = LocalSession.GetCurrentUser().UserId;
-				try {
-					exercise.EXERCISE_STARTDATE = simpleDateFormat
-							.parse(txt_StartDate.getText());
-					exercise.EXERCISE_ENDDATE = simpleDateFormat
-							.parse(txt_EndDate.getText());
-				} catch (ParseException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+		if (User.IsFacultyOnCourse(LocalSession.GetCurrentUser(),
+				LocalSession.getCurrentSelectedCourseObject())) {
+			JButton btn_Save = new JButton("Save");
+			btn_Save.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					lbl_Message.setText("");
+					SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
+							"yyyy-MM-dd");
+					Exercise exercise = new Exercise();
+					exercise.EXERCISE_NAME = txt_ExerciseName.getText();
+					exercise.EXERCISE_COURSE = selectedCourse.CSC_COURSE_Course_ID;
+					exercise.EXERCISE_DIFFICULTY_RANGE1 = Integer
+							.parseInt(txt_DifficultyRange1.getText());
+					exercise.EXERCISE_DIFFICULTY_RANGE2 = Integer
+							.parseInt(txt_DifficultyRange2.getText());
+					exercise.EXERCISE_CORRECTPT = Integer
+							.parseInt(txt_CorrectPoint.getText());
+					exercise.EXERCISE_PENALTYPT = Integer
+							.parseInt(txt_PenaltyPoint.getText());
+					exercise.EXERCISE_SCORINGTYPE = Integer
+							.parseInt(txt_ScoringType.getText());
+					exercise.EXERCISE_CREATEDBY = LocalSession.GetCurrentUser().UserId;
+					try {
+						exercise.EXERCISE_STARTDATE = simpleDateFormat
+								.parse(txt_StartDate.getText());
+						exercise.EXERCISE_ENDDATE = simpleDateFormat
+								.parse(txt_EndDate.getText());
+					} catch (ParseException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					exercise.EXERCISE_RETRYLIMIT = Integer
+							.parseInt(txt_RetryLimit.getText());
+
+					SaveExercise(exercise);
+					lbl_Message.setText("Data Saved");
 				}
-				exercise.EXERCISE_RETRYLIMIT = Integer.parseInt(txt_RetryLimit
-						.getText());
-
-				SaveExercise(exercise);
-				lbl_Message.setText("Data Saved");
-			}
-		});
-		btn_Save.setBounds(450, 185, 100, 25);
-		panel_Right.add(btn_Save);
-
-		btn_Save.setVisible(EditMode);
+			});
+			btn_Save.setBounds(450, 185, 100, 25);
+			panel_Right.add(btn_Save);
+			btn_Save.setVisible(EditMode);
+		}
 
 		// /
 

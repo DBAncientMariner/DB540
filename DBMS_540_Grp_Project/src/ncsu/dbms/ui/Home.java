@@ -281,7 +281,7 @@ public class Home {
 		OracleDataAdapter oracleDataAdapter = new OracleDataAdapter();
 		ArrayList<Course> listCourse = oracleDataAdapter.GetAllCourseForUser(LocalSession.GetCurrentUser());
 		for (ncsu.dbms.core.Course course : listCourse) {
-			listModel.addElement(course.CSC_COURSE_Course_Name);
+			listModel.addElement(course.CSC_COURSE_Course_Name+":"+course.CSC_COURSE_token);
 		}
 		LocalSession.CourseListModel = listCourse;
 	}

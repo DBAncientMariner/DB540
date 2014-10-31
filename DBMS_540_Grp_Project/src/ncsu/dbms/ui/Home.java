@@ -259,7 +259,6 @@ public class Home {
 						LocalSession.GetCurrentUser())) {
 					// print success
 					lbl_ErrorToken.setText("Course Added");
-					listModel = new DefaultListModel();
 					AddCourse();
 				} else {
 					lbl_ErrorToken.setText("Error occured.");

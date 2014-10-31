@@ -722,7 +722,7 @@ public class OracleDataAdapter1 {
 		int count_attemp = 1;
 		try {
 			while(resultset != null && resultset.next()) {
-				count_attemp = resultset.getInt("UA_ID");
+				count_attemp = resultset.getInt("count(*)");
 				break;
 			}
 			if(count_attemp == 0)
@@ -741,5 +741,47 @@ public class OracleDataAdapter1 {
 			oracleDb.CloseConnection();
 		}
 		return IsAttempted;
+	}
+	
+	public static boolean ISNotifiedStudent(int Exercise_Id,int Course_id) {
+		OracleDb oracleDb = new OracleDb();
+		oracleDb.OpenConnection();
+		User user = LocalSession.GetCurrentUser();
+		String query = "select count(*) from NOTIFICATION_STUDENT where EXERCISE_ID = "+Exercise_Id+ "and COURSE_ID ="+Course_id+" and USER_ID =" +user.UserId ;
+		ResultSet resultset = oracleDb
+				.GetResultSet(query);
+		boolean IsAttempted = false;
+		int count_attemp = 1;
+		try {
+			while(resultset != null && resultset.next()) {
+				count_attemp = resultset.getInt("count(*)");
+				break;
+			}
+			if(count_attemp == 0)
+			{
+				IsAttempted = false;
+			}
+			else
+			{
+				IsAttempted = true;
+				
+			}
+			return IsAttempted;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			oracleDb.CloseConnection();
+		}
+		return IsAttempted;
+	}
+	
+	public static boolean InsertIntoNotificationStudent(int Exercise_Id,int Course_id) {
+		OracleDb oracleDb = new OracleDb();
+		User user = LocalSession.GetCurrentUser();
+		oracleDb.OpenConnection();
+		String query = "INSERT INTO NOTIFICATION_STUDENT (EXERCISE_ID,COURSE_ID,USER_ID) VALUES ("+Exercise_Id+","+Course_id+","+user.UserId+")";
+		boolean resultset = oracleDb
+				.InsertQuery(query);
+		return resultset;
 	}
 }

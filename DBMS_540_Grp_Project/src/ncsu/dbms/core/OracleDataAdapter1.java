@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import ncsu.dbms.ui.NotificationView;
+
 public class OracleDataAdapter1 {
 
 	public static boolean InsertIntoUserAttempExercise(int ua_id, int Q_id,
@@ -795,4 +797,53 @@ public class OracleDataAdapter1 {
 		return resultset;
 	}
 		
+	public static List<NotificationFaculty> getNotificationForFaculty() {
+		List<NotificationFaculty> notificationFacultyList = new ArrayList<NotificationFaculty>();
+		User user = LocalSession.GetCurrentUser();
+		Course course = LocalSession.getCurrentSelectedCourseObject();
+		OracleDb oracleDb = new OracleDb();
+		oracleDb.OpenConnection();
+		ResultSet resultset = oracleDb
+				.GetResultSet("select ST_ID from NOTIFICATION_FACULTY where F_ID ="+user.UserId+" and COURSE_ID = "+ course.CSC_COURSE_Course_ID);
+		try {
+			if(resultset == null) {
+				return notificationFacultyList;
+			}
+			while (resultset.next()) {
+				NotificationFaculty notificationFaculty = new NotificationFaculty();
+				notificationFaculty.setStudentId(resultset.getInt("ST_ID"));
+				notificationFacultyList.add(notificationFaculty);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			oracleDb.CloseConnection();
+		}
+		return notificationFacultyList;
+	}
+	
+	public static List<NotificationFaculty> getCourse() {
+		List<NotificationFaculty> notificationFacultyList = new ArrayList<NotificationFaculty>();
+		User user = LocalSession.GetCurrentUser();
+		Course course = LocalSession.getCurrentSelectedCourseObject();
+		OracleDb oracleDb = new OracleDb();
+		oracleDb.OpenConnection();
+		ResultSet resultset = oracleDb
+				.GetResultSet("select ST_ID from NOTIFICATION_FACULTY where F_ID ="+user.UserId+" and COURSE_ID = "+ course.CSC_COURSE_Course_ID);
+		try {
+			if(resultset == null) {
+				return notificationFacultyList;
+			}
+			while (resultset.next()) {
+				NotificationFaculty notificationFaculty = new NotificationFaculty();
+				notificationFaculty.setStudentId(resultset.getInt("ST_ID"));
+				notificationFacultyList.add(notificationFaculty);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			oracleDb.CloseConnection();
+		}
+		return notificationFacultyList;
+	}
 }

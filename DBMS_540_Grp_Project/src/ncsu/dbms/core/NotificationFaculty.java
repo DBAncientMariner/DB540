@@ -10,6 +10,9 @@ public class NotificationFaculty {
 		this.facultyId = facultyId;
 		this.studentId = studentId;
 	}
+	public NotificationFaculty() {
+		
+	}
 	public int getCourseId() {
 		return courseId;
 	}

@@ -155,6 +155,9 @@ values (CSC_SCORINGTYPE_SEQUENCE.nextval,'Maximum Score');
 insert into CSC_SCORINGTYPE(SCORINGTYPE_ID,SCORINGTYPE_DESCRIPTION)
 values (CSC_SCORINGTYPE_SEQUENCE.nextval,'Average Score');
 
+insert into CSC_SCORINGTYPE(SCORINGTYPE_ID,SCORINGTYPE_DESCRIPTION)
+values (CSC_SCORINGTYPE_SEQUENCE.nextval,'First Attempt');
+
 Insert into CSC_TEXTBOOK (CSC_TEXTBOOK_ISBN,CSC_TEXTBOOK_TITLE,CSC_TEXTBOOK_AUTHOR)
 values ('0072465638','Database Management Systems (3rd edition)','Raghu Ramakrishnan and Johannes Gehrke');
 

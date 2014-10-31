@@ -94,10 +94,9 @@ public class OracleDataAdapter {
 	public User GetUserDetails(String userName, String password) {
 		User user = new User();
 		oracleDb.OpenConnection();
-		String query="Select * from csc_User where USER_ID_CHAR='"
-						+ userName + "' and USER_PASSWORD ='" + password + "'";
-		ResultSet resultset = oracleDb
-				.GetResultSet(query);
+		String query = "Select * from csc_User where USER_ID_CHAR='" + userName
+				+ "' and USER_PASSWORD ='" + password + "'";
+		ResultSet resultset = oracleDb.GetResultSet(query);
 		try {
 			while (resultset.next()) {
 				SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
@@ -125,7 +124,6 @@ public class OracleDataAdapter {
 		}
 		return user;
 	}
-
 
 	// insert user
 	public boolean InsertUser(User user) {
@@ -179,8 +177,9 @@ public class OracleDataAdapter {
 						.getInt("QUESTIONBANK_CREATEDBY");
 				questionBank.QUESTIONBANK_MODIFIEDBY = resultset
 						.getInt("QUESTIONBANK_MODIFIEDBY");
-				questionBank.CSC_QB_IS_PARAMETERIZED = resultset
-						.getString("CSC_QB_IS_PARAMETERIZED").equalsIgnoreCase("f")?false:true;
+				questionBank.CSC_QB_IS_PARAMETERIZED = resultset.getString(
+						"CSC_QB_IS_PARAMETERIZED").equalsIgnoreCase("f") ? false
+						: true;
 				questionBank.CSC_QUESTIONBANK_TOPIC_ID = resultset
 						.getInt("CSC_QUESTIONBANK_TOPIC_ID");
 				try {
@@ -245,14 +244,15 @@ public class OracleDataAdapter {
 
 	public List<QuestionBank> GetQuestion(int exercise_id) {
 		QuestionBank questionBank = new QuestionBank();
-		
+
 		List<QuestionBank> ListQuestions = new LinkedList<QuestionBank>();
-		
+
 		oracleDb.OpenConnection();
 		ResultSet resultset = oracleDb
-				.GetResultSet("Select * from CSC_QUESTIONBANK where QUESTIONBANK_ID IN (select EA_QUESTION_ID from CSC_EXERCISE_QUESTION where EA_EXERCISE_ID = "+exercise_id+") ORDER BY DBMS_RANDOM.RANDOM;");
+				.GetResultSet("Select * from CSC_QUESTIONBANK where QUESTIONBANK_ID IN (select EA_QUESTION_ID from CSC_EXERCISE_QUESTION where EA_EXERCISE_ID = "
+						+ exercise_id + ") ORDER BY DBMS_RANDOM.RANDOM;");
 		try {
-			if(resultset == null)
+			if (resultset == null)
 				return ListQuestions;
 			while (resultset.next()) {
 				questionBank = new QuestionBank();
@@ -294,15 +294,19 @@ public class OracleDataAdapter {
 		}
 		return ListQuestions;
 	}
-	
-	public List<AnswerBank> GetCorrectAnswerBank(int Question_id, int no_of_correct) {
+
+	public List<AnswerBank> GetCorrectAnswerBank(int Question_id,
+			int no_of_correct) {
 		AnswerBank answerBank = new AnswerBank();
 		List<AnswerBank> listAnswerBank = new LinkedList<AnswerBank>();
 		oracleDb.OpenConnection();
 		ResultSet resultset = oracleDb
-				.GetResultSet("Select * From (Select AB.* from CSC_Answerbank AB, CSC_QUESTIONBANK_ANSWERBANK QBAB where AB.ANSWERBANK_ID = QBAB.QABANK_ANSWER_ID and QBAB.QABANK_ISCORRECT = 'T' and QBAB.QABANK_QUESITON_ID = "+Question_id+" ORDER BY DBMS_RANDOM.RANDOM) where ROWNUM <= "+no_of_correct);
+				.GetResultSet("Select * From (Select AB.* from CSC_Answerbank AB, CSC_QUESTIONBANK_ANSWERBANK QBAB where AB.ANSWERBANK_ID = QBAB.QABANK_ANSWER_ID and QBAB.QABANK_ISCORRECT = 'T' and QBAB.QABANK_QUESITON_ID = "
+						+ Question_id
+						+ " ORDER BY DBMS_RANDOM.RANDOM) where ROWNUM <= "
+						+ no_of_correct);
 		try {
-			if(resultset == null) {
+			if (resultset == null) {
 				return listAnswerBank;
 			}
 			while (resultset.next()) {
@@ -337,15 +341,19 @@ public class OracleDataAdapter {
 		}
 		return listAnswerBank;
 	}
-	
-	public ArrayList<AnswerBank> GetInCorrectAnswerBank(int Question_id, int no_of_incorrect) {
+
+	public ArrayList<AnswerBank> GetInCorrectAnswerBank(int Question_id,
+			int no_of_incorrect) {
 		AnswerBank answerBank = new AnswerBank();
 		ArrayList<AnswerBank> listAnswerBank = new ArrayList<AnswerBank>();
 		oracleDb.OpenConnection();
 		ResultSet resultset = oracleDb
-				.GetResultSet("Select * From (Select AB.* from CSC_Answerbank AB, CSC_QUESTIONBANK_ANSWERBANK QBAB where AB.ANSWERBANK_ID = QBAB.QABANK_ANSWER_ID and QBAB.QABANK_ISCORRECT = 'F' and QBAB.QABANK_QUESITON_ID = "+Question_id+" ORDER BY DBMS_RANDOM.RANDOM) where ROWNUM <= "+no_of_incorrect);
+				.GetResultSet("Select * From (Select AB.* from CSC_Answerbank AB, CSC_QUESTIONBANK_ANSWERBANK QBAB where AB.ANSWERBANK_ID = QBAB.QABANK_ANSWER_ID and QBAB.QABANK_ISCORRECT = 'F' and QBAB.QABANK_QUESITON_ID = "
+						+ Question_id
+						+ " ORDER BY DBMS_RANDOM.RANDOM) where ROWNUM <= "
+						+ no_of_incorrect);
 		try {
-			if(resultset == null) {
+			if (resultset == null) {
 				return listAnswerBank;
 			}
 			while (resultset.next()) {
@@ -379,7 +387,7 @@ public class OracleDataAdapter {
 		}
 		return listAnswerBank;
 	}
-	
+
 	// returns question answer bank
 	public ArrayList<QuestionBank_AnswerBank> GetQuestionAnswerBank() {
 		QuestionBank_AnswerBank questionAnswerBank = new QuestionBank_AnswerBank();
@@ -446,8 +454,7 @@ public class OracleDataAdapter {
 
 	}
 
-	public ArrayList<Course> GetAllCourseForUser(User user)
-	{
+	public ArrayList<Course> GetAllCourseForUser(User user) {
 		Course course = new Course();
 		ArrayList<Course> listCourse = new ArrayList<Course>();
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -455,7 +462,7 @@ public class OracleDataAdapter {
 		String query = "SELECT * FROM CSC_COURSE CCO "
 				+ "inner join CSC_CLASS CCS on CCO.CSC_COURSE_COURSE_ID=CCS.CSC_CLASS_COURSE_ID "
 				+ "inner join csc_user_role CUR on CUR.CSC_U_R_CLASS_SURR_KEY=CCS.CSC_CLASS_COURSE_ID "
-				+ "WHERE CUR.User_ROLE_USER_ID="+user.UserId;
+				+ "WHERE CUR.User_ROLE_USER_ID=" + user.UserId;
 		ResultSet resultset = oracleDb.GetResultSet(query);
 		try {
 			while (resultset.next()) {
@@ -488,6 +495,7 @@ public class OracleDataAdapter {
 		}
 		return listCourse;
 	}
+
 	public ArrayList<Course> GetCourseForStudent(User user) {
 
 		int roleId = 0;
@@ -845,9 +853,9 @@ public class OracleDataAdapter {
 		}
 		return listExercise;
 	}
-	
-	public int InsertUserAttempSubmit(int exercise_id,double score, String IsSubmitted)
-	{
+
+	public int InsertUserAttempSubmit(int exercise_id, double score,
+			String IsSubmitted) {
 		ArrayList<Object> param = new ArrayList<Object>();
 		User user = LocalSession.GetCurrentUser();
 		try {
@@ -855,9 +863,8 @@ public class OracleDataAdapter {
 			param.add(exercise_id);
 			param.add(score);
 			param.add(IsSubmitted);
-			int returnvalue = oracleDb
-					.ExecuteStoredProcedure4ParamOut(
-							"CSC_InsertUserAttempSubmit", param);
+			int returnvalue = oracleDb.ExecuteStoredProcedure4ParamOut(
+					"CSC_InsertUserAttempSubmit", param);
 			oracleDb.CloseConnection();
 			return returnvalue;
 		} catch (Exception e) {
@@ -865,9 +872,9 @@ public class OracleDataAdapter {
 		}
 		return -1;
 	}
-	
-	public int UpdateUserAttempSubmit(int exercise_id,double score, String IsSubmitted)
-	{
+
+	public int UpdateUserAttempSubmit(int exercise_id, double score,
+			String IsSubmitted) {
 		ArrayList<Object> param = new ArrayList<Object>();
 		User user = LocalSession.GetCurrentUser();
 		try {
@@ -875,9 +882,8 @@ public class OracleDataAdapter {
 			param.add(exercise_id);
 			param.add(score);
 			param.add(IsSubmitted);
-			int returnvalue = oracleDb
-					.ExecuteStoredProcedure4ParamOut(
-							"CSC_InsertUserAttempt_final", param);
+			int returnvalue = oracleDb.ExecuteStoredProcedure4ParamOut(
+					"CSC_InsertUserAttempt_final", param);
 			oracleDb.CloseConnection();
 			return returnvalue;
 		} catch (Exception e) {
@@ -885,20 +891,22 @@ public class OracleDataAdapter {
 		}
 		return -1;
 	}
+
 	public ArrayList<Exercise> GetActiveExerciseForCourse(int course_id) {
 		Exercise exercise = new Exercise();
 		ArrayList<Exercise> listExercise = new ArrayList<Exercise>();
 		User user = LocalSession.GetCurrentUser();
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		oracleDb.OpenConnection();
-		
+
 		int uid = user.UserId;
-		String query="Select EX.* from csc_exercise EX where EX.EXERCISE_RETRYLIMIT > ANY (Select count(ATTEMP_ID) From csc_user_attempt UA1 where UA1.UA_EXERCISE_ID = EX.EXERCISE_ID and UA1.UA_USER_ID = "+uid+") and TRUNC(EX.EXERCISE_STARTDATE) <= TRUNC(SYSDATE) AND TRUNC(EX.EXERCISE_ENDDATE) >= TRUNC(SYSDATE) AND EXERCISE_COURSE ="+ course_id;
-		ResultSet resultset = oracleDb
-				.GetResultSet(query);
+		String query = "Select EX.* from csc_exercise EX where EX.EXERCISE_RETRYLIMIT > ANY (Select count(ATTEMP_ID) From csc_user_attempt UA1 where UA1.UA_EXERCISE_ID = EX.EXERCISE_ID and UA1.UA_USER_ID = "
+				+ uid
+				+ ") and TRUNC(EX.EXERCISE_STARTDATE) <= TRUNC(SYSDATE) AND TRUNC(EX.EXERCISE_ENDDATE) >= TRUNC(SYSDATE) AND EXERCISE_COURSE ="
+				+ course_id;
+		ResultSet resultset = oracleDb.GetResultSet(query);
 		try {
-			if(resultset == null)
-			{
+			if (resultset == null) {
 				return listExercise;
 			}
 			while (resultset.next()) {
@@ -934,7 +942,8 @@ public class OracleDataAdapter {
 							.parse(resultset
 									.getString("EXERCISE_LASTMODIFIEDDATE"));
 				} catch (Exception e) {
-					e.printStackTrace();				}
+					e.printStackTrace();
+				}
 				listExercise.add(exercise);
 			}
 		} catch (SQLException e) {
@@ -944,13 +953,14 @@ public class OracleDataAdapter {
 		}
 		return listExercise;
 	}
-	
+
 	public Exercise GetExercise(int exerciseId) {
 		Exercise exercise = new Exercise();
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		oracleDb.OpenConnection();
 		ResultSet resultset = oracleDb
-				.GetResultSet("Select * from CSC_EXERCISE where EXERCISE_ID="+exerciseId);
+				.GetResultSet("Select * from CSC_EXERCISE where EXERCISE_ID="
+						+ exerciseId);
 		try {
 			while (resultset.next()) {
 				exercise = new Exercise();
@@ -995,35 +1005,44 @@ public class OracleDataAdapter {
 		}
 		return exercise;
 	}
-	
-	public boolean UpdateExerciseDetails(Exercise exercise)
-	{
+
+	public boolean UpdateExerciseDetails(Exercise exercise) {
 		oracleDb.OpenConnection();
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-dd");
-		String query = "UPDATE CSC_EXERCISE SET "
-				+ "EXERCISE_NAME='"+ exercise.EXERCISE_NAME
-				+ "',EXERCISE_COURSE="+ exercise.EXERCISE_COURSE
-				+ ",EXERCISE_DIFFICULTY_RANGE1="+ exercise.EXERCISE_DIFFICULTY_RANGE1
-				+ ",EXERCISE_DIFFICULTY_RANGE2="+ exercise.EXERCISE_DIFFICULTY_RANGE2
-				+ ",EXERCISE_RETRYLIMIT="+ exercise.EXERCISE_RETRYLIMIT
-				+ ",EXERCISE_CORRECTPT="+ exercise.EXERCISE_CORRECTPT 
-				+ ",EXERCISE_PENALTYPT="+ exercise.EXERCISE_PENALTYPT 
-				+ ",EXERCISE_SCORINGTYPE="+ exercise.EXERCISE_SCORINGTYPE 
-				+ ",EXERCISE_CREATEDBY="+ exercise.EXERCISE_CREATEDBY
-				+ ",EXERCISE_MODIFIEDBY="+ exercise.EXERCISE_CREATEDBY
-				+ ",EXERCISE_STARTDATE=TO_DATE('"+ simpleDateFormat.format(exercise.EXERCISE_STARTDATE)
-				+ "','YYYY-MM-DD'),EXERCISE_ENDDATE=TO_DATE('"+ simpleDateFormat.format(exercise.EXERCISE_ENDDATE)
-				+ "','YYYY-MM-DD'),EXERCISE_LASTMODIFIEDDATE=TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS') WHERE EXERCISE_ID="+exercise.EXERCISE_ID;
+		String query = "UPDATE CSC_EXERCISE SET " + "EXERCISE_NAME='"
+				+ exercise.EXERCISE_NAME
+				+ "',EXERCISE_COURSE="
+				+ exercise.EXERCISE_COURSE
+				+ ",EXERCISE_DIFFICULTY_RANGE1="
+				+ exercise.EXERCISE_DIFFICULTY_RANGE1
+				+ ",EXERCISE_DIFFICULTY_RANGE2="
+				+ exercise.EXERCISE_DIFFICULTY_RANGE2
+				+ ",EXERCISE_RETRYLIMIT="
+				+ exercise.EXERCISE_RETRYLIMIT
+				+ ",EXERCISE_CORRECTPT="
+				+ exercise.EXERCISE_CORRECTPT
+				+ ",EXERCISE_PENALTYPT="
+				+ exercise.EXERCISE_PENALTYPT
+				+ ",EXERCISE_SCORINGTYPE="
+				+ exercise.EXERCISE_SCORINGTYPE
+				+ ",EXERCISE_CREATEDBY="
+				+ exercise.EXERCISE_CREATEDBY
+				+ ",EXERCISE_MODIFIEDBY="
+				+ exercise.EXERCISE_CREATEDBY
+				+ ",EXERCISE_STARTDATE=TO_DATE('"
+				+ simpleDateFormat.format(exercise.EXERCISE_STARTDATE)
+				+ "','YYYY-MM-DD'),EXERCISE_ENDDATE=TO_DATE('"
+				+ simpleDateFormat.format(exercise.EXERCISE_ENDDATE)
+				+ "','YYYY-MM-DD'),EXERCISE_LASTMODIFIEDDATE=TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS') WHERE EXERCISE_ID="
+				+ exercise.EXERCISE_ID;
 		try {
 			return oracleDb.InsertQuery(query);
-		}
-		catch(Exception e)
-		{
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return false;
 	}
-	
+
 	public int InsertExerciseDetails(Exercise exercise) {
 
 		oracleDb.OpenConnection();
@@ -1039,7 +1058,8 @@ public class OracleDataAdapter {
 				+ exercise.EXERCISE_SCORINGTYPE + "','"
 				+ exercise.EXERCISE_CREATEDBY + "','"
 				+ exercise.EXERCISE_CREATEDBY + "',To_Date('";
-		query = query + simpleDateFormat.format(exercise.EXERCISE_STARTDATE) + "','yyyy-mm-dd'),To_Date('"
+		query = query + simpleDateFormat.format(exercise.EXERCISE_STARTDATE)
+				+ "','yyyy-mm-dd'),To_Date('"
 				+ simpleDateFormat.format(exercise.EXERCISE_ENDDATE)
 				+ "','yyyy-mm-dd'),TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS'))";
 		int retval = 0;
@@ -1246,7 +1266,8 @@ public class OracleDataAdapter {
 		ArrayList<QuestionBank> listQuestionBank = new ArrayList<QuestionBank>();
 		oracleDb.OpenConnection();
 		ResultSet resultset = oracleDb
-				.GetResultSet("Select * from  CSC_QuestionBank where QUESTIONBANK_ID in(select EA_QUESTION_ID from CSC_EXERCISE_QUESTION where EA_EXERCISE_ID="+ EA_EXERCISE_ID+")");
+				.GetResultSet("Select * from  CSC_QuestionBank where QUESTIONBANK_ID in(select EA_QUESTION_ID from CSC_EXERCISE_QUESTION where EA_EXERCISE_ID="
+						+ EA_EXERCISE_ID + ")");
 		try {
 			while (resultset.next()) {
 				questionBank = new QuestionBank();
@@ -1266,8 +1287,9 @@ public class OracleDataAdapter {
 						.getInt("QUESTIONBANK_CREATEDBY");
 				questionBank.QUESTIONBANK_MODIFIEDBY = resultset
 						.getInt("QUESTIONBANK_MODIFIEDBY");
-				questionBank.CSC_QB_IS_PARAMETERIZED = resultset
-						.getString("CSC_QB_IS_PARAMETERIZED").equalsIgnoreCase("f")?false:true;
+				questionBank.CSC_QB_IS_PARAMETERIZED = resultset.getString(
+						"CSC_QB_IS_PARAMETERIZED").equalsIgnoreCase("f") ? false
+						: true;
 				questionBank.CSC_QUESTIONBANK_TOPIC_ID = resultset
 						.getInt("CSC_QUESTIONBANK_TOPIC_ID");
 				try {
@@ -1278,7 +1300,7 @@ public class OracleDataAdapter {
 							.parse(resultset
 									.getString("QUESTIONBANK_MODIFIEDDATE"));
 				} catch (Exception e) {
-					
+
 				}
 				listQuestionBank.add(questionBank);
 			}
@@ -1326,16 +1348,19 @@ public class OracleDataAdapter {
 	}
 
 	public ArrayList<UserAttempt> GetUserAttemptFromCourse(int course_id) {
-		
+
 		User user = LocalSession.GetCurrentUser();
 		UserAttempt userAttempt = new UserAttempt();
 		ArrayList<UserAttempt> listUserAttempt = new ArrayList<UserAttempt>();
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		oracleDb.OpenConnection();
 		ResultSet resultset = oracleDb
-				.GetResultSet("select * from CSC_USER_ATTEMPT UT,CSC_EXERCISE EX where UT.UA_EXERCISE_ID = EX.EXERCISE_ID and EX.EXERCISE_COURSE = "+course_id+" and UT.UA_SUBMITTED = 'T'and UT.UA_USER_ID = "+user.UserId);
+				.GetResultSet("select * from CSC_USER_ATTEMPT UT,CSC_EXERCISE EX where UT.UA_EXERCISE_ID = EX.EXERCISE_ID and EX.EXERCISE_COURSE = "
+						+ course_id
+						+ " and UT.UA_SUBMITTED = 'T'and UT.UA_USER_ID = "
+						+ user.UserId);
 		try {
-			if(resultset == null) {
+			if (resultset == null) {
 				return listUserAttempt;
 			}
 			while (resultset.next()) {
@@ -1345,12 +1370,9 @@ public class OracleDataAdapter {
 				userAttempt.UA_USER_ID = resultset.getInt("UA_USER_ID");
 				userAttempt.UA_EXERCISE_ID = resultset.getInt("UA_EXERCISE_ID");
 				String submit = resultset.getString("UA_SUBMITTED");
-				if("T".equalsIgnoreCase(submit))
-				{
+				if ("T".equalsIgnoreCase(submit)) {
 					userAttempt.UA_SUBMITTED = true;
-				}
-				else
-				{
+				} else {
 					userAttempt.UA_SUBMITTED = false;
 				}
 				userAttempt.UA_SCORE = resultset.getDouble("UA_SCORE");
@@ -1372,7 +1394,7 @@ public class OracleDataAdapter {
 		}
 		return listUserAttempt;
 	}
-	
+
 	public ArrayList<UserAttemptExercise> GetUserAttemptExercise() {
 		UserAttemptExercise userAttemptExercise = new UserAttemptExercise();
 		ArrayList<UserAttemptExercise> listUserAttemptExercise = new ArrayList<UserAttemptExercise>();
@@ -1685,25 +1707,27 @@ public class OracleDataAdapter {
 		}
 		return listExerciseTopic;
 	}
+
 	public boolean InsertExerciseTopic(Exercise exercise, Topic topic) {
 
-		
 		String query = "DELETE FROM  CSC_EXERCISE_TOPIC where  CSC_EXERCISE_TOPIC_EXERCISE_ID="
 				+ exercise.EXERCISE_ID;
 		ResultSet resultset = oracleDb.GetResultSet(query);
 
 		query = "INSERT INTO CSC_EXERCISE_TOPIC (CSC_EXERCISE_TOPIC_SURR_KEY ,CSC_EXERCISE_TOPIC_TOPIC_ID,CSC_EXERCISE_TOPIC_EXERCISE_ID) values(";
-		query = query + "CSC_EXERCISE_TOPIC_SEQUENCE.NextVal,"
-				+ topic.TOPIC_ID + "," + exercise.EXERCISE_ID;
+		query = query + "CSC_EXERCISE_TOPIC_SEQUENCE.NextVal," + topic.TOPIC_ID
+				+ "," + exercise.EXERCISE_ID;
 		query = query + ")";
 		return oracleDb.InsertQuery(query);
 	}
+
 	public ArrayList<Exercise> GetExerciseForCourseId(int courseId) {
 		Exercise exercise = new Exercise();
 		ArrayList<Exercise> listExercise = new ArrayList<Exercise>();
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		oracleDb.OpenConnection();
-		String query="select * from CSC_EXERCISE where  EXERCISE_COURSE="+ courseId;
+		String query = "select * from CSC_EXERCISE where  EXERCISE_COURSE="
+				+ courseId;
 		ResultSet resultset = oracleDb.GetResultSet(query);
 		try {
 			while (resultset.next()) {
@@ -1782,7 +1806,7 @@ public class OracleDataAdapter {
 					if (resultset.next()) {
 						int Max_CSC_COURSE_COURSE_ID = resultset
 								.getInt("CSC_COURSE_COURSE_ID");
-						course.CSC_COURSE_Course_ID=Max_CSC_COURSE_COURSE_ID;
+						course.CSC_COURSE_Course_ID = Max_CSC_COURSE_COURSE_ID;
 						query = "INSERT INTO CSC_CLASS(CSC_CLASS_SURR_KEY ,CSC_CLASS_CLASS_ID,CSC_CLASS_COURSE_ID) "
 								+ "values(CSC_CLASS_SEQUENCE.nextval,1,"
 								+ Max_CSC_COURSE_COURSE_ID + ")";
@@ -1792,11 +1816,12 @@ public class OracleDataAdapter {
 									+ Max_CSC_COURSE_COURSE_ID;
 							oracleDb.InsertQuery(query);
 						} else {
-							course.CSC_COURSE_LEVEL.CSC_COURSE_LEVEL_SURR_KEY=GetMaxClassSurrogateKey();
-							course.CSC_COURSE_LEVEL.CSC_COURSE_LEVEL_Course_ID=Max_CSC_COURSE_COURSE_ID;
+							course.CSC_COURSE_LEVEL.CSC_COURSE_LEVEL_SURR_KEY = GetMaxClassSurrogateKey();
+							course.CSC_COURSE_LEVEL.CSC_COURSE_LEVEL_Course_ID = Max_CSC_COURSE_COURSE_ID;
 							InsertCourseLevel(course.CSC_COURSE_LEVEL);
-							InsertCourseTopic(course,course.CourseTopic);
-							InsertUserRoleForCourse(course,LocalSession.GetCurrentUser(),1);
+							InsertCourseTopic(course, course.CourseTopic);
+							InsertUserRoleForCourse(course,
+									LocalSession.GetCurrentUser(), 1);
 							// csc_user_role
 							return true;
 						}
@@ -1816,133 +1841,209 @@ public class OracleDataAdapter {
 	/**
 	 * @param courseTopic
 	 */
-	private void InsertCourseTopic(Course course,ArrayList<Topic> courseTopic) {
-		
-		String query="";
-		for(Topic topic:courseTopic)
-		{
-		query="INSERT INTO CSC_COURSE_TOPIC (CSC_COURSE_TOPIC_SURR_KEY ,CSC_COURSE_TOPIC_TOPIC_ID , CSC_COURSE_TOPIC_COURSE_ID ) "
-				+ "VALUES(CSC_COURSE_TOPIC_SEQUENCE.NEXTVAL,"+topic.TOPIC_ID+","+course.CSC_COURSE_Course_ID+")";
-			try
-			{
+	private void InsertCourseTopic(Course course, ArrayList<Topic> courseTopic) {
+
+		String query = "";
+		for (Topic topic : courseTopic) {
+			query = "INSERT INTO CSC_COURSE_TOPIC (CSC_COURSE_TOPIC_SURR_KEY ,CSC_COURSE_TOPIC_TOPIC_ID , CSC_COURSE_TOPIC_COURSE_ID ) "
+					+ "VALUES(CSC_COURSE_TOPIC_SEQUENCE.NEXTVAL,"
+					+ topic.TOPIC_ID + "," + course.CSC_COURSE_Course_ID + ")";
+			try {
 				oracleDb.InsertQuery(query);
-			}
-			catch(Exception e)
-			{
-				
+			} catch (Exception e) {
+
 			}
 		}
 	}
 
-	private boolean InsertUserRoleForCourse(Course course,User user,int roleId)
-	{
-		String query="INSERT INTO CSC_USER_ROLE(USER_ROLE_USER_ID,USER_ROLE_ROLE_ID,CSC_U_R_CLASS_SURR_KEY) "
-				+ "VALUES ("+user.UserId+","+roleId+","+ course.CSC_COURSE_LEVEL.CSC_COURSE_LEVEL_SURR_KEY+")";
-		if(!oracleDb.InsertQuery(query))
-		{
-			//failure
+	private boolean InsertUserRoleForCourse(Course course, User user, int roleId) {
+		String query = "INSERT INTO CSC_USER_ROLE(USER_ROLE_USER_ID,USER_ROLE_ROLE_ID,CSC_U_R_CLASS_SURR_KEY) "
+				+ "VALUES ("
+				+ user.UserId
+				+ ","
+				+ roleId
+				+ ","
+				+ course.CSC_COURSE_LEVEL.CSC_COURSE_LEVEL_SURR_KEY + ")";
+		if (!oracleDb.InsertQuery(query)) {
+			// failure
 			return false;
-		}
-		else
+		} else
 			return true;
-		
+
 	}
-	private boolean InsertCourseLevel(CourseLevel courseLevel)
-	{
-		String query="INSERT INTO CSC_COURSE_LEVEL(CSC_COURSE_LEVEL_SURR_KEY,CSC_COURSE_LEVEL_LEVEL_ID,CSC_COURSE_LEVEL_COURSE_ID) "
-				+ "VALUES(CSC_COURSE_LEVEL_SEQUENCE.NEXTVAL,"+courseLevel.CSC_COURSE_LEVEL_LEVEL_ID+","+courseLevel.CSC_COURSE_LEVEL_Course_ID+")";
-		if(!oracleDb.InsertQuery(query))
-		{
-			//failure
+
+	private boolean InsertCourseLevel(CourseLevel courseLevel) {
+		String query = "INSERT INTO CSC_COURSE_LEVEL(CSC_COURSE_LEVEL_SURR_KEY,CSC_COURSE_LEVEL_LEVEL_ID,CSC_COURSE_LEVEL_COURSE_ID) "
+				+ "VALUES(CSC_COURSE_LEVEL_SEQUENCE.NEXTVAL,"
+				+ courseLevel.CSC_COURSE_LEVEL_LEVEL_ID
+				+ ","
+				+ courseLevel.CSC_COURSE_LEVEL_Course_ID + ")";
+		if (!oracleDb.InsertQuery(query)) {
+			// failure
 			return false;
-		}
-		else
+		} else
 			return true;
 	}
-	private int GetMaxClassSurrogateKey()
-	{
+
+	private int GetMaxClassSurrogateKey() {
 		String query = "select Max(CSC_CLASS_SURR_KEY) as CSC_CLASS_SURR_KEY from CSC_CLASS ";
-		ResultSet resultSet=oracleDb.GetResultSet(query);
-		
-			try {
-				if(resultSet.next())
-				{
-					return resultSet.getInt("CSC_CLASS_SURR_KEY");
-				}
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+		ResultSet resultSet = oracleDb.GetResultSet(query);
+
+		try {
+			if (resultSet.next()) {
+				return resultSet.getInt("CSC_CLASS_SURR_KEY");
 			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return 0;
 	}
 
-	public ArrayList<User> GetReport1()
-	{
+	public ArrayList<User> GetReport1() {
 		User user = new User();
 		ArrayList<User> listUser = new ArrayList<User>();
 		oracleDb.OpenConnection();
+		String query = " select DISTINCT c.user_fname, c.user_lname from csc_user c, csc_user_role ur, "+ 
+				" CSC_EXERCISE ex,CSC_COURSE CO, CSC_CLASS CL , CSC_ROLE R where  "+
+				" c.USER_ID = ur.USER_ROLE_USER_ID  "+
+				" and ex.EXERCISE_COURSE = CO.CSC_COURSE_COURSE_ID "+
+				" and CL.CSC_CLASS_COURSE_ID = CO.CSC_COURSE_COURSE_ID "+
+				" and CL.CSC_CLASS_SURR_KEY = UR.CSC_U_R_CLASS_SURR_KEY "+
+				" and R.ROLE_ID = ur.USER_ROLE_ROLE_ID "+
+				" and CO.CSC_COURSE_TOKEN = 'CSC540FALL14' "+
+				" and R.ROLE_NAME = 'Student' "+
+				" and c.user_id NOT IN "+
+				" (select ua_user_id from csc_user_attempt ua where ua.ua_exercise_id=1) ";
+		
 		ResultSet resultset = oracleDb
-				.GetResultSet("select distinct c.user_fname, c.user_lname "
-						+ "from csc_user c, CSC_USER_ROLE CUR "
-						+ "where "
-						+ "C.USER_ID=CUR.USER_ROLE_USER_ID "
-						+ "and CUR.USER_ROLE_ROLE_ID=2 "
-						+ "AND c.user_id NOT IN(select ua_user_id from csc_user_attempt ua where ua.ua_exercise_id=1)");
+				.GetResultSet(query);
 		try {
 			while (resultset.next()) {
 				user = new User();
-				user.UserFName = resultset.getString("user_fname");
+				user.UserFName = resultset.getString("USER_FNAME");
+				user.UserLName = resultset.getString("USER_LNAME");
+				listUser.add(user);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			oracleDb.CloseConnection();
+		}
+		return listUser;
+	}
+
+	public ArrayList<User> GetReport2() {
+		User user = new User();
+		ArrayList<User> listUser = new ArrayList<User>();
+		oracleDb.OpenConnection();
+		String query = "select c.user_fname, c.user_lname from csc_user c "+
+				"where c.user_id IN ( "+
+						"select UA_USER_ID from csc_user_attempt ua  "+
+						"where ua.attemp_id = 1 "+
+						"and ua.UA_EXERCISE_ID = 1 "+
+						"and ua.ua_score = (select max(ua1.ua_score) from csc_user_attempt ua1 "+
+						"where ua1.attemp_id=1 and ua1.ua_exercise_id=1) "+
+						") ";
+		
+		ResultSet resultset = oracleDb
+				.GetResultSet(query);
+		try {
+			while (resultset.next()) {
+				user = new User();
+				user.UserFName = resultset.getString("USER_FNAME");
 				user.UserLName = resultset.getString("user_lname");
 				listUser.add(user);
 			}
 		} catch (SQLException e) {
+		} finally {
+			oracleDb.CloseConnection();
+		}
+		return listUser;
+	}
+
+	public ArrayList<User> GetReport3(int Course_id) {
+		User user = new User();
+		ArrayList<User> listUser = new ArrayList<User>();
+		oracleDb.OpenConnection();
+		String query = "select sub.e_name as Exercise_Name, c.user_fname, c.user_lname from csc_user c, "+
+						"( "+
+						"select ua.UA_USER_ID as u_id, ua.UA_EXERCISE_ID as e_id, EX.EXERCISE_NAME as e_name from csc_user_attempt ua , CSC_EXERCISE EX "+
+						"where ua.UA_EXERCISE_ID = EX.EXERCISE_ID "+
+						"and ua.attemp_id = 1 "+
+						"and EX.EXERCISE_COURSE ="+Course_id+
+						"and (ua.UA_EXERCISE_ID, ua.ua_score) IN (select ua1.UA_EXERCISE_ID,max(ua1.ua_score) from csc_user_attempt ua1 "+
+						"where ua1.attemp_id=1 "+
+						"group by ua1.UA_EXERCISE_ID) "+
+						") sub "+
+						"where sub.u_id = c.user_id ";
+		
+		ResultSet resultset = oracleDb
+				.GetResultSet(query);
+		try {
+			while (resultset.next()) {
+				user = new User();
+				user.ExerciseName = resultset.getString("EXERCISE_NAME");
+				user.UserFName = resultset.getString("USER_FNAME");
+				user.UserLName = resultset.getString("USER_LNAME");
+				listUser.add(user);
+			}
+		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
 			oracleDb.CloseConnection();
 		}
 		return listUser;
 	}
-	public ArrayList<User> GetReport2()
-	{
+
+	public ArrayList<User> GetReport4Average(int Course_Id) {
 		User user = new User();
 		ArrayList<User> listUser = new ArrayList<User>();
 		oracleDb.OpenConnection();
+		String query = "SELECT CC.USER_FNAME as FirstName,CC.USER_LNAME as LastName, AVG(UA_SCORE) as AVERAGESCORE "
+				+ "FROM CSC_USER CC "
+				+ "inner join CSC_USER_ROLE CUR on CC.USER_ID=CUR.USER_ROLE_USER_ID AND CUR.USER_ROLE_ROLE_ID=2 "
+				+ "left join "
+				+ "( SELECT UA_USER_ID,EXERCISE_ID,UA_SCORE FROM "
+				+ "( SELECT CUA.UA_USER_ID UA_USER_ID, CE.EXERCISE_ID EXERCISE_ID, UA_SCORE "
+				+ " FROM CSC_EXERCISE CE,CSC_USER_ATTEMPT  CUA  "
+				+ " WHERE CE.EXERCISE_ID=CUA.UA_EXERCISE_ID and CE.EXERCISE_ScoringType=1 and ROWNUM <= 1 and CE.EXERCISE_COURSE = "+Course_Id
+				+ " ORDER BY CUA.UA_USER_ID, CE.EXERCISE_ID,CUA.UA_LASTATTEMPT_DATE DESC) "
+				+
+
+				" UNION "
+				+ " SELECT UA_USER_ID,EXERCISE_ID,UA_SCORE FROM  "
+				+ " ( SELECT CUA.UA_USER_ID UA_USER_ID, CE.EXERCISE_ID EXERCISE_ID, UA_SCORE "
+				+ " FROM CSC_EXERCISE CE,CSC_USER_ATTEMPT  CUA  "
+				+ " WHERE CE.EXERCISE_ID=CUA.UA_EXERCISE_ID and CE.EXERCISE_ScoringType=4 and ROWNUM <= 1 and CE.EXERCISE_COURSE = "+Course_Id
+				+ " ORDER BY CUA.UA_USER_ID, CE.EXERCISE_ID,CUA.UA_LASTATTEMPT_DATE ASC) "
+				+
+
+				" UNION  "
+				+
+
+				" SELECT UA_USER_ID,EXERCISE_ID,UA_SCORE  "
+				+ " FROM ( SELECT CUA.UA_USER_ID, CE.EXERCISE_ID, UA_SCORE  "
+				+ " FROM CSC_EXERCISE CE,CSC_USER_ATTEMPT  CUA WHERE CE.EXERCISE_ID=CUA.UA_EXERCISE_ID and CE.EXERCISE_ScoringType=2 and CE.EXERCISE_COURSE = "+Course_Id
+				+ " and ROWNUM <= 1 ORDER BY CUA.UA_USER_ID, CE.EXERCISE_ID,CUA.UA_SCORE DESC)  "
+				+
+
+				" UNION  "
+				+
+
+				" SELECT DISTINCT CUA.UA_USER_ID, CE.EXERCISE_ID, AVG(UA_SCORE)  "
+				+ " FROM CSC_EXERCISE CE,CSC_USER_ATTEMPT  CUA WHERE CE.EXERCISE_ID=CUA.UA_EXERCISE_ID and CE.EXERCISE_ScoringType=3 CE.EXERCISE_COURSE = "+Course_Id
+				+ " GROUP BY CUA.UA_USER_ID, CE.EXERCISE_ID )  "
+				+ " AA ON AA.UA_USER_ID=CC.USER_ID  GROUP BY CC.USER_FNAME,CC.USER_LNAME ";
+
 		ResultSet resultset = oracleDb
-				.GetResultSet("select c.user_fname as FirstName, c.user_lname as LastName from csc_user c where c.user_id IN(select ua.ua_user_id "
-						+ " from csc_user_attempt ua "
-						+ " where ua.ua_id=1 "
-						+ " and ua.ua_exercise_id=1"
-						+ " and ua.ua_score>=( select max(ua1.ua_score) from csc_user_attempt ua1 "
-						+ " where ua1.ATTEMP_ID=1 and ua1.ua_exercise_id=1))");
+				.GetResultSet(query);
 		try {
 			while (resultset.next()) {
 				user = new User();
 				user.UserFName = resultset.getString("FirstName");
 				user.UserLName = resultset.getString("LastName");
-				listUser.add(user);
-			}
-		} catch (SQLException e) {
-		} finally {
-			oracleDb.CloseConnection();
-		}
-		return listUser;
-	}
-	public ArrayList<User> GetReport3()
-	{
-		User user = new User();
-		ArrayList<User> listUser = new ArrayList<User>();
-		oracleDb.OpenConnection();
-		ResultSet resultset = oracleDb
-				.GetResultSet("select c.user_fname, c.user_lname From csc_user c "
-						+ " where c.user_id IN "
-						+ " (select ua.ua_user_id from csc_user_attempt ua where ua.attemp_id = 1 and ua.ua_score >= (Select max(ua2.ua_score) "
-						+ " from csc_user_attempt ua2  "
-						+ "	where ua2.ua_exercise_id = ua.ua_exercise_id and ua2.attemp_id = 1))");
-		try {
-			while (resultset.next()) {
-				user = new User();
-				user.UserFName = resultset.getString("user_fname");
-				user.UserLName = resultset.getString("user_lname");
+				user.AverageScore = resultset.getDouble("AVERAGESCORE");
 				listUser.add(user);
 			}
 		} catch (SQLException e) {
@@ -1952,42 +2053,54 @@ public class OracleDataAdapter {
 		}
 		return listUser;
 	}
-	public ArrayList<User> GetReport4Average()
-	{
+
+	public ArrayList<User> GetReport4Total(int Course_id) {
 		User user = new User();
 		ArrayList<User> listUser = new ArrayList<User>();
 		oracleDb.OpenConnection();
+		
+		String query = " SELECT CC.USER_FNAME as FirstName,CC.USER_LNAME LastName, CE.EXERCISE_NAME as ExerciseName, UA_SCORE  as TotalScore "+ 
+				" FROM CSC_USER CC  "+
+				" inner join CSC_USER_ROLE CUR on CC.USER_ID=CUR.USER_ROLE_USER_ID AND CUR.USER_ROLE_ROLE_ID=2  "+
+				" left join ( SELECT UA_USER_ID,EXERCISE_ID,UA_SCORE  "+
+				" FROM ( SELECT CUA.UA_USER_ID UA_USER_ID, CE.EXERCISE_ID EXERCISE_ID, UA_SCORE "+ 
+				" FROM CSC_EXERCISE CE,CSC_USER_ATTEMPT  CUA "+ 
+				" WHERE CE.EXERCISE_ID=CUA.UA_EXERCISE_ID and CE.EXERCISE_ScoringType=1 and ROWNUM <= 1 and CE.EXERCISE_COURSE ="+Course_id+
+				" ORDER BY CUA.UA_USER_ID, CE.EXERCISE_ID,CUA.UA_LASTATTEMPT_DATE DESC) "+ 
+
+				" UNION "+
+
+				" SELECT UA_USER_ID,EXERCISE_ID,UA_SCORE "+ 
+				" FROM ( SELECT CUA.UA_USER_ID UA_USER_ID, CE.EXERCISE_ID EXERCISE_ID, UA_SCORE "+ 
+				" FROM CSC_EXERCISE CE,CSC_USER_ATTEMPT  CUA  "+
+				" WHERE CE.EXERCISE_ID=CUA.UA_EXERCISE_ID and CE.EXERCISE_ScoringType=4 and ROWNUM <= 1 and CE.EXERCISE_COURSE = "+Course_id+
+				" ORDER BY CUA.UA_USER_ID, CE.EXERCISE_ID,CUA.UA_LASTATTEMPT_DATE ASC) "+
+
+				" UNION  "+
+
+				" SELECT UA_USER_ID,EXERCISE_ID,UA_SCORE  "+
+				" FROM ( SELECT CUA.UA_USER_ID, CE.EXERCISE_ID, UA_SCORE "+ 
+				" FROM CSC_EXERCISE CE,CSC_USER_ATTEMPT  CUA  "+
+				" WHERE CE.EXERCISE_ID=CUA.UA_EXERCISE_ID and CE.EXERCISE_ScoringType=2 and ROWNUM <= 1 and CE.EXERCISE_COURSE = "+Course_id+
+				" ORDER BY CUA.UA_USER_ID, CE.EXERCISE_ID,CUA.UA_SCORE DESC)  "+
+
+				" UNION  "+
+
+				" SELECT DISTINCT CUA.UA_USER_ID, CE.EXERCISE_ID, AVG(UA_SCORE)  "+
+				" FROM CSC_EXERCISE CE,CSC_USER_ATTEMPT  CUA  "+
+				" WHERE CE.EXERCISE_ID=CUA.UA_EXERCISE_ID and CE.EXERCISE_ScoringType=3 and CE.EXERCISE_COURSE = "+Course_id+
+				" GROUP BY CUA.UA_USER_ID, CE.EXERCISE_ID ) AA ON AA.UA_USER_ID=CC.USER_ID  "+
+				" INNER JOIN csc_exercise CE on CE.EXERCISE_ID=AA.EXERCISE_ID ";
+
 		ResultSet resultset = oracleDb
-				.GetResultSet(" SELECT CC.USER_FNAME as FirstName,CC.USER_LNAME as LastName, AVG(UA_SCORE) as AVERAGESCORE FROM CSC_USER CC inner join CSC_USER_ROLE CUR on CC.USER_ID=CUR.USER_ROLE_USER_ID AND CUR.USER_ROLE_ROLE_ID=2 left join ( SELECT UA_USER_ID,EXERCISE_ID,UA_SCORE FROM ( SELECT CUA.UA_USER_ID UA_USER_ID, CE.EXERCISE_ID EXERCISE_ID, UA_SCORE FROM CSC_EXERCISE CE,CSC_USER_ATTEMPT  CUA WHERE CE.EXERCISE_ID=CUA.UA_EXERCISE_ID and CE.EXERCISE_ScoringType=1 and ROWNUM <= 1 ORDER BY CUA.UA_USER_ID, CE.EXERCISE_ID,CUA.UA_LASTATTEMPT_DATE DESC) UNION SELECT UA_USER_ID,EXERCISE_ID,UA_SCORE FROM ( SELECT CUA.UA_USER_ID, CE.EXERCISE_ID, UA_SCORE FROM CSC_EXERCISE CE,CSC_USER_ATTEMPT  CUA WHERE CE.EXERCISE_ID=CUA.UA_EXERCISE_ID and CE.EXERCISE_ScoringType=2 and ROWNUM <= 1 ORDER BY CUA.UA_USER_ID, CE.EXERCISE_ID,CUA.UA_SCORE DESC) UNION SELECT DISTINCT CUA.UA_USER_ID, CE.EXERCISE_ID, AVG(UA_SCORE) FROM CSC_EXERCISE CE,CSC_USER_ATTEMPT  CUA WHERE CE.EXERCISE_ID=CUA.UA_EXERCISE_ID and CE.EXERCISE_ScoringType=3 GROUP BY CUA.UA_USER_ID, CE.EXERCISE_ID ) AA ON AA.UA_USER_ID=CC.USER_ID  GROUP BY CC.USER_FNAME,CC.USER_LNAME"); 
-		try {
-			while (resultset.next()) {
-				user = new User();
-				user.UserFName = resultset.getString("FirstName");
-				user.UserLName = resultset.getString("LastName");
-				user.AverageScore=resultset.getDouble("AVERAGESCORE");
-				listUser.add(user);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			oracleDb.CloseConnection();
-		}
-		return listUser;
-	}
-	public ArrayList<User> GetReport4Total()
-	{
-		User user = new User();
-		ArrayList<User> listUser = new ArrayList<User>();
-		oracleDb.OpenConnection();
-		ResultSet resultset = oracleDb
-				.GetResultSet("SELECT CC.USER_FNAME as FirstName,CC.USER_LNAME LastName, CE.EXERCISE_NAME as ExerciseName, UA_SCORE  as TotalScore FROM CSC_USER CC inner join CSC_USER_ROLE CUR on CC.USER_ID=CUR.USER_ROLE_USER_ID AND CUR.USER_ROLE_ROLE_ID=2 left join ( SELECT UA_USER_ID,EXERCISE_ID,UA_SCORE FROM ( SELECT CUA.UA_USER_ID UA_USER_ID, CE.EXERCISE_ID EXERCISE_ID, UA_SCORE FROM CSC_EXERCISE CE,CSC_USER_ATTEMPT  CUA WHERE CE.EXERCISE_ID=CUA.UA_EXERCISE_ID and CE.EXERCISE_ScoringType=1 and ROWNUM <= 1 ORDER BY CUA.UA_USER_ID, CE.EXERCISE_ID,CUA.UA_LASTATTEMPT_DATE DESC) UNION SELECT UA_USER_ID,EXERCISE_ID,UA_SCORE FROM ( SELECT CUA.UA_USER_ID, CE.EXERCISE_ID, UA_SCORE FROM CSC_EXERCISE CE,CSC_USER_ATTEMPT  CUA WHERE CE.EXERCISE_ID=CUA.UA_EXERCISE_ID and CE.EXERCISE_ScoringType=2 and ROWNUM <= 1 ORDER BY CUA.UA_USER_ID, CE.EXERCISE_ID,CUA.UA_SCORE DESC) UNION SELECT DISTINCT CUA.UA_USER_ID, CE.EXERCISE_ID, AVG(UA_SCORE) FROM CSC_EXERCISE CE,CSC_USER_ATTEMPT  CUA WHERE CE.EXERCISE_ID=CUA.UA_EXERCISE_ID and CE.EXERCISE_ScoringType=3 GROUP BY CUA.UA_USER_ID, CE.EXERCISE_ID ) AA ON AA.UA_USER_ID=CC.USER_ID INNER JOIN csc_exercise CE on CE.EXERCISE_ID=AA.EXERCISE_ID");
+				.GetResultSet(query);
 		try {
 			while (resultset.next()) {
 				user = new User();
 				user.UserFName = resultset.getString("FirstName");
 				user.UserLName = resultset.getString("LastName");
-				user.ExerciseName=resultset.getString("ExerciseName");
-				user.AverageScore=resultset.getDouble("TotalScore");
+				user.ExerciseName = resultset.getString("ExerciseName");
+				user.AverageScore = resultset.getDouble("TotalScore");
 				listUser.add(user);
 			}
 		} catch (SQLException e) {
@@ -1997,18 +2110,27 @@ public class OracleDataAdapter {
 		}
 		return listUser;
 	}
-	public ArrayList<Exercise> GetReport5()
-	{
-		Exercise exercise=new Exercise();
-		ArrayList<Exercise> listExercise=new ArrayList<Exercise>();
+
+	public ArrayList<Exercise> GetReport5(int Course_id) {
+		Exercise exercise = new Exercise();
+		ArrayList<Exercise> listExercise = new ArrayList<Exercise>();
 		oracleDb.OpenConnection();
-		ResultSet resultset=oracleDb.GetResultSet("Select CE.EXERCISE_ID AS EXERCISE_ID, CE.EXERCISE_NAME as EXERCISE_NAME,AA.AVERAGEATTEMPT as AVERAGEATTEMPT  FROM  csc_exercise CE LEFT JOIN  (SELECT ua_exercise_id,avg(Attempt) AVERAGEATTEMPT  from ( select ua_exercise_id,UA_USER_ID,count(*) as Attempt from csc_user_attempt ua Group By ua.ua_exercise_id, ua.UA_USER_ID) A group by ua_exercise_id ) AA  on AA.ua_exercise_id=CE.exercise_id");
+		String query = "Select CE.EXERCISE_ID AS EXERCISE_ID, CE.EXERCISE_NAME as EXERCISE_NAME,AA.AVERAGEATTEMPT "+
+				" as AVERAGEATTEMPT  FROM  csc_exercise CE "+
+				" LEFT JOIN  (SELECT ua_exercise_id, "+
+				" avg(Attempt) AVERAGEATTEMPT  from ( select ua_exercise_id,UA_USER_ID,count(*) as Attempt "+
+				" from csc_user_attempt ua "+
+				" Group By ua.ua_exercise_id, ua.UA_USER_ID) A group by ua_exercise_id ) AA  on AA.ua_exercise_id=CE.exercise_id "+
+				" where CE.EXERCISE_COURSE ="+Course_id;
+		
+		ResultSet resultset = oracleDb
+				.GetResultSet(query);
 		try {
 			while (resultset.next()) {
 				exercise = new Exercise();
 				exercise.EXERCISE_ID = resultset.getInt("EXERCISE_ID");
 				exercise.EXERCISE_NAME = resultset.getString("EXERCISE_NAME");
-				exercise.AverageAttempt=resultset.getInt("AVERAGEATTEMPT");
+				exercise.AverageAttempt = resultset.getInt("AVERAGEATTEMPT");
 				listExercise.add(exercise);
 			}
 		} catch (SQLException e) {
@@ -2016,23 +2138,24 @@ public class OracleDataAdapter {
 		} finally {
 			oracleDb.CloseConnection();
 		}
-		return listExercise;		
+		return listExercise;
 	}
-	public boolean IsRoleOnCourse(User user, Course course,int roleId)
-	{
-		String query="SELECT count(*) counter FROM CSC_COURSE CCO "
+
+	public boolean IsRoleOnCourse(User user, Course course, int roleId) {
+		String query = "SELECT count(*) counter FROM CSC_COURSE CCO "
 				+ "inner join CSC_CLASS CCS on CCO.CSC_COURSE_COURSE_ID=CCS.CSC_CLASS_COURSE_ID "
 				+ "inner join csc_user_role CUR on CUR.CSC_U_R_CLASS_SURR_KEY=CCS.CSC_CLASS_COURSE_ID "
-				+ "WHERE CUR.User_ROLE_USER_ID="+user.UserId+" and CUR.USER_ROLE_ROLE_ID ="+roleId+" and CCS.CSC_CLASS_COURSE_ID ="+course.CSC_COURSE_Course_ID;
+				+ "WHERE CUR.User_ROLE_USER_ID=" + user.UserId
+				+ " and CUR.USER_ROLE_ROLE_ID =" + roleId
+				+ " and CCS.CSC_CLASS_COURSE_ID ="
+				+ course.CSC_COURSE_Course_ID;
 		try {
-			ResultSet resultset=oracleDb.GetResultSet(query);
+			ResultSet resultset = oracleDb.GetResultSet(query);
 			while (resultset.next()) {
-				return resultset.getInt("counter")>0?true:false;
+				return resultset.getInt("counter") > 0 ? true : false;
 			}
-		}
-		catch(Exception e)
-		{
-			
+		} catch (Exception e) {
+
 		}
 		return false;
 	}

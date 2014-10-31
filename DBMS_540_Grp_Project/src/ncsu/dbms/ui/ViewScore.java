@@ -1,7 +1,6 @@
 package ncsu.dbms.ui;
 
 import java.awt.Color;
-import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
@@ -14,27 +13,13 @@ import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 
 import ncsu.dbms.core.UserAttempt;
+import ncsu.dbms.db.PastSubmissionData;
 import ncsu.dbms.db.ScoresData;
 
 public class ViewScore {
 
 	private JPanel contentPane;
 	private JFrame frame;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					new ViewScore();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
 	/**
 	 * Create the frame.
@@ -109,14 +94,15 @@ public class ViewScore {
 
 		int i = 10;
 		for (UserAttempt userAttempt : allAttempts) {
-			JLabel exercise = new JLabel("Exercise" + userAttempt.getUA_EXERCISE_ID());
-			exercise.setBounds(10, i, 110, 40);
+			String exerciseName = PastSubmissionData.getExerciseName(userAttempt.getUA_EXERCISE_ID());
+			JLabel exercise = new JLabel(exerciseName);
+			exercise.setBounds(10, i, 170, 40);
 			panel_Right.add(exercise);
 			JLabel attempt = new JLabel("Attempt" + userAttempt.getUA_ID());
-			attempt.setBounds(140, i, 110, 40);
+			attempt.setBounds(190, i, 110, 40);
 			panel_Right.add(attempt);
 			JLabel score = new JLabel("" + userAttempt.getUA_SCORE());
-			score.setBounds(270, i, 110, 40);
+			score.setBounds(320, i, 110, 40);
 			panel_Right.add(score);
 			i += 20;
 		}

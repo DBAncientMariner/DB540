@@ -2141,6 +2141,7 @@ public class OracleDataAdapter {
 		return listExercise;
 	}
 
+
 	public boolean IsRoleOnCourse(User user, Course course, int roleId) {
 		String query = "SELECT count(*) counter FROM CSC_COURSE CCO "
 				+ "inner join CSC_CLASS CCS on CCO.CSC_COURSE_COURSE_ID=CCS.CSC_CLASS_COURSE_ID "

@@ -406,6 +406,7 @@ public class Home {
 						txt_CourseLevel.setText("");
 						lbl_CourseTokenError.setText("Course Created!");
 						//AddCourse(course.CSC_COURSE_token);
+						AddCourse();
 					} else {
 						lbl_CourseTokenError.setText("Error");
 					}

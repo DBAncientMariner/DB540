@@ -50,6 +50,7 @@ public class OracleDataAdapter {
 				listUsers.add(user);
 			}
 		} catch (SQLException e) {
+			System.out.println(e);
 		} finally {
 			oracleDb.CloseConnection();
 		}
@@ -80,10 +81,12 @@ public class OracleDataAdapter {
 					user.UserLastModifiedDate = simpleDateFormat
 							.parse(resultset.getString("USER_LASTMODIFIEDDATE"));
 				} catch (Exception e) {
+					System.out.println(e);
 				}
 				user.UserLastModifiedBy = resultset.getInt("USER_MODIFIEDBY");
 			}
 		} catch (SQLException e) {
+			System.out.println(e);
 		} finally {
 			oracleDb.CloseConnection();
 		}
@@ -118,6 +121,7 @@ public class OracleDataAdapter {
 				user.UserLastModifiedBy = resultset.getInt("USER_MODIFIEDBY");
 			}
 		} catch (SQLException e) {
+			System.out.println(e);
 		} finally {
 			oracleDb.CloseConnection();
 		}
@@ -192,6 +196,7 @@ public class OracleDataAdapter {
 				listQuestionBank.add(questionBank);
 			}
 		} catch (SQLException e) {
+			System.out.println(e);
 		} finally {
 			oracleDb.CloseConnection();
 		}
@@ -232,6 +237,7 @@ public class OracleDataAdapter {
 				listAnswerBank.add(answerBank);
 			}
 		} catch (SQLException e) {
+			System.out.println(e);
 		} finally {
 			oracleDb.CloseConnection();
 		}
@@ -283,6 +289,7 @@ public class OracleDataAdapter {
 				ListQuestions.add(questionBank);
 			}
 		} catch (SQLException e) {
+			System.out.println(e);
 		} finally {
 			oracleDb.CloseConnection();
 		}
@@ -320,10 +327,12 @@ public class OracleDataAdapter {
 							.parse(resultset
 									.getString("ANSWERBANK_MODIFIEDDATE"));
 				} catch (Exception e) {
+					System.out.println(e);
 				}
 				listAnswerBank.add(answerBank);
 			}
 		} catch (SQLException e) {
+			System.out.println(e);
 		} finally {
 			oracleDb.CloseConnection();
 		}
@@ -365,6 +374,7 @@ public class OracleDataAdapter {
 				listAnswerBank.add(answerBank);
 			}
 		} catch (SQLException e) {
+			System.out.println(e);
 		} finally {
 			oracleDb.CloseConnection();
 		}
@@ -390,6 +400,7 @@ public class OracleDataAdapter {
 				listQABank.add(questionAnswerBank);
 			}
 		} catch (SQLException e) {
+			System.out.println(e);
 		} finally {
 			oracleDb.CloseConnection();
 		}
@@ -428,6 +439,7 @@ public class OracleDataAdapter {
 				listCourse.add(course);
 			}
 		} catch (SQLException e) {
+			System.out.println(e);
 		} finally {
 			oracleDb.CloseConnection();
 		}
@@ -472,10 +484,12 @@ public class OracleDataAdapter {
 					course.CSC_COURSE_EndDate = simpleDateFormat
 							.parse(resultset.getString("CSC_COURSE_EndDate"));
 				} catch (Exception e) {
+					System.out.println(e);
 				}
 				listCourse.add(course);
 			}
 		} catch (SQLException e) {
+			System.out.println(e);
 		} finally {
 			oracleDb.CloseConnection();
 		}
@@ -512,10 +526,12 @@ public class OracleDataAdapter {
 					course.CSC_COURSE_EndDate = simpleDateFormat
 							.parse(resultset.getString("CSC_COURSE_ENDDATE"));
 				} catch (SQLException e) {
+					System.out.println(e);
 				}
 				listCourse.add(course);
 			}
 		} catch (Exception e) {
+			System.out.println(e);
 		} finally {
 			oracleDb.CloseConnection();
 		}
@@ -537,7 +553,7 @@ public class OracleDataAdapter {
 						oracleDb.CloseConnection();
 						return returnvalue;
 					} catch (Exception e) {
-
+						System.out.println(e);
 					}
 				} else
 					return false;
@@ -567,6 +583,7 @@ public class OracleDataAdapter {
 				listClass.add(cscClass);
 			}
 		} catch (SQLException e) {
+			System.out.println(e);
 		} finally {
 			oracleDb.CloseConnection();
 		}
@@ -589,6 +606,7 @@ public class OracleDataAdapter {
 				listLevel.add(level);
 			}
 		} catch (SQLException e) {
+			System.out.println(e);
 		} finally {
 			oracleDb.CloseConnection();
 		}
@@ -614,6 +632,7 @@ public class OracleDataAdapter {
 				listTextBook.add(textBook);
 			}
 		} catch (SQLException e) {
+			System.out.println(e);
 		} finally {
 			oracleDb.CloseConnection();
 		}
@@ -642,6 +661,7 @@ public class OracleDataAdapter {
 				listChapter.add(chapter);
 			}
 		} catch (SQLException e) {
+			System.out.println(e);
 		} finally {
 			oracleDb.CloseConnection();
 		}
@@ -674,6 +694,7 @@ public class OracleDataAdapter {
 				listSection.add(section);
 			}
 		} catch (SQLException e) {
+			System.out.println(e);
 		} finally {
 			oracleDb.CloseConnection();
 		}
@@ -700,6 +721,7 @@ public class OracleDataAdapter {
 				listCourseTextbook.add(courseTextbook);
 			}
 		} catch (SQLException e) {
+			System.out.println(e);
 		} finally {
 			oracleDb.CloseConnection();
 		}
@@ -724,6 +746,7 @@ public class OracleDataAdapter {
 				listScoringType.add(scoringType);
 			}
 		} catch (SQLException e) {
+			System.out.println(e);
 		} finally {
 			oracleDb.CloseConnection();
 		}
@@ -771,10 +794,12 @@ public class OracleDataAdapter {
 							.parse(resultset
 									.getString("EXERCISE_LASTMODIFIEDDATE"));
 				} catch (Exception e) {
+					System.out.println(e);
 				}
 				listExercise.add(exercise);
 			}
 		} catch (SQLException e) {
+			System.out.println(e);
 		} finally {
 			oracleDb.CloseConnection();
 		}
@@ -796,7 +821,7 @@ public class OracleDataAdapter {
 			oracleDb.CloseConnection();
 			return returnvalue;
 		} catch (Exception e) {
-
+			System.out.println(e);
 		}
 		return -1;
 	}
@@ -816,7 +841,7 @@ public class OracleDataAdapter {
 			oracleDb.CloseConnection();
 			return returnvalue;
 		} catch (Exception e) {
-
+			System.out.println(e);
 		}
 		return -1;
 	}
@@ -869,10 +894,12 @@ public class OracleDataAdapter {
 							.parse(resultset
 									.getString("EXERCISE_LASTMODIFIEDDATE"));
 				} catch (Exception e) {
+					System.out.println(e);
 				}
 				listExercise.add(exercise);
 			}
 		} catch (SQLException e) {
+			System.out.println(e);
 		} finally {
 			oracleDb.CloseConnection();
 		}
@@ -919,9 +946,11 @@ public class OracleDataAdapter {
 							.parse(resultset
 									.getString("EXERCISE_LASTMODIFIEDDATE"));
 				} catch (Exception e) {
+					System.out.println(e);
 				}
 			}
 		} catch (SQLException e) {
+			System.out.println(e);
 		} finally {
 			oracleDb.CloseConnection();
 		}
@@ -951,7 +980,7 @@ public class OracleDataAdapter {
 		}
 		catch(Exception e)
 		{
-			
+			System.out.println(e);
 		}
 		return false;
 	}
@@ -986,7 +1015,7 @@ public class OracleDataAdapter {
 				return retval;
 			}
 		} catch (SQLException e) {
-
+			System.out.println(e);
 		}
 		return retval;
 	}
@@ -1033,6 +1062,7 @@ public class OracleDataAdapter {
 				listTopic.add(topic);
 			}
 		} catch (SQLException e) {
+			System.out.println(e);
 		} finally {
 			oracleDb.CloseConnection();
 		}
@@ -1062,6 +1092,7 @@ public class OracleDataAdapter {
 				listTopic.add(topic);
 			}
 		} catch (SQLException e) {
+			System.out.println(e);
 		} finally {
 			oracleDb.CloseConnection();
 		}
@@ -1084,6 +1115,7 @@ public class OracleDataAdapter {
 				listQuestionBankTopic.add(questionBankTopic);
 			}
 		} catch (SQLException e) {
+			System.out.println(e);
 		} finally {
 			oracleDb.CloseConnection();
 		}
@@ -1131,10 +1163,12 @@ public class OracleDataAdapter {
 							.parse(resultset
 									.getString("QUESTIONBANK_MODIFIEDDATE"));
 				} catch (Exception e) {
+					System.out.println(e);
 				}
 				listQuestionBank.add(questionBank);
 			}
 		} catch (SQLException e) {
+			System.out.println(e);
 		} finally {
 			oracleDb.CloseConnection();
 		}
@@ -1161,6 +1195,7 @@ public class OracleDataAdapter {
 				listExerciseQuestion.add(exerciseQuestion);
 			}
 		} catch (SQLException e) {
+			System.out.println(e);
 		} finally {
 			oracleDb.CloseConnection();
 		}
@@ -1205,10 +1240,12 @@ public class OracleDataAdapter {
 							.parse(resultset
 									.getString("QUESTIONBANK_MODIFIEDDATE"));
 				} catch (Exception e) {
+					System.out.println(e);
 				}
 				listQuestionBank.add(questionBank);
 			}
 		} catch (SQLException e) {
+			System.out.println(e);
 		} finally {
 			oracleDb.CloseConnection();
 		}
@@ -1243,6 +1280,7 @@ public class OracleDataAdapter {
 				listUserAttempt.add(userAttempt);
 			}
 		} catch (SQLException e) {
+			System.out.println(e);
 		} finally {
 			oracleDb.CloseConnection();
 		}
@@ -1290,6 +1328,7 @@ public class OracleDataAdapter {
 				listUserAttempt.add(userAttempt);
 			}
 		} catch (SQLException e) {
+			System.out.println(e);
 		} finally {
 			oracleDb.CloseConnection();
 		}
@@ -1316,6 +1355,7 @@ public class OracleDataAdapter {
 				listUserAttemptExercise.add(userAttemptExercise);
 			}
 		} catch (SQLException e) {
+			System.out.println(e);
 		} finally {
 			oracleDb.CloseConnection();
 		}
@@ -1339,6 +1379,7 @@ public class OracleDataAdapter {
 				listLevelStudent.add(levelStudent);
 			}
 		} catch (SQLException e) {
+			System.out.println(e);
 		} finally {
 			oracleDb.CloseConnection();
 		}
@@ -1364,6 +1405,7 @@ public class OracleDataAdapter {
 				listLevelStudentUser.add(levelStudentUser);
 			}
 		} catch (SQLException e) {
+			System.out.println(e);
 		} finally {
 			oracleDb.CloseConnection();
 		}
@@ -1385,6 +1427,7 @@ public class OracleDataAdapter {
 				listRole.add(role);
 			}
 		} catch (SQLException e) {
+			System.out.println(e);
 		} finally {
 			oracleDb.CloseConnection();
 		}
@@ -1415,6 +1458,7 @@ public class OracleDataAdapter {
 				listUserRole.add(userRole);
 			}
 		} catch (SQLException e) {
+			System.out.println(e);
 		} finally {
 			oracleDb.CloseConnection();
 		}
@@ -1442,6 +1486,7 @@ public class OracleDataAdapter {
 				listQbVariable.add(qbVariable);
 			}
 		} catch (SQLException e) {
+			System.out.println(e);
 		} finally {
 			oracleDb.CloseConnection();
 		}
@@ -1469,6 +1514,7 @@ public class OracleDataAdapter {
 				listVarParam.add(varParam);
 			}
 		} catch (SQLException e) {
+			System.out.println(e);
 		} finally {
 			oracleDb.CloseConnection();
 		}
@@ -1492,6 +1538,7 @@ public class OracleDataAdapter {
 				listQbParamSet.add(qbParamSet);
 			}
 		} catch (SQLException e) {
+			System.out.println(e);
 		} finally {
 			oracleDb.CloseConnection();
 		}
@@ -1517,6 +1564,7 @@ public class OracleDataAdapter {
 				listQaAbParam.add(qaAbParam);
 			}
 		} catch (SQLException e) {
+			System.out.println(e);
 		} finally {
 			oracleDb.CloseConnection();
 		}
@@ -1542,6 +1590,7 @@ public class OracleDataAdapter {
 				listCourseTopic.add(courseTopic);
 			}
 		} catch (SQLException e) {
+			System.out.println(e);
 		} finally {
 			oracleDb.CloseConnection();
 		}
@@ -1567,6 +1616,7 @@ public class OracleDataAdapter {
 				listChapterTopic.add(chapterTopic);
 			}
 		} catch (SQLException e) {
+			System.out.println(e);
 		} finally {
 			oracleDb.CloseConnection();
 		}
@@ -1656,6 +1706,7 @@ public class OracleDataAdapter {
 				listExercise.add(exercise);
 			}
 		} catch (SQLException e) {
+			System.out.println(e);
 		} finally {
 			oracleDb.CloseConnection();
 		}
@@ -1702,7 +1753,7 @@ public class OracleDataAdapter {
 			else
 				return false;
 		} catch (Exception e) {
-
+			System.out.println(e);
 		}
 		return false;
 		
@@ -1727,6 +1778,7 @@ public class OracleDataAdapter {
 				listUser.add(user);
 			}
 		} catch (SQLException e) {
+			System.out.println(e);
 		} finally {
 			oracleDb.CloseConnection();
 		}
@@ -1776,6 +1828,7 @@ public class OracleDataAdapter {
 				listUser.add(user);
 			}
 		} catch (SQLException e) {
+			System.out.println(e);
 		} finally {
 			oracleDb.CloseConnection();
 		}
@@ -1797,6 +1850,7 @@ public class OracleDataAdapter {
 				listUser.add(user);
 			}
 		} catch (SQLException e) {
+			System.out.println(e);
 		} finally {
 			oracleDb.CloseConnection();
 		}
@@ -1819,6 +1873,7 @@ public class OracleDataAdapter {
 				listUser.add(user);
 			}
 		} catch (SQLException e) {
+			System.out.println(e);
 		} finally {
 			oracleDb.CloseConnection();
 		}
@@ -1839,6 +1894,7 @@ public class OracleDataAdapter {
 				listExercise.add(exercise);
 			}
 		} catch (SQLException e) {
+			System.out.println(e);
 		} finally {
 			oracleDb.CloseConnection();
 		}

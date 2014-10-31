@@ -57,4 +57,28 @@ public class NotificationData {
 		}
 		return notificationList;
 	}
+	
+	public static void checkforFacultyNotification(String tokenId, boolean isTa) {
+		int newCourseId = OracleDataAdapter1.GetCourseFromToken(tokenId);
+		List<Integer> newTopicList = OracleDataAdapter1.GetTopicForCouseId(newCourseId);
+		
+		User currentUser = LocalSession.GetCurrentUser();
+		ArrayList<Course> courseList = null;
+		if(isTa) {
+			courseList = OracleDataAdapter1.GetCourseAsStudent(currentUser.UserId);
+		} else {
+			courseList = OracleDataAdapter1.GetCourseAsTA(currentUser.UserId);
+		}
+		for (Course course : courseList) {
+			List<Integer> oldTopicList = OracleDataAdapter1.GetTopicForCouseId(course.CSC_COURSE_Course_ID);
+			for (Integer integer : oldTopicList) {
+				if(newTopicList.contains(integer)) {
+					int faculty1Id = OracleDataAdapter1.GetFacutlyForCourse(course.CSC_COURSE_Course_ID);
+					int faculty2Id = OracleDataAdapter1.GetFacutlyForCourse(newCourseId);
+					OracleDataAdapter1.InsertIntoNotificationFaculty(currentUser.UserId, faculty1Id, course.CSC_COURSE_Course_ID);
+					OracleDataAdapter1.InsertIntoNotificationFaculty(currentUser.UserId, faculty2Id, newCourseId);
+				}
+			}
+		}
+	}
 }

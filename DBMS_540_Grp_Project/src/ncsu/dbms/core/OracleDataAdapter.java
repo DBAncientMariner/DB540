@@ -1720,43 +1720,124 @@ public class OracleDataAdapter {
 		try {
 			if (!resultset.next()) {
 				query = "INSERT INTO CSC_COURSE (CSC_COURSE_COURSE_ID , CSC_COURSE_COURSE_NAME ,CSC_COURSE_STARTDATE,CSC_COURSE_ENDDATE,CSC_COURSE_MAX_ENROLL_NO,CSC_COURSE_NUMBER_OF_STUDENTS,CSC_COURSE_TOKEN) "
-						+ "values(CSC_COURSE_SEQUENCE.nextval,'"+course.CSC_COURSE_Course_Name+"',"
-						+ "to_date('"+simpleDateFormat.format(course.CSC_COURSE_StartDate)+"','YYYY-MM-DD'),"
-						+ "to_date('"+simpleDateFormat.format(course.CSC_COURSE_EndDate)+"','YYYY-MM-DD'),"
-						+ ""+(course.CSC_COURSE_Max_Enroll_No)+","
-						+ ""+(course.CSC_COURSE_Number_Of_Students)+","
-						+ "'"+(course.CSC_COURSE_token)+"'"
-								+ ")";
-				if(oracleDb.InsertQuery(query))
-				{
-					//insert into CSC_CLASS
+						+ "values(CSC_COURSE_SEQUENCE.nextval,'"
+						+ course.CSC_COURSE_Course_Name
+						+ "',"
+						+ "to_date('"
+						+ simpleDateFormat.format(course.CSC_COURSE_StartDate)
+						+ "','YYYY-MM-DD'),"
+						+ "to_date('"
+						+ simpleDateFormat.format(course.CSC_COURSE_EndDate)
+						+ "','YYYY-MM-DD'),"
+						+ ""
+						+ (course.CSC_COURSE_Max_Enroll_No)
+						+ ","
+						+ ""
+						+ (course.CSC_COURSE_Number_Of_Students)
+						+ ","
+						+ "'"
+						+ (course.CSC_COURSE_token) + "'" + ")";
+				if (oracleDb.InsertQuery(query)) {
+					// insert into CSC_CLASS
 					query = "select Max(CSC_COURSE_COURSE_ID) CSC_COURSE_COURSE_ID from csc_course ";
 					resultset = oracleDb.GetResultSet(query);
-					if(resultset.next())
-					{
-						int Max_CSC_COURSE_COURSE_ID=resultset.getInt("CSC_COURSE_COURSE_ID");
+					if (resultset.next()) {
+						int Max_CSC_COURSE_COURSE_ID = resultset
+								.getInt("CSC_COURSE_COURSE_ID");
+						course.CSC_COURSE_Course_ID=Max_CSC_COURSE_COURSE_ID;
 						query = "INSERT INTO CSC_CLASS(CSC_CLASS_SURR_KEY ,CSC_CLASS_CLASS_ID,CSC_CLASS_COURSE_ID) "
-								+ "values(CSC_CLASS_SEQUENCE.nextval,1,"+Max_CSC_COURSE_COURSE_ID+")";
-						if(!oracleDb.InsertQuery(query))
-						{
-							//if failure then delete entry into csc_course
-							query = "DELETE FROM CSC_COURSE WHERE CSC_COURSE_COURSE_ID "+Max_CSC_COURSE_COURSE_ID;
+								+ "values(CSC_CLASS_SEQUENCE.nextval,1,"
+								+ Max_CSC_COURSE_COURSE_ID + ")";
+						if (!oracleDb.InsertQuery(query)) {
+							// if failure then delete entry into csc_course
+							query = "DELETE FROM CSC_COURSE WHERE CSC_COURSE_COURSE_ID "
+									+ Max_CSC_COURSE_COURSE_ID;
 							oracleDb.InsertQuery(query);
-						}
-						else
+						} else {
+							course.CSC_COURSE_LEVEL.CSC_COURSE_LEVEL_SURR_KEY=GetMaxClassSurrogateKey();
+							course.CSC_COURSE_LEVEL.CSC_COURSE_LEVEL_Course_ID=Max_CSC_COURSE_COURSE_ID;
+							InsertCourseLevel(course.CSC_COURSE_LEVEL);
+							InsertCourseTopic(course,course.CourseTopic);
+							InsertUserRoleForCourse(course,LocalSession.GetCurrentUser(),1);
+							// csc_user_role
 							return true;
+						}
+
 					}
-					
+
 				}
-			}
-			else
+			} else
 				return false;
 		} catch (Exception e) {
-			e.printStackTrace();
+
 		}
 		return false;
+
+	}
+
+	/**
+	 * @param courseTopic
+	 */
+	private void InsertCourseTopic(Course course,ArrayList<Topic> courseTopic) {
+		
+		String query="";
+		for(Topic topic:courseTopic)
+		{
+		query="INSERT INTO CSC_COURSE_TOPIC (CSC_COURSE_TOPIC_SURR_KEY ,CSC_COURSE_TOPIC_TOPIC_ID , CSC_COURSE_TOPIC_COURSE_ID ) "
+				+ "VALUES(CSC_COURSE_TOPIC_SEQUENCE.NEXTVAL,"+topic.TOPIC_ID+","+course.CSC_COURSE_Course_ID+")";
+			try
+			{
+				oracleDb.InsertQuery(query);
+			}
+			catch(Exception e)
+			{
+				
+			}
+		}
+	}
+
+	private boolean InsertUserRoleForCourse(Course course,User user,int roleId)
+	{
+		String query="INSERT INTO CSC_USER_ROLE(USER_ROLE_USER_ID,USER_ROLE_ROLE_ID,CSC_U_R_CLASS_SURR_KEY) "
+				+ "VALUES ("+user.UserId+","+roleId+","+ course.CSC_COURSE_LEVEL.CSC_COURSE_LEVEL_SURR_KEY+")";
+		if(!oracleDb.InsertQuery(query))
+		{
+			//failure
+			return false;
+		}
+		else
+			return true;
 		
 	}
+	private boolean InsertCourseLevel(CourseLevel courseLevel)
+	{
+		String query="INSERT INTO CSC_COURSE_LEVEL(CSC_COURSE_LEVEL_SURR_KEY,CSC_COURSE_LEVEL_LEVEL_ID,CSC_COURSE_LEVEL_COURSE_ID) "
+				+ "VALUES(CSC_COURSE_LEVEL_SEQUENCE.NEXTVAL,"+courseLevel.CSC_COURSE_LEVEL_LEVEL_ID+","+courseLevel.CSC_COURSE_LEVEL_Course_ID+")";
+		if(!oracleDb.InsertQuery(query))
+		{
+			//failure
+			return false;
+		}
+		else
+			return true;
+	}
+	private int GetMaxClassSurrogateKey()
+	{
+		String query = "select Max(CSC_CLASS_SURR_KEY) as CSC_CLASS_SURR_KEY from CSC_CLASS ";
+		ResultSet resultSet=oracleDb.GetResultSet(query);
+		
+			try {
+				if(resultSet.next())
+				{
+					return resultSet.getInt("CSC_CLASS_SURR_KEY");
+				}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		return 0;
+	}
+
 	public ArrayList<User> GetReport1()
 	{
 		User user = new User();

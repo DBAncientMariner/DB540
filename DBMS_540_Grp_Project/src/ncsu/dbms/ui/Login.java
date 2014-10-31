@@ -7,6 +7,7 @@ import java.awt.Window;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPasswordField;
 
 import java.awt.BorderLayout;
 
@@ -83,7 +84,8 @@ public class Login {
 		frame.getContentPane().add(txt_LoginName);
 		txt_LoginName.setColumns(10);
 		
-		final JTextField txt_Password = new JTextField();
+		
+		final JPasswordField txt_Password = new JPasswordField();
 		txt_Password.setToolTipText("Password");
 		txt_Password.setBounds(293, 135, 116, 22);
 		frame.getContentPane().add(txt_Password);
@@ -110,10 +112,11 @@ public class Login {
 				//txt_Password.setText("sgarg5");
 				//txt_LoginName.setText("sgarg5");
 				//testing
-				if(!txt_Password.getText().trim().equalsIgnoreCase("") && !txt_LoginName.getText().trim().equalsIgnoreCase(""))
+				String password = new String(txt_Password.getPassword());
+				if(!password.equalsIgnoreCase("") && !txt_LoginName.getText().trim().equalsIgnoreCase(""))
 				{
 					User user=new User();
-					if(User.IsValidUser(txt_LoginName.getText().trim(), txt_Password.getText().trim()))
+					if(User.IsValidUser(txt_LoginName.getText().trim(), password.trim()))
 					{
 						//user exists
 						user=User.GetUser(txt_LoginName.getText().trim());
@@ -133,7 +136,7 @@ public class Login {
 				{
 					lbl_ErrorMessage.setText("Provide email id");
 				}
-				else if(txt_Password.getText().trim().equalsIgnoreCase("") )
+				else if(password.trim().equalsIgnoreCase("") )
 				{
 					lbl_ErrorMessage.setText("Provide password");
 				}

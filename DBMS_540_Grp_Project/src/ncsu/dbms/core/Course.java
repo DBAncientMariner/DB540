@@ -3,6 +3,7 @@
  */
 package ncsu.dbms.core;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -18,7 +19,7 @@ public class Course {
 	public Date CSC_COURSE_EndDate  =new Date();
 	public int CSC_COURSE_Max_Enroll_No =0;
 	public int CSC_COURSE_Number_Of_Students =0;
-	
-
+	public CourseLevel CSC_COURSE_LEVEL=new CourseLevel();
+	public ArrayList<Topic> CourseTopic=new ArrayList<Topic>();
 
 }

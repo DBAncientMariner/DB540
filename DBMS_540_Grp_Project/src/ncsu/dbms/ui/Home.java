@@ -147,7 +147,7 @@ public class Home {
 		panel_Center.add(btnReport);
 
 		JPanel panel_Bottom = new JPanel();
-		panel_Bottom.setBounds(12, 390, 211, 224);
+		panel_Bottom.setBounds(12, 436, 211, 178);
 		contentPane.add(panel_Bottom);
 
 		JPanel panel_Top = new JPanel();
@@ -155,7 +155,7 @@ public class Home {
 		contentPane.add(panel_Top);
 		panel_Top.setLayout(null);
 
-		panel_Right.setBounds(230, 13, 840, 750);
+		panel_Right.setBounds(230, 13, 840, 727);
 		contentPane.add(panel_Right);
 		panel_Right.setLayout(null);
 
@@ -357,7 +357,7 @@ public class Home {
 			listModel.addElement(topic.TOPIC_KEYWORD);
 		}
 		final JList jListTopic = new JList(listModel);
-		jListTopic.setBounds(250, 550, 200, 300);
+		jListTopic.setBounds(250, 550, 300, 100);
 		jListTopic.addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent arg0) {
 			}
@@ -369,7 +369,7 @@ public class Home {
 		
 		
 		final JLabel lbl_CourseTokenError = new JLabel("");
-		lbl_CourseTokenError.setBounds(100, 750, 450, 30);
+		lbl_CourseTokenError.setBounds(100, 660, 450, 30);
 		lbl_CourseTokenError.setForeground(Color.red);
 		panel.add(lbl_CourseTokenError);
 
@@ -403,6 +403,7 @@ public class Home {
 						txt_CourseEndDate.setText("");
 						txt_MaxEnrollment.setText("");
 						txt_CourseToken.setText("");
+						txt_CourseLevel.setText("");
 						lbl_CourseTokenError.setText("Course Created!");
 						//AddCourse(course.CSC_COURSE_token);
 					} else {

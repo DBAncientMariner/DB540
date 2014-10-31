@@ -12,6 +12,7 @@ public class LocalSession {
 
 	private static User _currentUser = new User();
 	private static int _currentSelectedCourse =0;
+	public static ArrayList<Course> CourseListModel = new ArrayList<Course>();
 
 	public static User GetCurrentUser() {
 		return _currentUser;
@@ -28,8 +29,6 @@ public class LocalSession {
 	public static void SetCurrentSelectedCourse(int courseId) {
 		_currentSelectedCourse = courseId;
 	}
-
-	public static ArrayList<Course> CourseListModel=new ArrayList<Course>();
 	
 	public static Course getCurrentSelectedCourseObject() {
 		Course course = CourseListModel.get(_currentSelectedCourse);

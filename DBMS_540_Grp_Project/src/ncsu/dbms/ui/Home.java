@@ -1,8 +1,6 @@
 package ncsu.dbms.ui;
 
 import java.awt.Color;
-import java.awt.Component;
-import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
@@ -15,7 +13,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
@@ -109,9 +106,8 @@ public class Home {
 		btn_Notification.setBounds(12, 161, 187, 33);
 		btn_Notification.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				Notification notification = new Notification();
-				notification.setVisible(true);
 				frame.setVisible(false);
+				new NotificationView();
 			}
 		});
 		panel_Center.add(btn_Notification);

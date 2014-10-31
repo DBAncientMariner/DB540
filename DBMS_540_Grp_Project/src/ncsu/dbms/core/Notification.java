@@ -2,40 +2,56 @@
  * 
  */
 package ncsu.dbms.core;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 
 /**
  * @author ravi
  *
  */
 public class Notification {
-	public String NotificationTitle;
-	public String NotificationDue;
+	private String notificationTitle;
+	private int exerciseId;
+	private int courseId;
+	private boolean isStudent;
+	
+	public Notification(String notificationTitle, int exerciseId, int courseId,
+			boolean isStudent) {
+		super();
+		this.notificationTitle = notificationTitle;
+		this.exerciseId = exerciseId;
+		this.courseId = courseId;
+		this.isStudent = isStudent;
+	}
 
-	public static ArrayList<Notification> GetDummyList() {
-		ArrayList<Notification> listNotification = new ArrayList<Notification>();
-		for (int index = 1; index < 10; index++) {
-			Notification notification = new Notification();
-			notification.NotificationTitle = "Notification Number" + index;
-			Date date = new Date();
-			notification.NotificationDue = new SimpleDateFormat(
-					"yyyy.MM.dd  HH:mm").format(date);
-			listNotification.add(notification);
-		}
-		return listNotification;
+	public String getNotificationTitle() {
+		return notificationTitle;
 	}
-	public static ArrayList<Notification> GetDummyListFaculty() {
-		ArrayList<Notification> listNotification = new ArrayList<Notification>();
-		for (int index = 1; index < 10; index++) {
-			Notification notification = new Notification();
-			notification.NotificationTitle = "Notification For Faculty" + index;
-			Date date = new Date();
-			notification.NotificationDue = new SimpleDateFormat(
-					"yyyy.MM.dd  HH:mm").format(date);
-			listNotification.add(notification);
-		}
-		return listNotification;
+
+	public void setNotificationTitle(String notificationTitle) {
+		this.notificationTitle = notificationTitle;
 	}
+
+	public int getExerciseId() {
+		return exerciseId;
+	}
+
+	public void setExerciseId(int exerciseId) {
+		this.exerciseId = exerciseId;
+	}
+
+	public int getCourseId() {
+		return courseId;
+	}
+
+	public void setCourseId(int courseId) {
+		this.courseId = courseId;
+	}
+
+	public boolean isStudent() {
+		return isStudent;
+	}
+
+	public void setStudent(boolean isStudent) {
+		this.isStudent = isStudent;
+	}
+	
 }

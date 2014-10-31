@@ -86,4 +86,23 @@ public class User {
 		}
 		return false;
 	}
+	public static boolean IsStudentOnCourse(User user, Course course)
+	{
+		OracleDataAdapter oracleDataAdapter=new OracleDataAdapter();
+		return oracleDataAdapter.IsRoleOnCourse(user, course, 2);
+		
+	}
+	public static boolean IsFacultyOnCourse(User user, Course course)
+	{
+		OracleDataAdapter oracleDataAdapter=new OracleDataAdapter();
+		return oracleDataAdapter.IsRoleOnCourse(user, course, 1);
+		
+	}
+	public static boolean IsTAOnCourse(User user, Course course)
+	{
+		OracleDataAdapter oracleDataAdapter=new OracleDataAdapter();
+		return oracleDataAdapter.IsRoleOnCourse(user, course, 3);
+		
+	}
+	
 }

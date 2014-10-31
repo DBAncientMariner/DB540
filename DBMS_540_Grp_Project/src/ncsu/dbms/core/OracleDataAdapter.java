@@ -81,12 +81,10 @@ public class OracleDataAdapter {
 					user.UserLastModifiedDate = simpleDateFormat
 							.parse(resultset.getString("USER_LASTMODIFIEDDATE"));
 				} catch (Exception e) {
-					e.printStackTrace();
 				}
 				user.UserLastModifiedBy = resultset.getInt("USER_MODIFIEDBY");
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
 		} finally {
 			oracleDb.CloseConnection();
 		}
@@ -121,12 +119,12 @@ public class OracleDataAdapter {
 				user.UserLastModifiedBy = resultset.getInt("USER_MODIFIEDBY");
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
 		} finally {
 			oracleDb.CloseConnection();
 		}
 		return user;
 	}
+
 
 	// insert user
 	public boolean InsertUser(User user) {
@@ -447,6 +445,48 @@ public class OracleDataAdapter {
 
 	}
 
+	public ArrayList<Course> GetAllCourseForUser(User user)
+	{
+		Course course = new Course();
+		ArrayList<Course> listCourse = new ArrayList<Course>();
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		oracleDb.OpenConnection();
+		String query = "SELECT * FROM CSC_COURSE CCO "
+				+ "inner join CSC_CLASS CCS on CCO.CSC_COURSE_COURSE_ID=CCS.CSC_CLASS_COURSE_ID "
+				+ "inner join csc_user_role CUR on CUR.CSC_U_R_CLASS_SURR_KEY=CCS.CSC_CLASS_COURSE_ID "
+				+ "WHERE CUR.User_ROLE_USER_ID="+user.UserId;
+		ResultSet resultset = oracleDb.GetResultSet(query);
+		try {
+			while (resultset.next()) {
+				course = new Course();
+
+				course.CSC_COURSE_Course_ID = resultset
+						.getInt("CSC_COURSE_Course_ID");
+				course.CSC_COURSE_Course_Name = resultset
+						.getString("CSC_COURSE_Course_Name");
+				course.CSC_COURSE_token = resultset
+						.getString("CSC_COURSE_token");
+				course.CSC_COURSE_Max_Enroll_No = resultset
+						.getInt("CSC_COURSE_Max_Enroll_No");
+				course.CSC_COURSE_Number_Of_Students = resultset
+						.getInt("CSC_COURSE_Number_Of_Students");
+				try {
+					course.CSC_COURSE_StartDate = simpleDateFormat
+							.parse(resultset.getString("CSC_COURSE_StartDate"));
+					course.CSC_COURSE_EndDate = simpleDateFormat
+							.parse(resultset.getString("CSC_COURSE_EndDate"));
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				listCourse.add(course);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			oracleDb.CloseConnection();
+		}
+		return listCourse;
+	}
 	public ArrayList<Course> GetCourseForStudent(User user) {
 
 		int roleId = 0;
@@ -456,7 +496,6 @@ public class OracleDataAdapter {
 				break;
 			}
 		}
-
 		Course course = new Course();
 		ArrayList<Course> listCourse = new ArrayList<Course>();
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -1979,5 +2018,23 @@ public class OracleDataAdapter {
 			oracleDb.CloseConnection();
 		}
 		return listExercise;		
+	}
+	public boolean IsRoleOnCourse(User user, Course course,int roleId)
+	{
+		String query="SELECT count(*) counter FROM CSC_COURSE CCO "
+				+ "inner join CSC_CLASS CCS on CCO.CSC_COURSE_COURSE_ID=CCS.CSC_CLASS_COURSE_ID "
+				+ "inner join csc_user_role CUR on CUR.CSC_U_R_CLASS_SURR_KEY=CCS.CSC_CLASS_COURSE_ID "
+				+ "WHERE CUR.User_ROLE_USER_ID="+user.UserId+" and CUR.USER_ROLE_ROLE_ID ="+roleId+" and CCS.CSC_CLASS_COURSE_ID ="+course.CSC_COURSE_Course_ID;
+		try {
+			ResultSet resultset=oracleDb.GetResultSet(query);
+			while (resultset.next()) {
+				return resultset.getInt("counter")>0?true:false;
+			}
+		}
+		catch(Exception e)
+		{
+			
+		}
+		return false;
 	}
 }

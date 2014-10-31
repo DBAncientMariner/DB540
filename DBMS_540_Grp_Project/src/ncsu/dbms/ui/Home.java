@@ -119,7 +119,7 @@ public class Home {
 		btnAddHomework.setBounds(12, 200, 187, 33);
 		btnAddHomework.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				if (listCourses.getSelectedIndex() >= 0 && (User.IsFaculty(LocalSession.GetCurrentUser())  || User.IsTA(LocalSession.GetCurrentUser()))) {
+				if (listCourses.getSelectedIndex() >= 0 && (User.IsFacultyOnCourse(LocalSession.GetCurrentUser(),LocalSession.getCurrentSelectedCourseObject())  || User.IsTAOnCourse(LocalSession.GetCurrentUser(),LocalSession.getCurrentSelectedCourseObject()))) {
 					ListHomework listHomework = new ListHomework();
 					listHomework.setVisible(true);
 					frame.setVisible(false);
@@ -132,7 +132,7 @@ public class Home {
 		btnReport.setBounds(12, 240, 187, 33);
 		btnReport.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				if (User.IsFaculty(LocalSession.GetCurrentUser()) || User.IsTA(LocalSession.GetCurrentUser())) {
+				if (User.IsFacultyOnCourse(LocalSession.GetCurrentUser(),LocalSession.getCurrentSelectedCourseObject()) || User.IsTAOnCourse(LocalSession.GetCurrentUser(),LocalSession.getCurrentSelectedCourseObject())) {
 					Report report = new Report();
 					report.setVisible(true);
 					frame.setVisible(false);
@@ -273,11 +273,10 @@ public class Home {
 	}
 
 	private void AddCourse() {
+		listModel.clear();
 		OracleDataAdapter oracleDataAdapter = new OracleDataAdapter();
-		ArrayList<ncsu.dbms.core.Course> listCourse = oracleDataAdapter
-				.GetCourseForStudent(LocalSession.GetCurrentUser());
+		ArrayList<Course> listCourse = oracleDataAdapter.GetAllCourseForUser(LocalSession.GetCurrentUser());
 		for (ncsu.dbms.core.Course course : listCourse) {
-			// listModel= new DefaultListModel();
 			listModel.addElement(course.CSC_COURSE_Course_Name);
 		}
 		LocalSession.CourseListModel = listCourse;

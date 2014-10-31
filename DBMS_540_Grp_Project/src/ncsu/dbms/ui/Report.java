@@ -171,12 +171,12 @@ public class Report extends JFrame {
 		txt_Report.setText("");
 		String outputString="";
 		outputString=outputString+"---students who scored the maximum score on the first attempt for each homework----\n";
-		outputString=outputString+"Last Name First Name \n";
+		outputString=outputString+"Last Name First Name \t Exercise Name\n";
 		Course course = LocalSession.getCurrentSelectedCourseObject();
 		ArrayList<User> listUser=oracleDataAdapter.GetReport3(course.CSC_COURSE_Course_ID);
 		for(User user:listUser)
 		{
-			outputString=outputString+user.UserLName+" "+user.UserFName +"\n";
+			outputString=outputString+user.UserLName+" "+user.UserFName +"\t"+user.ExerciseName+"\n";
 		}
 		txt_Report.setText(outputString);
 	}

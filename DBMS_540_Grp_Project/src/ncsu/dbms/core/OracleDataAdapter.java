@@ -2160,4 +2160,19 @@ public class OracleDataAdapter {
 		}
 		return false;
 	}
+	
+	public boolean AddTAToCourse(String token,User user)
+	{
+		ArrayList<Course> listCourse=GetCourseForToken(token);
+		for(Course course:listCourse)
+		{
+			return InsertUserRoleForCourse(course,user,3);
+		}
+		return false;
+		
+	}
+	
+	
+	
+	
 }

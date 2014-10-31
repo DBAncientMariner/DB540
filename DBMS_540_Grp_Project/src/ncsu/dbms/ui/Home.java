@@ -74,8 +74,10 @@ public class Home {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				if (listCourses.getSelectedIndex() >= 0 && (User.IsStudentOnCourse(LocalSession.GetCurrentUser(),LocalSession.getCurrentSelectedCourseObject()))) {
 				frame.setVisible(false);
 				new ViewScore();
+				}
 			}
 		});
 		panel_Center.add(btn_ViewScore);
@@ -84,8 +86,10 @@ public class Home {
 		btn_AttemptHomework.setBounds(12, 83, 187, 33);
 		btn_AttemptHomework.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				if (listCourses.getSelectedIndex() >= 0 && (User.IsStudentOnCourse(LocalSession.GetCurrentUser(),LocalSession.getCurrentSelectedCourseObject()))) {
 				new AttemptExercise(0);
 				frame.setVisible(false);
+				}
 			}
 		});
 		panel_Center.add(btn_AttemptHomework);
@@ -96,8 +100,10 @@ public class Home {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				if (listCourses.getSelectedIndex() >= 0 && (User.IsStudentOnCourse(LocalSession.GetCurrentUser(),LocalSession.getCurrentSelectedCourseObject()))) {
 				frame.setVisible(false);
 				new PastSubmissions();
+				}
 			}
 		});
 		panel_Center.add(btn_ViewSubmissions);
@@ -106,8 +112,10 @@ public class Home {
 		btn_Notification.setBounds(12, 161, 187, 33);
 		btn_Notification.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				if (listCourses.getSelectedIndex() >= 0 && (User.IsFacultyOnCourse(LocalSession.GetCurrentUser(),LocalSession.getCurrentSelectedCourseObject())  || User.IsStudentOnCourse(LocalSession.GetCurrentUser(),LocalSession.getCurrentSelectedCourseObject()))) {
 				frame.setVisible(false);
 				new NotificationView();
+				}
 			}
 		});
 		panel_Center.add(btn_Notification);

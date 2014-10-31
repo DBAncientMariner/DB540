@@ -497,7 +497,7 @@ public class AddHomework extends JFrame {
 	public void GetAllSelectedTopicForExercise(int ExerciseId)
 	{
 		ArrayList<ExerciseTopic> listExerciseTopic=oracleDataAdapter.GetExerciseTopic();
-		int[] indices=new int[Integer.MAX_VALUE];
+		int[] indices=new int[1000];
 		int indexCounter=0;
 		for(ExerciseTopic eTopic:listExerciseTopic)
 		{

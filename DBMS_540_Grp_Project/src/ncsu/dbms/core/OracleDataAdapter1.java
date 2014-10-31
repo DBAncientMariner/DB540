@@ -656,4 +656,90 @@ public class OracleDataAdapter1 {
 		return listCourse;
 
 	}
+	
+	public static ArrayList<Exercise> GetExerciseForCourseNotifi(int Course_id) {
+		Exercise exercise = new Exercise();
+		ArrayList<Exercise> listExercise = new ArrayList<Exercise>();
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		OracleDb oracleDb = new OracleDb();
+		oracleDb.OpenConnection();
+		ResultSet resultset = oracleDb
+				.GetResultSet("select * from csc_exercise where EXERCISE_ENDDATE = SYSDATE and EXERCISE_COURSE ="+Course_id);
+		try {
+			while (resultset.next()) {
+				exercise = new Exercise();
+
+				exercise.EXERCISE_ID = resultset.getInt("EXERCISE_ID");
+				exercise.EXERCISE_NAME = resultset.getString("EXERCISE_NAME");
+				exercise.EXERCISE_COURSE = resultset.getInt("EXERCISE_COURSE");
+				exercise.EXERCISE_NAME = resultset.getString("EXERCISE_NAME");
+				exercise.EXERCISE_DIFFICULTY_RANGE1 = resultset
+						.getInt("EXERCISE_DIFFICULTY_RANGE1");
+				exercise.EXERCISE_DIFFICULTY_RANGE2 = resultset
+						.getInt("EXERCISE_DIFFICULTY_RANGE2");
+				exercise.EXERCISE_RETRYLIMIT = resultset
+						.getInt("EXERCISE_RETRYLIMIT");
+				exercise.EXERCISE_CORRECTPT = resultset
+						.getInt("EXERCISE_CORRECTPT");
+				exercise.EXERCISE_PENALTYPT = resultset
+						.getInt("EXERCISE_PENALTYPT");
+				exercise.EXERCISE_SCORINGTYPE = resultset
+						.getInt("EXERCISE_SCORINGTYPE");
+				exercise.EXERCISE_CREATEDBY = resultset
+						.getInt("EXERCISE_CREATEDBY");
+				exercise.EXERCISE_MODIFIEDBY = resultset
+						.getInt("EXERCISE_MODIFIEDBY");
+
+				try {
+					exercise.EXERCISE_STARTDATE = simpleDateFormat
+							.parse(resultset.getString("EXERCISE_STARTDATE"));
+					exercise.EXERCISE_ENDDATE = simpleDateFormat
+							.parse(resultset.getString("EXERCISE_ENDDATE"));
+					exercise.EXERCISE_LASTMODIFIEDDATE = simpleDateFormat
+							.parse(resultset
+									.getString("EXERCISE_LASTMODIFIEDDATE"));
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				listExercise.add(exercise);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			oracleDb.CloseConnection();
+		}
+		return listExercise;
+	}
+	
+	public static boolean ExerciseAttempNotifici(int Exercise_Id) {
+		OracleDb oracleDb = new OracleDb();
+		oracleDb.OpenConnection();
+		User user = LocalSession.GetCurrentUser();
+		String query = "select count(*) from csc_user_attempt where UA_EXERCISE_ID =" + Exercise_Id +" and UA_USER_ID =" +user.UserId;
+		ResultSet resultset = oracleDb
+				.GetResultSet(query);
+		boolean IsAttempted = false;
+		int count_attemp = 1;
+		try {
+			while(resultset != null && resultset.next()) {
+				count_attemp = resultset.getInt("UA_ID");
+				break;
+			}
+			if(count_attemp == 0)
+			{
+				IsAttempted = true;
+			}
+			else
+			{
+				IsAttempted = false;
+				
+			}
+			return IsAttempted;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			oracleDb.CloseConnection();
+		}
+		return IsAttempted;
+	}
 }

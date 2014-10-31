@@ -385,6 +385,7 @@ public class AddHomework extends JFrame {
 			listModelTopic.addElement(topic.TOPIC_KEYWORD);
 		}
 		selectedListTopics = listTopics;
+		
 		// int[] indices=new int[listTopics.size()];
 		// if(ExerciseId!=0)
 		// {
@@ -489,9 +490,27 @@ public class AddHomework extends JFrame {
 				listModelSelectedQuestion
 						.addElement(questionBank.QUESTIONBANK_TEXT);
 			}
+			GetAllSelectedTopicForExercise(ExerciseId);
 		}
 	}
 
+	public void GetAllSelectedTopicForExercise(int ExerciseId)
+	{
+		ArrayList<ExerciseTopic> listExerciseTopic=oracleDataAdapter.GetExerciseTopic();
+		int[] indices=new int[Integer.MAX_VALUE];
+		int indexCounter=0;
+		for(ExerciseTopic eTopic:listExerciseTopic)
+		{
+			for(int index=0;index<selectedListTopics.size();index++)
+			{
+				if(selectedListTopics.get(index).TOPIC_ID==eTopic.CSC_EXERCISE_TOPIC_TOPIC_ID)
+				{
+					indices[indexCounter]=index;
+				}
+			}
+		}
+		jListTopic.setSelectedIndices(indices);
+	}
 	private void SaveExercise(Exercise exercise) {
 		// insert/update exercise details
 		if (ExerciseId != 0) {

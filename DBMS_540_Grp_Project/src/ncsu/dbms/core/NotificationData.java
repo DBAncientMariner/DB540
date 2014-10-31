@@ -47,7 +47,8 @@ public class NotificationData {
 		List<Notification> notificationList = new LinkedList<Notification>();
 		List<NotificationFaculty> list = OracleDataAdapter1.getNotificationForFaculty();
 		for (NotificationFaculty notificationFaculty : list) {
-			String text = notificationFaculty.getStudentId() + " has conflicting topics with TA courses";
+			User userDetails = OracleDataAdapter2.getUserDetails(notificationFaculty.getStudentId());
+			String text = userDetails.UserFName + " " + userDetails.UserLName + " has conflicting topics with TA courses";
 			Notification n = new Notification(text, 0, 0, false);
 			notificationList.add(n);
 			User user = LocalSession.GetCurrentUser();

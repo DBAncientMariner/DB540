@@ -22,6 +22,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import ncsu.dbms.core.Course;
 import ncsu.dbms.core.Exercise;
 import ncsu.dbms.core.LocalSession;
 import ncsu.dbms.core.OracleDataAdapter;
@@ -171,7 +172,8 @@ public class Report extends JFrame {
 		String outputString="";
 		outputString=outputString+"---students who scored the maximum score on the first attempt for each homework----\n";
 		outputString=outputString+"Last Name First Name \n";
-		ArrayList<User> listUser=oracleDataAdapter.GetReport3();
+		Course course = LocalSession.getCurrentSelectedCourseObject();
+		ArrayList<User> listUser=oracleDataAdapter.GetReport3(course.CSC_COURSE_Course_ID);
 		for(User user:listUser)
 		{
 			outputString=outputString+user.UserLName+" "+user.UserFName +"\n";
@@ -184,13 +186,15 @@ public class Report extends JFrame {
 		String outputString="";
 		outputString=outputString+"-------------Average Score across all homework--------\n";
 		outputString=outputString+"Last Name First Name \t Average Score \n";
-		ArrayList<User> listUser=oracleDataAdapter.GetReport4Average();
+		Course course = LocalSession.getCurrentSelectedCourseObject();
+		ArrayList<User> listUser=oracleDataAdapter.GetReport4Average(course.CSC_COURSE_Course_ID);
 		for(User user:listUser)
 		{
 			outputString=outputString+user.UserLName+" "+user.UserFName +"\t"+user.AverageScore +"\n";
 		}
 		outputString=outputString+"-------------Total score for each homework--------\n";
-		listUser=oracleDataAdapter.GetReport4Total();
+		Course course1 = LocalSession.getCurrentSelectedCourseObject();
+		listUser=oracleDataAdapter.GetReport4Total(course1.CSC_COURSE_Course_ID);
 		outputString=outputString+"Last Name First Name \tExercise Name : Average Score \n";
 		for(User user:listUser)
 		{
@@ -204,7 +208,8 @@ public class Report extends JFrame {
 		String outputString="";
 		outputString=outputString+"---For each homework,average number of attempts----\n";
 		outputString=outputString+"Exercise Name \t Average Attempt \n";
-		ArrayList<Exercise> listExercise=oracleDataAdapter.GetReport5();
+		Course course = LocalSession.getCurrentSelectedCourseObject();
+		ArrayList<Exercise> listExercise=oracleDataAdapter.GetReport5(course.CSC_COURSE_Course_ID);
 		for(Exercise exercise:listExercise)
 		{
 			outputString=outputString+exercise.EXERCISE_NAME+"\t" +exercise.AverageAttempt + "\n";

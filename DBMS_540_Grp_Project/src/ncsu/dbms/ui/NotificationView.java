@@ -88,22 +88,24 @@ public class NotificationView {
 	}
 	
 	public void openNotification(JPanel panel_right) {
+		panel_right.setLayout(null);
 		List<Notification> notificationList = NotificationData.getNotifications();
 		if(notificationList != null && !notificationList.isEmpty()) {
 			JLabel welcomeText = new JLabel("Notifications");
 			welcomeText.setBounds(10, 10, 200, 35);
-			panel_Right.add(welcomeText);
+			panel_right.add(welcomeText);
 			
 			int i = 55;
 			for (Notification notification : notificationList) {
 				JLabel notificationText = new JLabel(notification.getNotificationTitle());
-				notificationText.setBounds(10, i, 200, 35);
+				notificationText.setBounds(10, i, 350, 35);
+				panel_right.add(notificationText);
 				i += 45;
 			}
 		} else {
-			JLabel welcomeText = new JLabel("No unread notifications");
-			welcomeText.setBounds(10, 10, 200, 35);
-			panel_Right.add(welcomeText);
+			JLabel notificationText = new JLabel("No unread notifications");
+			notificationText.setBounds(10, 55, 200, 35);
+			panel_right.add(notificationText);
 		}
 	}
 }

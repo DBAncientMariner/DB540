@@ -664,7 +664,7 @@ public class OracleDataAdapter1 {
 		OracleDb oracleDb = new OracleDb();
 		oracleDb.OpenConnection();
 		ResultSet resultset = oracleDb
-				.GetResultSet("select * from csc_exercise where EXERCISE_ENDDATE = SYSDATE and EXERCISE_COURSE ="+Course_id);
+				.GetResultSet("select * from csc_exercise where TRUNC(EXERCISE_ENDDATE) = TRUNC(SYSDATE) and EXERCISE_COURSE ="+Course_id);
 		try {
 			while (resultset.next()) {
 				exercise = new Exercise();
@@ -784,4 +784,15 @@ public class OracleDataAdapter1 {
 				.InsertQuery(query);
 		return resultset;
 	}
+	
+	public static boolean DeleteFromNotificationFaculty(int ST_ID,int F_ID, int COURSE_ID) {
+		OracleDb oracleDb = new OracleDb();
+		User user = LocalSession.GetCurrentUser();
+		oracleDb.OpenConnection();
+		String query = "Delete from NOTIFICATION_FACULTY where ST_ID ="+ST_ID+" and F_ID ="+F_ID+ " and COURSE_ID = "+COURSE_ID;
+		boolean resultset = oracleDb
+				.InsertQuery(query);
+		return resultset;
+	}
+		
 }

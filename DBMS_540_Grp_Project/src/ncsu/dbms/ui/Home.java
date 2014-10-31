@@ -22,6 +22,7 @@ import javax.swing.event.ListSelectionListener;
 
 import ncsu.dbms.core.Course;
 import ncsu.dbms.core.LocalSession;
+import ncsu.dbms.core.NotificationData;
 import ncsu.dbms.core.OracleDataAdapter;
 import ncsu.dbms.core.Topic;
 import ncsu.dbms.core.User;
@@ -281,6 +282,7 @@ public class Home {
 			{
 				if (cb_AddCourse.isSelected()) {
 					// add as TA
+					NotificationData.checkforFacultyNotification(token, true);
 					if (oracleDataAdapter.AddTAToCourse(token,
 							LocalSession.GetCurrentUser())) {
 						lbl_ErrorToken.setText("Course Added");
@@ -291,6 +293,7 @@ public class Home {
 						lbl_ErrorToken.setText("Error Occured");
 					}
 				} else {
+					NotificationData.checkforFacultyNotification(token, false);
 					ArrayList<ncsu.dbms.core.Course> listCourse = oracleDataAdapter
 							.GetCourseForToken(token);
 					if (listCourse != null && listCourse.size() == 0) {

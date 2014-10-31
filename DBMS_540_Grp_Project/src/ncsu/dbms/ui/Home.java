@@ -9,6 +9,7 @@ import java.util.Date;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -21,6 +22,7 @@ import javax.swing.event.ListSelectionListener;
 
 import ncsu.dbms.core.Course;
 import ncsu.dbms.core.LocalSession;
+import ncsu.dbms.core.NotificationData;
 import ncsu.dbms.core.OracleDataAdapter;
 import ncsu.dbms.core.Topic;
 import ncsu.dbms.core.User;
@@ -34,6 +36,7 @@ public class Home {
 	final JPanel panel_Right = new JPanel();
 	JList listCourses;
 	DefaultListModel listModel = new DefaultListModel();
+	JCheckBox cb_AddCourse;
 
 	/**
 	 * Launch the application.
@@ -74,9 +77,12 @@ public class Home {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (listCourses.getSelectedIndex() >= 0 && (User.IsStudentOnCourse(LocalSession.GetCurrentUser(),LocalSession.getCurrentSelectedCourseObject()))) {
-				frame.setVisible(false);
-				new ViewScore();
+				if (listCourses.getSelectedIndex() >= 0
+						&& (User.IsStudentOnCourse(
+								LocalSession.GetCurrentUser(),
+								LocalSession.getCurrentSelectedCourseObject()))) {
+					frame.setVisible(false);
+					new ViewScore();
 				}
 			}
 		});
@@ -86,9 +92,12 @@ public class Home {
 		btn_AttemptHomework.setBounds(12, 83, 187, 33);
 		btn_AttemptHomework.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				if (listCourses.getSelectedIndex() >= 0 && (User.IsStudentOnCourse(LocalSession.GetCurrentUser(),LocalSession.getCurrentSelectedCourseObject()))) {
-				new AttemptExercise(0);
-				frame.setVisible(false);
+				if (listCourses.getSelectedIndex() >= 0
+						&& (User.IsStudentOnCourse(
+								LocalSession.GetCurrentUser(),
+								LocalSession.getCurrentSelectedCourseObject()))) {
+					new AttemptExercise(0);
+					frame.setVisible(false);
 				}
 			}
 		});
@@ -100,9 +109,12 @@ public class Home {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (listCourses.getSelectedIndex() >= 0 && (User.IsStudentOnCourse(LocalSession.GetCurrentUser(),LocalSession.getCurrentSelectedCourseObject()))) {
-				frame.setVisible(false);
-				new PastSubmissions();
+				if (listCourses.getSelectedIndex() >= 0
+						&& (User.IsStudentOnCourse(
+								LocalSession.GetCurrentUser(),
+								LocalSession.getCurrentSelectedCourseObject()))) {
+					frame.setVisible(false);
+					new PastSubmissions();
 				}
 			}
 		});
@@ -112,9 +124,15 @@ public class Home {
 		btn_Notification.setBounds(12, 161, 187, 33);
 		btn_Notification.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				if (listCourses.getSelectedIndex() >= 0 && (User.IsFacultyOnCourse(LocalSession.GetCurrentUser(),LocalSession.getCurrentSelectedCourseObject())  || User.IsStudentOnCourse(LocalSession.GetCurrentUser(),LocalSession.getCurrentSelectedCourseObject()))) {
-				frame.setVisible(false);
-				new NotificationView();
+				if (listCourses.getSelectedIndex() >= 0
+						&& (User.IsFacultyOnCourse(
+								LocalSession.GetCurrentUser(),
+								LocalSession.getCurrentSelectedCourseObject()) || User
+								.IsStudentOnCourse(LocalSession
+										.GetCurrentUser(), LocalSession
+										.getCurrentSelectedCourseObject()))) {
+					frame.setVisible(false);
+					new NotificationView();
 				}
 			}
 		});
@@ -123,7 +141,12 @@ public class Home {
 		btnAddHomework.setBounds(12, 200, 187, 33);
 		btnAddHomework.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				if (listCourses.getSelectedIndex() >= 0 && (User.IsFacultyOnCourse(LocalSession.GetCurrentUser(),LocalSession.getCurrentSelectedCourseObject())  || User.IsTAOnCourse(LocalSession.GetCurrentUser(),LocalSession.getCurrentSelectedCourseObject()))) {
+				if (listCourses.getSelectedIndex() >= 0
+						&& (User.IsFacultyOnCourse(
+								LocalSession.GetCurrentUser(),
+								LocalSession.getCurrentSelectedCourseObject()) || User.IsTAOnCourse(
+								LocalSession.GetCurrentUser(),
+								LocalSession.getCurrentSelectedCourseObject()))) {
 					ListHomework listHomework = new ListHomework();
 					listHomework.setVisible(true);
 					frame.setVisible(false);
@@ -136,12 +159,15 @@ public class Home {
 		btnReport.setBounds(12, 240, 187, 33);
 		btnReport.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				if (User.IsFacultyOnCourse(LocalSession.GetCurrentUser(),LocalSession.getCurrentSelectedCourseObject()) || User.IsTAOnCourse(LocalSession.GetCurrentUser(),LocalSession.getCurrentSelectedCourseObject())) {
+				if (User.IsFacultyOnCourse(LocalSession.GetCurrentUser(),
+						LocalSession.getCurrentSelectedCourseObject())
+						|| User.IsTAOnCourse(LocalSession.GetCurrentUser(),
+								LocalSession.getCurrentSelectedCourseObject())) {
 					Report report = new Report();
 					report.setVisible(true);
 					frame.setVisible(false);
 				}
-				
+
 			}
 		});
 		panel_Center.add(btnReport);
@@ -231,8 +257,16 @@ public class Home {
 		txt_Token.setToolTipText("Token");
 		homePanel.add(txt_Token);
 
+		// JLabel lbl_AddAsTA = new JLabel("Add as TA");
+		// lbl_AddAsTA.setBounds(360, 250, 80, 30);
+		// homePanel.add(lbl_AddAsTA);
+
+		cb_AddCourse = new JCheckBox("Add as TA");
+		cb_AddCourse.setBounds(360, 250, 100, 30);
+		homePanel.add(cb_AddCourse);
+
 		JButton btn_AddCourse = new JButton("Add Course");
-		btn_AddCourse.setBounds(370, 250, 100, 30);
+		btn_AddCourse.setBounds(490, 250, 100, 30);
 		btn_AddCourse.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				AddCourse(txt_Token.getText());
@@ -242,29 +276,47 @@ public class Home {
 	}
 
 	private void AddCourse(String token) {
-		OracleDataAdapter oracleDataAdapter = new OracleDataAdapter();
-		{
-			ArrayList<ncsu.dbms.core.Course> listCourse = oracleDataAdapter
-					.GetCourseForToken(token);
-			if (listCourse != null && listCourse.size() == 0) {
-				lbl_ErrorToken.setText("Invalid course id");
-			} else if (listCourse.get(0).CSC_COURSE_EndDate
-					.compareTo(new Date()) <= 0) {
-				lbl_ErrorToken.setText("Course over, cannot register.");
-			} else if (listCourse.get(0).CSC_COURSE_Max_Enroll_No <= listCourse
-					.get(0).CSC_COURSE_Number_Of_Students) {
-				lbl_ErrorToken.setText("Course full, cannot register.");
-			} else {
-				if (oracleDataAdapter.AddStudentToCourse(token,
-						LocalSession.GetCurrentUser())) {
-					// print success
-					lbl_ErrorToken.setText("Course Added");
-					AddCourse();
+		lbl_ErrorToken.setText("");
+		if (!token.equalsIgnoreCase("")) {
+			OracleDataAdapter oracleDataAdapter = new OracleDataAdapter();
+			{
+				if (cb_AddCourse.isSelected()) {
+					// add as TA
+					NotificationData.checkforFacultyNotification(token, true);
+					if (oracleDataAdapter.AddTAToCourse(token,
+							LocalSession.GetCurrentUser())) {
+						lbl_ErrorToken.setText("Course Added");
+						AddCourse();
+					}
+					else
+					{
+						lbl_ErrorToken.setText("Error Occured");
+					}
 				} else {
-					lbl_ErrorToken.setText("Error occured.");
-					// print failure
-				}
+					NotificationData.checkforFacultyNotification(token, false);
+					ArrayList<ncsu.dbms.core.Course> listCourse = oracleDataAdapter
+							.GetCourseForToken(token);
+					if (listCourse != null && listCourse.size() == 0) {
+						lbl_ErrorToken.setText("Invalid course id");
+					} else if (listCourse.get(0).CSC_COURSE_EndDate
+							.compareTo(new Date()) <= 0) {
+						lbl_ErrorToken.setText("Course over, cannot register.");
+					} else if (listCourse.get(0).CSC_COURSE_Max_Enroll_No <= listCourse
+							.get(0).CSC_COURSE_Number_Of_Students) {
+						lbl_ErrorToken.setText("Course full, cannot register.");
+					} else {
+						if (oracleDataAdapter.AddStudentToCourse(token,
+								LocalSession.GetCurrentUser())) {
+							// print success
+							lbl_ErrorToken.setText("Course Added");
+							AddCourse();
+						} else {
+							lbl_ErrorToken.setText("Error occured.");
+							// print failure
+						}
 
+					}
+				}
 			}
 		}
 
@@ -278,9 +330,11 @@ public class Home {
 	private void AddCourse() {
 		listModel.clear();
 		OracleDataAdapter oracleDataAdapter = new OracleDataAdapter();
-		ArrayList<Course> listCourse = oracleDataAdapter.GetAllCourseForUser(LocalSession.GetCurrentUser());
+		ArrayList<Course> listCourse = oracleDataAdapter
+				.GetAllCourseForUser(LocalSession.GetCurrentUser());
 		for (ncsu.dbms.core.Course course : listCourse) {
-			listModel.addElement(course.CSC_COURSE_Course_Name+":"+course.CSC_COURSE_token);
+			listModel.addElement(course.CSC_COURSE_Course_Name + ":"
+					+ course.CSC_COURSE_token);
 		}
 		LocalSession.CourseListModel = listCourse;
 	}
@@ -334,7 +388,7 @@ public class Home {
 		txt_CourseToken.setBounds(250, 480, 150, 30);
 		txt_CourseToken.setToolTipText("Course Token");
 		panel.add(txt_CourseToken);
-		
+
 		JLabel lbl_CourseLevel = new JLabel("Course Level");
 		lbl_CourseLevel.setBounds(400, 480, 150, 30);
 		panel.add(lbl_CourseLevel);
@@ -343,16 +397,14 @@ public class Home {
 		txt_CourseLevel.setBounds(550, 480, 150, 30);
 		txt_CourseLevel.setToolTipText("1 for UG, 2 for Graduate");
 		panel.add(txt_CourseLevel);
-		
-		final ArrayList<Topic> arrayListTopic=new ArrayList<Topic>();
+
+		final ArrayList<Topic> arrayListTopic = new ArrayList<Topic>();
 		DefaultListModel listModel = new DefaultListModel();
-		for(Topic topic :LoadTopics())
-		{
+		for (Topic topic : LoadTopics()) {
 			arrayListTopic.add(topic);
 		}
 		listModel.clear();
-		for(Topic topic:arrayListTopic)
-		{
+		for (Topic topic : arrayListTopic) {
 			listModel.addElement(topic.TOPIC_KEYWORD);
 		}
 		final JList jListTopic = new JList(listModel);
@@ -361,12 +413,12 @@ public class Home {
 			public void valueChanged(ListSelectionEvent arg0) {
 			}
 		});
-		jListTopic.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-		
-		//panel.add(new JScrollPane(jListTopic));
+		jListTopic
+				.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+
+		// panel.add(new JScrollPane(jListTopic));
 		panel.add(jListTopic);
-		
-		
+
 		final JLabel lbl_CourseTokenError = new JLabel("");
 		lbl_CourseTokenError.setBounds(100, 660, 450, 30);
 		lbl_CourseTokenError.setForeground(Color.red);
@@ -389,9 +441,9 @@ public class Home {
 							.parseInt(txt_MaxEnrollment.getText());
 					course.CSC_COURSE_Number_Of_Students = 0;
 					course.CSC_COURSE_token = txt_CourseToken.getText();
-					course.CSC_COURSE_LEVEL.CSC_COURSE_LEVEL_LEVEL_ID=Integer.parseInt(txt_CourseLevel.getText());
-					for(int index:jListTopic.getSelectedIndices())
-					{
+					course.CSC_COURSE_LEVEL.CSC_COURSE_LEVEL_LEVEL_ID = Integer
+							.parseInt(txt_CourseLevel.getText());
+					for (int index : jListTopic.getSelectedIndices()) {
 						course.CourseTopic.add(arrayListTopic.get(index));
 					}
 					OracleDataAdapter oracleDataAdapter = new OracleDataAdapter();
@@ -404,7 +456,7 @@ public class Home {
 						txt_CourseToken.setText("");
 						txt_CourseLevel.setText("");
 						lbl_CourseTokenError.setText("Course Created!");
-						//AddCourse(course.CSC_COURSE_token);
+						// AddCourse(course.CSC_COURSE_token);
 						AddCourse();
 					} else {
 						lbl_CourseTokenError.setText("Error");
@@ -427,6 +479,6 @@ public class Home {
 		// TODO Auto-generated method stub
 		OracleDataAdapter oracleDataAdapter = new OracleDataAdapter();
 		return oracleDataAdapter.GetTopic();
-		
+
 	}
 }

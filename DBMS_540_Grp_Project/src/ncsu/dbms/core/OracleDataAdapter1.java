@@ -979,7 +979,7 @@ public class OracleDataAdapter1 {
 		int setId = -1;
 		try {
 			while(resultset != null && resultset.next()) {
-				setId = resultset.getInt("USER_ROLE_USER_ID");
+				setId = resultset.getInt("CSC_COURSE_COURSE_ID");
 				break;
 			}
 				return setId;
@@ -989,5 +989,15 @@ public class OracleDataAdapter1 {
 			oracleDb.CloseConnection();
 		}
 		return setId;
+	}
+	
+	public static boolean InsertIntoNotificationFaculty(int ST_ID,int F_ID, int COURSE_ID) {
+		OracleDb oracleDb = new OracleDb();
+		User user = LocalSession.GetCurrentUser();
+		oracleDb.OpenConnection();
+		String query = "Insert Into NOTIFICATION_FACULTY (ST_ID,F_ID,COURSE_ID) VALUES("+ST_ID+","+F_ID+","+COURSE_ID+")";
+		boolean resultset = oracleDb
+				.InsertQuery(query);
+		return resultset;
 	}
 }

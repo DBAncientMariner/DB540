@@ -45,6 +45,15 @@ public class NotificationData {
 	
 	public static List<Notification> getNotificationForFaculty() {
 		List<Notification> notificationList = new LinkedList<Notification>();
+		List<NotificationFaculty> list = OracleDataAdapter1.getNotificationForFaculty();
+		for (NotificationFaculty notificationFaculty : list) {
+			String text = notificationFaculty.getStudentId() + " has conflicting topics with TA courses";
+			Notification n = new Notification(text, 0, 0, false);
+			notificationList.add(n);
+			User user = LocalSession.GetCurrentUser();
+			Course course = LocalSession.getCurrentSelectedCourseObject();
+			OracleDataAdapter1.DeleteFromNotificationFaculty(notificationFaculty.getStudentId(), user.UserId, course.CSC_COURSE_Course_ID);
+		}
 		return notificationList;
 	}
 }

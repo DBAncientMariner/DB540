@@ -966,5 +966,28 @@ public class OracleDataAdapter1 {
 		}
 		return setId;
 	}
-}
+	
+	public static int GetCourseFromToken(String token) {
+		OracleDb oracleDb = new OracleDb();
+		oracleDb.OpenConnection();
+		
+		String query = "select CSC_COURSE_COURSE_ID from CSC_COURSE where CSC_COURSE_TOKEN = '"+token+"'";
+		
+		ResultSet resultset = oracleDb
+				.GetResultSet(query);
 
+		int setId = -1;
+		try {
+			while(resultset != null && resultset.next()) {
+				setId = resultset.getInt("USER_ROLE_USER_ID");
+				break;
+			}
+				return setId;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			oracleDb.CloseConnection();
+		}
+		return setId;
+	}
+}

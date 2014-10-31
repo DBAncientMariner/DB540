@@ -822,28 +822,146 @@ public class OracleDataAdapter1 {
 		return notificationFacultyList;
 	}
 	
-	public static List<NotificationFaculty> getCourse() {
-		List<NotificationFaculty> notificationFacultyList = new ArrayList<NotificationFaculty>();
-		User user = LocalSession.GetCurrentUser();
-		Course course = LocalSession.getCurrentSelectedCourseObject();
+	public static List<Integer> GetTopicForCouseId(int Course_id) {
+		
+		List<Integer> topicList = new ArrayList<Integer>();
+		int topic_id;
 		OracleDb oracleDb = new OracleDb();
 		oracleDb.OpenConnection();
 		ResultSet resultset = oracleDb
-				.GetResultSet("select ST_ID from NOTIFICATION_FACULTY where F_ID ="+user.UserId+" and COURSE_ID = "+ course.CSC_COURSE_Course_ID);
+				.GetResultSet("select CSC_COURSE_TOPIC_TOPIC_ID from csc_course_topic where CSC_COURSE_TOPIC_COURSE_ID ="+Course_id);
 		try {
 			if(resultset == null) {
-				return notificationFacultyList;
+				return topicList;
 			}
 			while (resultset.next()) {
-				NotificationFaculty notificationFaculty = new NotificationFaculty();
-				notificationFaculty.setStudentId(resultset.getInt("ST_ID"));
-				notificationFacultyList.add(notificationFaculty);
+				//NotificationFaculty notificationFaculty = new NotificationFaculty();
+				topic_id= resultset.getInt("CSC_COURSE_TOPIC_TOPIC_ID");
+				topicList.add(topic_id);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
 			oracleDb.CloseConnection();
 		}
-		return notificationFacultyList;
+		return topicList;
+	}
+	
+	public ArrayList<Course> GetCourseAsStudent(int user_id) {
+
+		Course course = new Course();
+		ArrayList<Course> listCourse = new ArrayList<Course>();
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		OracleDb oracleDb = new OracleDb();
+		oracleDb.OpenConnection();
+		
+		String query = "select CO.* from CSC_COURSE CO,CSC_CLASS CL,CSC_USER_ROLE UR "+
+				"where CO.CSC_COURSE_COURSE_ID = CL.CSC_CLASS_COURSE_ID "+
+				"and CL.CSC_CLASS_SURR_KEY = UR.CSC_U_R_CLASS_SURR_KEY "+
+				"and UR.USER_ROLE_ROLE_ID = 2 "+
+				"and UR.USER_ROLE_USER_ID ="+user_id;
+		
+		ResultSet resultset = oracleDb.GetResultSet(query);
+		try {
+			while (resultset.next()) {
+				course = new Course();
+
+				course.CSC_COURSE_Course_ID = resultset
+						.getInt("CSC_COURSE_Course_ID");
+				course.CSC_COURSE_Course_Name = resultset
+						.getString("CSC_COURSE_Course_Name");
+				course.CSC_COURSE_token = resultset
+						.getString("CSC_COURSE_token");
+				course.CSC_COURSE_Max_Enroll_No = resultset
+						.getInt("CSC_COURSE_Max_Enroll_No");
+				course.CSC_COURSE_Number_Of_Students = resultset
+						.getInt("CSC_COURSE_Number_Of_Students");
+				try {
+					course.CSC_COURSE_StartDate = simpleDateFormat
+							.parse(resultset.getString("CSC_COURSE_StartDate"));
+					course.CSC_COURSE_EndDate = simpleDateFormat
+							.parse(resultset.getString("CSC_COURSE_EndDate"));
+				} catch (Exception e) {
+				}
+				listCourse.add(course);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			oracleDb.CloseConnection();
+		}
+		return listCourse;
+
+	}
+	
+	public ArrayList<Course> GetCourseAsTA(int user_id) {
+
+		Course course = new Course();
+		ArrayList<Course> listCourse = new ArrayList<Course>();
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		OracleDb oracleDb = new OracleDb();
+		oracleDb.OpenConnection();
+		
+		String query = "select CO.* from CSC_COURSE CO,CSC_CLASS CL,CSC_USER_ROLE UR "+
+				"where CO.CSC_COURSE_COURSE_ID = CL.CSC_CLASS_COURSE_ID "+
+				"and CL.CSC_CLASS_SURR_KEY = UR.CSC_U_R_CLASS_SURR_KEY "+
+				"and UR.USER_ROLE_ROLE_ID = 3 "+
+				"and UR.USER_ROLE_USER_ID ="+user_id;
+		
+		ResultSet resultset = oracleDb.GetResultSet(query);
+		try {
+			while (resultset.next()) {
+				course = new Course();
+
+				course.CSC_COURSE_Course_ID = resultset
+						.getInt("CSC_COURSE_Course_ID");
+				course.CSC_COURSE_Course_Name = resultset
+						.getString("CSC_COURSE_Course_Name");
+				course.CSC_COURSE_token = resultset
+						.getString("CSC_COURSE_token");
+				course.CSC_COURSE_Max_Enroll_No = resultset
+						.getInt("CSC_COURSE_Max_Enroll_No");
+				course.CSC_COURSE_Number_Of_Students = resultset
+						.getInt("CSC_COURSE_Number_Of_Students");
+				try {
+					course.CSC_COURSE_StartDate = simpleDateFormat
+							.parse(resultset.getString("CSC_COURSE_StartDate"));
+					course.CSC_COURSE_EndDate = simpleDateFormat
+							.parse(resultset.getString("CSC_COURSE_EndDate"));
+				} catch (Exception e) {
+				}
+				listCourse.add(course);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			oracleDb.CloseConnection();
+		}
+		return listCourse;
+
+	}
+	
+	public static int GetF(int UA_Id, int Q_id) {
+		OracleDb oracleDb = new OracleDb();
+		oracleDb.OpenConnection();
+		String query = "select CSC_UA_EX_PARM_SET_ID from CSC_USERATTEMPT_EXERCISE_PRM where CSC_UA_EX_UA_ID ="+UA_Id+
+				" and CSC_UA_EX_QUES_ID =" +Q_id;
+		ResultSet resultset = oracleDb
+				.GetResultSet(query);
+
+		int setId = -1;
+		try {
+			while(resultset != null && resultset.next()) {
+				setId = resultset.getInt("CSC_UA_EX_PARM_SET_ID");
+				break;
+			}
+				return setId;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			oracleDb.CloseConnection();
+		}
+		return setId;
 	}
 }
+

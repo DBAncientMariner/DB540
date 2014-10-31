@@ -601,9 +601,15 @@ public class OracleDataAdapter {
 				return false;
 		}
 		return false;
-
 	}
-
+	public boolean AddTAToCourse(String token, User user) {
+		ArrayList<Course> listCourse=GetCourseForToken(token);
+		for(Course course:listCourse)
+		{
+			return InsertUserRoleForCourse(course,user,3);
+		}
+		return false;
+	}
 	public ArrayList<CSCClass> GetClass() {
 
 		CSCClass cscClass = new CSCClass();
@@ -1794,6 +1800,7 @@ public class OracleDataAdapter {
 						} else {
 							course.CSC_COURSE_LEVEL.CSC_COURSE_LEVEL_SURR_KEY=GetMaxClassSurrogateKey();
 							course.CSC_COURSE_LEVEL.CSC_COURSE_LEVEL_Course_ID=Max_CSC_COURSE_COURSE_ID;
+							course.CSC_COURSE_Course_ID=Max_CSC_COURSE_COURSE_ID;
 							InsertCourseLevel(course.CSC_COURSE_LEVEL);
 							InsertCourseTopic(course,course.CourseTopic);
 							InsertUserRoleForCourse(course,LocalSession.GetCurrentUser(),1);
@@ -1837,7 +1844,7 @@ public class OracleDataAdapter {
 	private boolean InsertUserRoleForCourse(Course course,User user,int roleId)
 	{
 		String query="INSERT INTO CSC_USER_ROLE(USER_ROLE_USER_ID,USER_ROLE_ROLE_ID,CSC_U_R_CLASS_SURR_KEY) "
-				+ "VALUES ("+user.UserId+","+roleId+","+ course.CSC_COURSE_LEVEL.CSC_COURSE_LEVEL_SURR_KEY+")";
+				+ "VALUES ("+user.UserId+","+roleId+","+ course.CSC_COURSE_Course_ID+")";
 		if(!oracleDb.InsertQuery(query))
 		{
 			//failure

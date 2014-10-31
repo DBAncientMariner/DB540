@@ -1038,10 +1038,10 @@ public class OracleDataAdapter {
 				+ exercise.EXERCISE_PENALTYPT + "','"
 				+ exercise.EXERCISE_SCORINGTYPE + "','"
 				+ exercise.EXERCISE_CREATEDBY + "','"
-				+ exercise.EXERCISE_CREATEDBY + "','";
-		query = query + simpleDateFormat.format(exercise.EXERCISE_STARTDATE) + "','"
+				+ exercise.EXERCISE_CREATEDBY + "',To_Date('";
+		query = query + simpleDateFormat.format(exercise.EXERCISE_STARTDATE) + "','yyyy-mm-dd'),To_Date('"
 				+ simpleDateFormat.format(exercise.EXERCISE_ENDDATE)
-				+ "',TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS'))";
+				+ "','yyyy-mm-dd'),TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS'))";
 		int retval = 0;
 		try {
 			oracleDb.InsertQuery(query);
@@ -1278,7 +1278,7 @@ public class OracleDataAdapter {
 							.parse(resultset
 									.getString("QUESTIONBANK_MODIFIEDDATE"));
 				} catch (Exception e) {
-					e.printStackTrace();
+					
 				}
 				listQuestionBank.add(questionBank);
 			}
@@ -1703,9 +1703,8 @@ public class OracleDataAdapter {
 		ArrayList<Exercise> listExercise = new ArrayList<Exercise>();
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		oracleDb.OpenConnection();
-		ResultSet resultset = oracleDb
-				.GetResultSet("select * from CSC_EXERCISE where  EXERCISE_COURSE="
-						+ courseId);
+		String query="select * from CSC_EXERCISE where  EXERCISE_COURSE="+ courseId;
+		ResultSet resultset = oracleDb.GetResultSet(query);
 		try {
 			while (resultset.next()) {
 				exercise = new Exercise();

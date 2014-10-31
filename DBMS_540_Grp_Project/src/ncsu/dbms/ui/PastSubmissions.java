@@ -102,13 +102,13 @@ public class PastSubmissions {
 		}
 		for (final UserAttempt userAttempt : inActiveExercise) {
 			JLabel exercise = new JLabel(PastSubmissionData.getExerciseName(userAttempt.getUA_EXERCISE_ID()));
-			exercise.setBounds(10, i, 110, 35);
+			exercise.setBounds(10, i, 150, 35);
 			panel_Right.add(exercise);
 			JLabel attempt = new JLabel("Attempt" + userAttempt.getATTEMP_ID());
-			attempt.setBounds(130, i, 110, 35);
+			attempt.setBounds(170, i, 110, 35);
 			panel_Right.add(attempt);
 			JButton view = new JButton("View");
-			view.setBounds(250, i, 70, 30);
+			view.setBounds(300, i, 70, 30);
 			view.addActionListener(new ActionListener() {
 				
 				@Override
@@ -130,13 +130,13 @@ public class PastSubmissions {
 		
 		for (final UserAttempt userAttempt : activeExercise) {
 			JLabel exercise = new JLabel(PastSubmissionData.getExerciseName(userAttempt.getUA_EXERCISE_ID()));
-			exercise.setBounds(10, i, 110, 35);
+			exercise.setBounds(10, i, 150, 35);
 			panel_Right.add(exercise);
 			JLabel attempt = new JLabel("Attempt" + userAttempt.getATTEMP_ID());
-			attempt.setBounds(130, i, 110, 35);
+			attempt.setBounds(170, i, 110, 35);
 			panel_Right.add(attempt);
 			JButton view = new JButton("View");
-			view.setBounds(250, i, 70, 30);
+			view.setBounds(300, i, 70, 30);
 			view.addActionListener(new ActionListener() {
 				
 				@Override

@@ -76,7 +76,7 @@ public class OracleDataAdapter1 {
 				listUserAttemptExercise.add(userAttemptExercise);
 			}
 		} catch (SQLException e) {
-			System.out.println(e);
+			e.printStackTrace();
 		} finally {
 			oracleDb.CloseConnection();
 		}
@@ -96,7 +96,7 @@ public class OracleDataAdapter1 {
 			return str;
 			}
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 		}
 		return null;
 	}
@@ -141,12 +141,12 @@ public class OracleDataAdapter1 {
 							.parse(resultset
 									.getString("QUESTIONBANK_MODIFIEDDATE"));
 				} catch (Exception e) {
-					System.out.println(e);
+					e.printStackTrace();
 				}
 				listQuestionBank.add(questionBank);
 			}
 		} catch (SQLException e) {
-			System.out.println(e);
+			e.printStackTrace();
 		} 
 		return listQuestionBank;
 	}
@@ -181,12 +181,12 @@ public class OracleDataAdapter1 {
 							.parse(resultset
 									.getString("ANSWERBANK_MODIFIEDDATE"));
 				} catch (Exception e) {
-					System.out.println(e);
+					e.printStackTrace();
 				}
 				listAnswerBank.add(answerBank);
 			}
 		} catch (SQLException e) {
-			System.out.println(e);
+			e.printStackTrace();
 		} 
 		return listAnswerBank;
 	}
@@ -211,7 +211,7 @@ public class OracleDataAdapter1 {
 			}
 				return setId;
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 		} finally {
 			oracleDb.CloseConnection();
 		}
@@ -253,12 +253,12 @@ public class OracleDataAdapter1 {
 							.parse(resultset
 									.getString("ANSWERBANK_MODIFIEDDATE"));
 				} catch (Exception e) {
-					System.out.println(e);
+					e.printStackTrace();
 				}
 				listAnswerBank.add(answerBank);
 			}
 		} catch (SQLException e) {
-			System.out.println(e);
+			e.printStackTrace();
 		} finally {
 			oracleDb.CloseConnection();
 		}
@@ -300,12 +300,12 @@ public class OracleDataAdapter1 {
 							.parse(resultset
 									.getString("ANSWERBANK_MODIFIEDDATE"));
 				} catch (Exception e) {
-					System.out.println(e);
+					e.printStackTrace();
 				}
 				listAnswerBank.add(answerBank);
 			}
 		} catch (SQLException e) {
-			System.out.println(e);
+			e.printStackTrace();
 		} finally {
 			oracleDb.CloseConnection();
 		}
@@ -337,7 +337,7 @@ public class OracleDataAdapter1 {
 				listVarParam.add(varParam);
 			}
 		} catch (SQLException e) {
-			System.out.println(e);
+			e.printStackTrace();
 		} finally {
 			oracleDb.CloseConnection();
 		}
@@ -368,7 +368,7 @@ public class OracleDataAdapter1 {
 				listQbVariable.add(qbVariable);
 			}
 		} catch (SQLException e) {
-			System.out.println(e);
+			e.printStackTrace();
 		} finally {
 			oracleDb.CloseConnection();
 		}
@@ -389,7 +389,7 @@ public class OracleDataAdapter1 {
 			return str;
 			}
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 		}
 		return null;
 	}
@@ -431,12 +431,12 @@ public class OracleDataAdapter1 {
 					userAttempt.UA_LASTATTEMPT_DATE = simpleDateFormat
 							.parse(resultset.getString("UA_LASTATTEMPT_DATE"));
 				} catch (Exception e) {
-					System.out.println(e);
+					e.printStackTrace();
 				}
 				listUserAttempt.add(userAttempt);
 			}
 		} catch (SQLException e) {
-			System.out.println(e);
+			e.printStackTrace();
 		} finally {
 			oracleDb.CloseConnection();
 		}
@@ -473,7 +473,7 @@ public class OracleDataAdapter1 {
 				listUserAttemptExercise.add(userAttemptExercise);
 			}
 		} catch (SQLException e) {
-			System.out.println(e);
+			e.printStackTrace();
 		} finally {
 			oracleDb.CloseConnection();
 		}
@@ -502,7 +502,7 @@ public class OracleDataAdapter1 {
 				listQbVariable.add(qbVariable);
 			}
 		} catch (SQLException e) {
-			System.out.println(e);
+			e.printStackTrace();
 		} finally {
 			oracleDb.CloseConnection();
 		}
@@ -535,7 +535,7 @@ public class OracleDataAdapter1 {
 			}
 				return setId;
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 		} finally {
 			oracleDb.CloseConnection();
 		}
@@ -558,7 +558,7 @@ public class OracleDataAdapter1 {
 			}
 				return UA_Id;
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 		} finally {
 			oracleDb.CloseConnection();
 		}
@@ -580,7 +580,7 @@ public class OracleDataAdapter1 {
 				return true;
 			}
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 		} finally {
 			oracleDb.CloseConnection();
 		}
@@ -599,10 +599,61 @@ public class OracleDataAdapter1 {
 				return name;
 			}
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 		} finally {
 			oracleDb.CloseConnection();
 		}
 		return "";
+	}
+	
+	public ArrayList<Course> GetCourseForUser(User user) {
+
+		int roleId = 0;
+		//for (UserRole userRole : user.UserRoles) {
+		//	if (userRole.Roles.Role_Name.equalsIgnoreCase("student")) {
+		//		roleId = userRole.Roles.Role_ID;
+		//		break;
+		//	}
+		//}
+		OracleDb oracleDb = new OracleDb();
+		Course course = new Course();
+		ArrayList<Course> listCourse = new ArrayList<Course>();
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		oracleDb.OpenConnection();
+		String query = "select * from csc_course where CSC_COURSE_COURSE_ID IN "+
+			"(select CSC_CLASS_COURSE_ID from CSC_CLASS where CSC_CLASS_SURR_KEY IN(select CSC_U_R_CLASS_SURR_KEY "+
+			"from csc_user_role where USER_ROLE_USER_ID =" + user.UserId +"))";
+		
+		ResultSet resultset = oracleDb.GetResultSet(query);
+		try {
+			while (resultset.next()) {
+				course = new Course();
+
+				course.CSC_COURSE_Course_ID = resultset
+						.getInt("CSC_COURSE_Course_ID");
+				course.CSC_COURSE_Course_Name = resultset
+						.getString("CSC_COURSE_Course_Name");
+				course.CSC_COURSE_token = resultset
+						.getString("CSC_COURSE_token");
+				course.CSC_COURSE_Max_Enroll_No = resultset
+						.getInt("CSC_COURSE_Max_Enroll_No");
+				course.CSC_COURSE_Number_Of_Students = resultset
+						.getInt("CSC_COURSE_Number_Of_Students");
+				try {
+					course.CSC_COURSE_StartDate = simpleDateFormat
+							.parse(resultset.getString("CSC_COURSE_StartDate"));
+					course.CSC_COURSE_EndDate = simpleDateFormat
+							.parse(resultset.getString("CSC_COURSE_EndDate"));
+				} catch (Exception e) {
+				}
+				listCourse.add(course);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			oracleDb.CloseConnection();
+		}
+		return listCourse;
+
 	}
 }

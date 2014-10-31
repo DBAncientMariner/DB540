@@ -14,13 +14,14 @@ public class PastSubmissionData {
 	
 	public static List<UserAttempt> getExercise(boolean active) {
 		List<UserAttempt> userAttemptList = OracleDataAdapter1.GetUserAttemptForPastSubmission();
+		List<UserAttempt> exerciseList = new LinkedList<UserAttempt>();
 		for (UserAttempt userAttempt : userAttemptList) {
 			boolean isActive = OracleDataAdapter1.IsActive(userAttempt.getUA_EXERCISE_ID());
-			if(isActive != active) {
-				userAttemptList.remove(userAttempt);
+			if(isActive == active) {
+				exerciseList.add(userAttempt);
 			}
 		}
-		return userAttemptList;
+		return exerciseList;
 	}
 	
 	public static String getExerciseName(int exerciseId) {

@@ -164,8 +164,8 @@ public class ViewPastSubmissions {
 					JLabel correct = new JLabel("Correct Answer");
 					panel_Right.add(correct);
 				} else {
-					String cString = "" + correctAnswer.get(0);
-					for(int j = 1; j < correctAnswer.size(); j++) {
+					String cString = "";
+					for(int j = 0; j < correctAnswer.size(); j++) {
 						cString = cString + ", " + correctAnswer.get(j);
 					}
 					JLabel correct = new JLabel("Correct answer is " + cString);

@@ -941,18 +941,21 @@ public class OracleDataAdapter1 {
 
 	}
 	
-	public static int GetF(int UA_Id, int Q_id) {
+	public static int GetFacutlyForCourse(int Course_id) {
 		OracleDb oracleDb = new OracleDb();
 		oracleDb.OpenConnection();
-		String query = "select CSC_UA_EX_PARM_SET_ID from CSC_USERATTEMPT_EXERCISE_PRM where CSC_UA_EX_UA_ID ="+UA_Id+
-				" and CSC_UA_EX_QUES_ID =" +Q_id;
+		
+		String query = "select USER_ROLE_USER_ID from CSC_CLASS CL, CSC_USER_ROLE UR "+
+					"where CL.CSC_CLASS_SURR_KEY = UR.CSC_U_R_CLASS_SURR_KEY "+
+					"and USER_ROLE_ROLE_ID = 1 and CSC_CLASS_COURSE_ID = "+Course_id;
+		
 		ResultSet resultset = oracleDb
 				.GetResultSet(query);
 
 		int setId = -1;
 		try {
 			while(resultset != null && resultset.next()) {
-				setId = resultset.getInt("CSC_UA_EX_PARM_SET_ID");
+				setId = resultset.getInt("USER_ROLE_USER_ID");
 				break;
 			}
 				return setId;

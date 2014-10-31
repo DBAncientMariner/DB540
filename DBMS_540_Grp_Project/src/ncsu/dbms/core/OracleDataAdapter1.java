@@ -715,7 +715,7 @@ public class OracleDataAdapter1 {
 		OracleDb oracleDb = new OracleDb();
 		oracleDb.OpenConnection();
 		User user = LocalSession.GetCurrentUser();
-		String query = "select count(*) from csc_user_attempt where UA_EXERCISE_ID =" + Exercise_Id +" and UA_USER_ID =" +user.UserId;
+		String query = "select count(*) from csc_user_attempt where UA_SUBMITTED = 'T' and UA_EXERCISE_ID =" + Exercise_Id +" and UA_USER_ID =" +user.UserId;
 		ResultSet resultset = oracleDb
 				.GetResultSet(query);
 		boolean IsAttempted = false;

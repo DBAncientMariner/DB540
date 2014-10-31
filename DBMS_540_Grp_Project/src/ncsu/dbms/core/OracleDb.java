@@ -78,6 +78,7 @@ public class OracleDb {
 
 	public boolean InsertQuery(String query) {
 		try {
+			Logging(query);
 			if (OpenConnection()) {
 				Stmt = Conn.createStatement();
 				Stmt.executeUpdate(query);
@@ -96,6 +97,7 @@ public class OracleDb {
 	public boolean ExecuteStoredProcedure2Param(String storedProcedure,
 			ArrayList<Object> Param) {
 		try {
+			Logging(storedProcedure);
 			if (OpenConnection()) {
 				Stmt = Conn.createStatement();
 				CallableStatement proc = Conn.prepareCall("{call "
@@ -118,6 +120,7 @@ public class OracleDb {
 	public boolean ExecuteStoredProcedure3Param(String storedProcedure,
 			ArrayList<Object> Param) {
 		try {
+			Logging(storedProcedure);
 			if (OpenConnection()) {
 				Stmt = Conn.createStatement();
 				CallableStatement proc = Conn.prepareCall("{call "
@@ -140,6 +143,7 @@ public class OracleDb {
 	public int ExecuteStoredProcedure4ParamOut(String storedProcedure,
 			ArrayList<Object> Param) {
 		try {
+			Logging(storedProcedure);
 			if (OpenConnection()) {
 				Stmt = Conn.createStatement();
 				CallableStatement proc = Conn.prepareCall("{call "
@@ -168,6 +172,7 @@ public class OracleDb {
 	public boolean ExecuteStoredProcedure4Param(String storedProcedure,
 			ArrayList<Object> Param) {
 		try {
+			Logging(storedProcedure);
 			if (OpenConnection()) {
 				Stmt = Conn.createStatement();
 				CallableStatement proc = Conn.prepareCall("{call "
@@ -190,6 +195,7 @@ public class OracleDb {
 	public boolean ExecuteStoredProcedure1Param(String storedProcedure,
 			ArrayList<String> Param) {
 		try {
+			Logging(storedProcedure);
 			if (OpenConnection()) {
 				Stmt = Conn.createStatement();
 				CallableStatement proc = Conn.prepareCall("{call "
@@ -211,7 +217,9 @@ public class OracleDb {
 
 	public int ExecuteStoredProcedureExerciseReturn(String storedProcedure,
 			ArrayList<String> Param) {
+		
 		try {
+			Logging(storedProcedure);
 			if (OpenConnection()) {
 				Stmt = Conn.createStatement();
 				CallableStatement proc = Conn.prepareCall("{call "
@@ -236,7 +244,9 @@ public class OracleDb {
 
 	public int ExecuteStoredProcedureInsertUserAttemp(String storedProcedure,
 			ArrayList<String> Param) {
+		
 		try {
+			Logging(storedProcedure);
 			if (OpenConnection()) {
 				Stmt = Conn.createStatement();
 				CallableStatement proc = Conn.prepareCall("{call "
@@ -257,5 +267,26 @@ public class OracleDb {
 		}
 		CloseConnection();
 		return 0;
+	}
+	public boolean Logging(String operationString)
+	{
+		operationString=operationString.replace("'", "''");
+		String query="insert into CSC_LOG(Operation,USERID,EXECUTIONTIME) VALUES ('"+ operationString+"',"+ LocalSession.GetCurrentUser().UserId+",SYSDATE)";
+		return InsertQueryLog(query);
+	}
+	public boolean InsertQueryLog(String query) {
+		try {
+			if (OpenConnection()) {
+				Stmt = Conn.createStatement();
+				Stmt.executeUpdate(query);
+				Conn.commit();
+
+			} else
+				return false;
+		} catch (SQLException e) {
+			return false;
+		}
+		CloseConnection();
+		return true;
 	}
 }

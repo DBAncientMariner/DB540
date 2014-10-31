@@ -182,13 +182,9 @@ public class AddHomework extends JFrame {
 
 		final JTextField txt_StartDate = new JTextField();
 
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(currentExercise.EXERCISE_STARTDATE);
-		int year = cal.get(Calendar.YEAR);
-		int month = cal.get(Calendar.MONTH + 1);
-		int day = cal.get(Calendar.DAY_OF_MONTH);
 
-		txt_StartDate.setText(year + "-" + month + "-" + day);
+		SimpleDateFormat simpleDateFormat1=new SimpleDateFormat("yyyy-MM-dd");
+		txt_StartDate.setText(simpleDateFormat1.format(currentExercise.EXERCISE_STARTDATE));
 		txt_StartDate.setToolTipText("Start Date (yyyy-MM-dd");
 		txt_StartDate.setBounds(120, 80, 100, 25);
 		panel_Right.add(txt_StartDate);
@@ -197,13 +193,8 @@ public class AddHomework extends JFrame {
 		lbl_EndDate.setBounds(230, 80, 100, 25);
 		panel_Right.add(lbl_EndDate);
 
-		cal = Calendar.getInstance();
-		cal.setTime(currentExercise.EXERCISE_ENDDATE);
-		year = cal.get(Calendar.YEAR);
-		month = cal.get(Calendar.MONTH + 1);
-		day = cal.get(Calendar.DAY_OF_MONTH);
 		final JTextField txt_EndDate = new JTextField();
-		txt_EndDate.setText(year + "-" + month + "-" + day);
+		txt_EndDate.setText(simpleDateFormat1.format(currentExercise.EXERCISE_ENDDATE));
 		txt_EndDate.setToolTipText("End Date (yyyy-MM-dd");
 		txt_EndDate.setBounds(340, 80, 100, 25);
 		panel_Right.add(txt_EndDate);

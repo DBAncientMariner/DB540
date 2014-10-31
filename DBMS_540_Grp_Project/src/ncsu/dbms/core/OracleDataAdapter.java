@@ -94,9 +94,10 @@ public class OracleDataAdapter {
 	public User GetUserDetails(String userName, String password) {
 		User user = new User();
 		oracleDb.OpenConnection();
+		String query="Select * from csc_User where USER_ID_CHAR='"
+						+ userName + "' and USER_PASSWORD ='" + password + "'";
 		ResultSet resultset = oracleDb
-				.GetResultSet("Select * from csc_User where USER_ID_CHAR='"
-						+ userName + "' and USER_PASSWORD ='" + password + "'");
+				.GetResultSet(query);
 		try {
 			while (resultset.next()) {
 				SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
@@ -1010,9 +1011,9 @@ public class OracleDataAdapter {
 				+ ",EXERCISE_SCORINGTYPE="+ exercise.EXERCISE_SCORINGTYPE 
 				+ ",EXERCISE_CREATEDBY="+ exercise.EXERCISE_CREATEDBY
 				+ ",EXERCISE_MODIFIEDBY="+ exercise.EXERCISE_CREATEDBY
-				+ ",EXERCISE_STARTDATE='"+ simpleDateFormat.format(exercise.EXERCISE_STARTDATE)
-				+ "',EXERCISE_ENDDATE='"+ simpleDateFormat.format(exercise.EXERCISE_ENDDATE)
-				+ "',EXERCISE_LASTMODIFIEDDATE=TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS') WHERE EXERCISE_ID="+exercise.EXERCISE_ID;
+				+ ",EXERCISE_STARTDATE=TO_DATE('"+ simpleDateFormat.format(exercise.EXERCISE_STARTDATE)
+				+ "','YYYY-MM-DD'),EXERCISE_ENDDATE=TO_DATE('"+ simpleDateFormat.format(exercise.EXERCISE_ENDDATE)
+				+ "','YYYY-MM-DD'),EXERCISE_LASTMODIFIEDDATE=TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS') WHERE EXERCISE_ID="+exercise.EXERCISE_ID;
 		try {
 			return oracleDb.InsertQuery(query);
 		}
@@ -1201,7 +1202,6 @@ public class OracleDataAdapter {
 							.parse(resultset
 									.getString("QUESTIONBANK_MODIFIEDDATE"));
 				} catch (Exception e) {
-					e.printStackTrace();
 				}
 				listQuestionBank.add(questionBank);
 			}

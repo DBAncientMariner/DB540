@@ -122,12 +122,12 @@ public class ListHomework extends JFrame {
 					{
 						int exerciseId = listExercise.get(jListHomework
 								.getSelectedIndex()).EXERCISE_ID;
-						if (User.IsFaculty(LocalSession.GetCurrentUser())) {
+						if (User.IsFacultyOnCourse(LocalSession.GetCurrentUser(),LocalSession.getCurrentSelectedCourseObject())) {
 							AddHomework addHomework = new AddHomework(exerciseId,
 									true);
 							addHomework.setVisible(true);
 							setVisible(false);
-						} else if (User.IsTA(LocalSession.GetCurrentUser())) {
+						} else if (User.IsTAOnCourse(LocalSession.GetCurrentUser(),LocalSession.getCurrentSelectedCourseObject())) {
 							AddHomework addHomework = new AddHomework(exerciseId,
 									false);
 							addHomework.setVisible(true);

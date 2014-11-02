@@ -1,0 +1,366 @@
+--------1--------
+
+select DISTINCT c.user_fname, c.user_lname from csc_user c, csc_user_role ur,
+				CSC_EXERCISE ex,CSC_COURSE CO, CSC_CLASS CL , CSC_ROLE R where
+				c.USER_ID = ur.USER_ROLE_USER_ID
+				and ex.EXERCISE_COURSE = CO.CSC_COURSE_COURSE_ID  
+				 and CL.CSC_CLASS_COURSE_ID = CO.CSC_COURSE_COURSE_ID  
+				 and CL.CSC_CLASS_SURR_KEY = UR.CSC_U_R_CLASS_SURR_KEY  
+				 and R.ROLE_ID = ur.USER_ROLE_ROLE_ID  
+				 and CO.CSC_COURSE_TOKEN = 'CSC540FALL14'  
+				 and R.ROLE_NAME = 'Student'  
+				 and c.user_id NOT IN  
+				 (select ua_user_id from csc_user_attempt ua where ua.ua_exercise_id=1);
+
+--------2---------
+
+select c.user_fname, c.user_lname from csc_user c  
+				 where c.user_id IN (  
+						 select UA_USER_ID from csc_user_attempt ua   
+						 where ua.attemp_id = 1  
+						 and ua.UA_EXERCISE_ID = 1  
+						 and ua.ua_score = (select max(ua1.ua_score) from csc_user_attempt ua1  
+						 where ua1.attemp_id=1 and ua1.ua_exercise_id=1)  
+						 );
+
+--------3---------
+
+select sub.e_name as Exercise_Name, c.user_fname, c.user_lname from csc_user c,
+(
+select ua.UA_USER_ID as u_id, ua.UA_EXERCISE_ID as e_id, EX.EXERCISE_NAME as e_name from csc_user_attempt ua , CSC_EXERCISE 
+EX
+where ua.UA_EXERCISE_ID = EX.EXERCISE_ID
+and ua.attemp_id = 1
+and EX.EXERCISE_COURSE = 2 -- course_id
+and (ua.UA_EXERCISE_ID, ua.ua_score) IN (select ua1.UA_EXERCISE_ID,max(ua1.ua_score) from csc_user_attempt ua1
+where ua1.attemp_id=1
+group by ua1.UA_EXERCISE_ID)
+) sub
+where sub.u_id = c.user_id
+
+------4-----------
+
+--------- AVERAGE SCORE ACROSS ALL --------------
+SELECT CC.USER_FNAME as FirstName,CC.USER_LNAME as LastName, AVG(UA_SCORE) as AVERAGESCORE  
+				 FROM CSC_USER CC  
+				 inner join CSC_USER_ROLE CUR on CC.USER_ID=CUR.USER_ROLE_USER_ID AND CUR.USER_ROLE_ROLE_ID=2  
+				 left join  
+				 ( SELECT UA_USER_ID,EXERCISE_ID,UA_SCORE FROM  
+				 ( SELECT CUA.UA_USER_ID UA_USER_ID, CE.EXERCISE_ID EXERCISE_ID, UA_SCORE  
+				  FROM CSC_EXERCISE CE,CSC_USER_ATTEMPT  CUA   
+				  WHERE CE.EXERCISE_ID=CUA.UA_EXERCISE_ID and CE.EXERCISE_ScoringType=1 and ROWNUM <= 1 and CE.EXERCISE_COURSE = 2 -- course_id
+				  ORDER BY CUA.UA_USER_ID, CE.EXERCISE_ID,CUA.UA_LASTATTEMPT_DATE DESC)  
+				  UNION  
+				  SELECT UA_USER_ID,EXERCISE_ID,UA_SCORE FROM   
+				  ( SELECT CUA.UA_USER_ID UA_USER_ID, CE.EXERCISE_ID EXERCISE_ID, UA_SCORE  
+				  FROM CSC_EXERCISE CE,CSC_USER_ATTEMPT  CUA   
+				  WHERE CE.EXERCISE_ID=CUA.UA_EXERCISE_ID and CE.EXERCISE_ScoringType=4 and ROWNUM <= 1 and CE.EXERCISE_COURSE = 2 -- course_id
+				  ORDER BY CUA.UA_USER_ID, CE.EXERCISE_ID,CUA.UA_LASTATTEMPT_DATE ASC)  
+				  UNION   
+				  SELECT UA_USER_ID,EXERCISE_ID,UA_SCORE   
+				  FROM ( SELECT CUA.UA_USER_ID, CE.EXERCISE_ID, UA_SCORE   
+				  FROM CSC_EXERCISE CE,CSC_USER_ATTEMPT  CUA WHERE CE.EXERCISE_ID=CUA.UA_EXERCISE_ID and CE.EXERCISE_ScoringType=2 and CE.EXERCISE_COURSE =  2 -- course_id
+				  and ROWNUM <= 1 ORDER BY CUA.UA_USER_ID, CE.EXERCISE_ID,CUA.UA_SCORE DESC)   
+				  UNION   
+				  SELECT DISTINCT CUA.UA_USER_ID, CE.EXERCISE_ID, AVG(UA_SCORE)   
+				  FROM CSC_EXERCISE CE,CSC_USER_ATTEMPT  CUA WHERE CE.EXERCISE_ID=CUA.UA_EXERCISE_ID and CE.EXERCISE_ScoringType=3 AND CE.EXERCISE_COURSE =  2 -- course_id
+				  GROUP BY CUA.UA_USER_ID, CE.EXERCISE_ID )   
+				  AA ON AA.UA_USER_ID=CC.USER_ID  GROUP BY CC.USER_FNAME,CC.USER_LNAME;
+
+----- TOTAL SCORE FOR EACH HOMEWORK--------
+SELECT DISTINCT CE.EXERCISE_ID, CC.USER_FNAME as FirstName,CC.USER_LNAME LastName, CE.EXERCISE_NAME as ExerciseName, UA_SCORE  as TotalScore   
+				 FROM CSC_USER CC   
+				 inner join CSC_USER_ROLE CUR on CC.USER_ID=CUR.USER_ROLE_USER_ID AND CUR.USER_ROLE_ROLE_ID=2   
+				 left join ( SELECT UA_USER_ID,EXERCISE_ID,UA_SCORE   
+				 FROM ( SELECT CUA.UA_USER_ID UA_USER_ID, CE.EXERCISE_ID EXERCISE_ID, UA_SCORE   
+				 FROM CSC_EXERCISE CE,CSC_USER_ATTEMPT  CUA   
+				 WHERE CE.EXERCISE_ID=CUA.UA_EXERCISE_ID and CE.EXERCISE_ScoringType=1 and ROWNUM <= 1 and CE.EXERCISE_COURSE = 2 -- course_id
+				 ORDER BY CUA.UA_USER_ID, CE.EXERCISE_ID,CUA.UA_LASTATTEMPT_DATE DESC)   
+				 UNION  
+				 SELECT UA_USER_ID,EXERCISE_ID,UA_SCORE   
+				 FROM ( SELECT CUA.UA_USER_ID UA_USER_ID, CE.EXERCISE_ID EXERCISE_ID, UA_SCORE   
+				 FROM CSC_EXERCISE CE,CSC_USER_ATTEMPT  CUA   
+				 WHERE CE.EXERCISE_ID=CUA.UA_EXERCISE_ID and CE.EXERCISE_ScoringType=4 and ROWNUM <= 1 and CE.EXERCISE_COURSE =  2 -- course_id
+				 ORDER BY CUA.UA_USER_ID, CE.EXERCISE_ID,CUA.UA_LASTATTEMPT_DATE ASC)  
+				 UNION   
+				 SELECT UA_USER_ID,EXERCISE_ID,UA_SCORE   
+				 FROM ( SELECT CUA.UA_USER_ID, CE.EXERCISE_ID, UA_SCORE   
+				 FROM CSC_EXERCISE CE,CSC_USER_ATTEMPT  CUA   
+				 WHERE CE.EXERCISE_ID=CUA.UA_EXERCISE_ID and CE.EXERCISE_ScoringType=2 and ROWNUM <= 1 and CE.EXERCISE_COURSE =  2 -- course_id
+				 ORDER BY CUA.UA_USER_ID, CE.EXERCISE_ID,CUA.UA_SCORE DESC)   
+				 UNION   
+				 SELECT DISTINCT CUA.UA_USER_ID, CE.EXERCISE_ID, AVG(UA_SCORE)   
+				 FROM CSC_EXERCISE CE,CSC_USER_ATTEMPT  CUA   
+				 WHERE CE.EXERCISE_ID=CUA.UA_EXERCISE_ID and CE.EXERCISE_ScoringType=3 and CE.EXERCISE_COURSE =  2 -- course_id
+				 GROUP BY CUA.UA_USER_ID, CE.EXERCISE_ID ) AA ON AA.UA_USER_ID=CC.USER_ID   
+				 INNER JOIN csc_exercise CE on CE.EXERCISE_ID=AA.EXERCISE_ID;
+
+-------5----------
+Select CE.EXERCISE_ID AS EXERCISE_ID, CE.EXERCISE_NAME as EXERCISE_NAME,AA.AVERAGEATTEMPT   
+				 as AVERAGEATTEMPT  FROM  csc_exercise CE   
+				 LEFT JOIN  (SELECT ua_exercise_id,   
+				 avg(Attempt) AVERAGEATTEMPT  from ( select ua_exercise_id,UA_USER_ID,count(*) as Attempt   
+				 from csc_user_attempt ua   
+				 Group By ua.ua_exercise_id, ua.UA_USER_ID) A group by ua_exercise_id ) AA  on AA.ua_exercise_id=CE.exercise_id   
+				 where CE.EXERCISE_COURSE = 2;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+public ArrayList<User> GetReport1() {
+		User user = new User();
+		ArrayList<User> listUser = new ArrayList<User>();
+		oracleDb.OpenConnection();
+		String query = " select DISTINCT c.user_fname, c.user_lname from csc_user c, csc_user_role ur, "+ 
+				" CSC_EXERCISE ex,CSC_COURSE CO, CSC_CLASS CL , CSC_ROLE R where  "+
+				" c.USER_ID = ur.USER_ROLE_USER_ID  "+
+				" and ex.EXERCISE_COURSE = CO.CSC_COURSE_COURSE_ID "+
+				" and CL.CSC_CLASS_COURSE_ID = CO.CSC_COURSE_COURSE_ID "+
+				" and CL.CSC_CLASS_SURR_KEY = UR.CSC_U_R_CLASS_SURR_KEY "+
+				" and R.ROLE_ID = ur.USER_ROLE_ROLE_ID "+
+				" and CO.CSC_COURSE_TOKEN = 'CSC540FALL14' "+
+				" and R.ROLE_NAME = 'Student' "+
+				" and c.user_id NOT IN "+
+				" (select ua_user_id from csc_user_attempt ua where ua.ua_exercise_id=1) ";
+		
+		ResultSet resultset = oracleDb
+				.GetResultSet(query);
+		try {
+			while (resultset.next()) {
+				user = new User();
+				user.UserFName = resultset.getString("USER_FNAME");
+				user.UserLName = resultset.getString("USER_LNAME");
+				listUser.add(user);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			oracleDb.CloseConnection();
+		}
+		return listUser;
+	}
+
+	public ArrayList<User> GetReport2() {
+		User user = new User();
+		ArrayList<User> listUser = new ArrayList<User>();
+		oracleDb.OpenConnection();
+		String query = "select c.user_fname, c.user_lname from csc_user c "+
+				"where c.user_id IN ( "+
+						"select UA_USER_ID from csc_user_attempt ua  "+
+						"where ua.attemp_id = 1 "+
+						"and ua.UA_EXERCISE_ID = 1 "+
+						"and ua.ua_score = (select max(ua1.ua_score) from csc_user_attempt ua1 "+
+						"where ua1.attemp_id=1 and ua1.ua_exercise_id=1) "+
+						") ";
+		
+		ResultSet resultset = oracleDb
+				.GetResultSet(query);
+		try {
+			while (resultset.next()) {
+				user = new User();
+				user.UserFName = resultset.getString("USER_FNAME");
+				user.UserLName = resultset.getString("user_lname");
+				listUser.add(user);
+			}
+		} catch (SQLException e) {
+		} finally {
+			oracleDb.CloseConnection();
+		}
+		return listUser;
+	}
+
+	public ArrayList<User> GetReport3(int Course_id) {
+		User user = new User();
+		ArrayList<User> listUser = new ArrayList<User>();
+		oracleDb.OpenConnection();
+		String query = "select sub.e_name as Exercise_Name, c.user_fname, c.user_lname from csc_user c, "+
+						"( "+
+						"select ua.UA_USER_ID as u_id, ua.UA_EXERCISE_ID as e_id, EX.EXERCISE_NAME as e_name from csc_user_attempt ua , CSC_EXERCISE EX "+
+						"where ua.UA_EXERCISE_ID = EX.EXERCISE_ID "+
+						"and ua.attemp_id = 1 "+
+						"and EX.EXERCISE_COURSE ="+Course_id+
+						"and (ua.UA_EXERCISE_ID, ua.ua_score) IN (select ua1.UA_EXERCISE_ID,max(ua1.ua_score) from csc_user_attempt ua1 "+
+						"where ua1.attemp_id=1 "+
+						"group by ua1.UA_EXERCISE_ID) "+
+						") sub "+
+						"where sub.u_id = c.user_id ";
+		
+		ResultSet resultset = oracleDb
+				.GetResultSet(query);
+		try {
+			while (resultset.next()) {
+				user = new User();
+				user.ExerciseName = resultset.getString("EXERCISE_NAME");
+				user.UserFName = resultset.getString("USER_FNAME");
+				user.UserLName = resultset.getString("USER_LNAME");
+				listUser.add(user);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			oracleDb.CloseConnection();
+		}
+		return listUser;
+	}
+
+	public ArrayList<User> GetReport4Average(int Course_Id) {
+		User user = new User();
+		ArrayList<User> listUser = new ArrayList<User>();
+		oracleDb.OpenConnection();
+		String query = "SELECT CC.USER_FNAME as FirstName,CC.USER_LNAME as LastName, AVG(UA_SCORE) as AVERAGESCORE "
+				+ "FROM CSC_USER CC "
+				+ "inner join CSC_USER_ROLE CUR on CC.USER_ID=CUR.USER_ROLE_USER_ID AND CUR.USER_ROLE_ROLE_ID=2 "
+				+ "left join "
+				+ "( SELECT UA_USER_ID,EXERCISE_ID,UA_SCORE FROM "
+				+ "( SELECT CUA.UA_USER_ID UA_USER_ID, CE.EXERCISE_ID EXERCISE_ID, UA_SCORE "
+				+ " FROM CSC_EXERCISE CE,CSC_USER_ATTEMPT  CUA  "
+				+ " WHERE CE.EXERCISE_ID=CUA.UA_EXERCISE_ID and CE.EXERCISE_ScoringType=1 and ROWNUM <= 1 and CE.EXERCISE_COURSE = "+Course_Id
+				+ " ORDER BY CUA.UA_USER_ID, CE.EXERCISE_ID,CUA.UA_LASTATTEMPT_DATE DESC) "
+				+
+
+				" UNION "
+				+ " SELECT UA_USER_ID,EXERCISE_ID,UA_SCORE FROM  "
+				+ " ( SELECT CUA.UA_USER_ID UA_USER_ID, CE.EXERCISE_ID EXERCISE_ID, UA_SCORE "
+				+ " FROM CSC_EXERCISE CE,CSC_USER_ATTEMPT  CUA  "
+				+ " WHERE CE.EXERCISE_ID=CUA.UA_EXERCISE_ID and CE.EXERCISE_ScoringType=4 and ROWNUM <= 1 and CE.EXERCISE_COURSE = "+Course_Id
+				+ " ORDER BY CUA.UA_USER_ID, CE.EXERCISE_ID,CUA.UA_LASTATTEMPT_DATE ASC) "
+				+
+
+				" UNION  "
+				+
+
+				" SELECT UA_USER_ID,EXERCISE_ID,UA_SCORE  "
+				+ " FROM ( SELECT CUA.UA_USER_ID, CE.EXERCISE_ID, UA_SCORE  "
+				+ " FROM CSC_EXERCISE CE,CSC_USER_ATTEMPT  CUA WHERE CE.EXERCISE_ID=CUA.UA_EXERCISE_ID and CE.EXERCISE_ScoringType=2 and CE.EXERCISE_COURSE = "+Course_Id
+				+ " and ROWNUM <= 1 ORDER BY CUA.UA_USER_ID, CE.EXERCISE_ID,CUA.UA_SCORE DESC)  "
+				+
+
+				" UNION  "
+				+
+
+				" SELECT DISTINCT CUA.UA_USER_ID, CE.EXERCISE_ID, AVG(UA_SCORE)  "
+				+ " FROM CSC_EXERCISE CE,CSC_USER_ATTEMPT  CUA WHERE CE.EXERCISE_ID=CUA.UA_EXERCISE_ID and CE.EXERCISE_ScoringType=3 CE.EXERCISE_COURSE = "+Course_Id
+				+ " GROUP BY CUA.UA_USER_ID, CE.EXERCISE_ID )  "
+				+ " AA ON AA.UA_USER_ID=CC.USER_ID  GROUP BY CC.USER_FNAME,CC.USER_LNAME ";
+
+		ResultSet resultset = oracleDb
+				.GetResultSet(query);
+		try {
+			while (resultset.next()) {
+				user = new User();
+				user.UserFName = resultset.getString("FirstName");
+				user.UserLName = resultset.getString("LastName");
+				user.AverageScore = resultset.getDouble("AVERAGESCORE");
+				listUser.add(user);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			oracleDb.CloseConnection();
+		}
+		return listUser;
+	}
+
+	public ArrayList<User> GetReport4Total(int Course_id) {
+		User user = new User();
+		ArrayList<User> listUser = new ArrayList<User>();
+		oracleDb.OpenConnection();
+		
+		String query = " SELECT CC.USER_FNAME as FirstName,CC.USER_LNAME LastName, CE.EXERCISE_NAME as ExerciseName, UA_SCORE  as TotalScore "+ 
+				" FROM CSC_USER CC  "+
+				" inner join CSC_USER_ROLE CUR on CC.USER_ID=CUR.USER_ROLE_USER_ID AND CUR.USER_ROLE_ROLE_ID=2  "+
+				" left join ( SELECT UA_USER_ID,EXERCISE_ID,UA_SCORE  "+
+				" FROM ( SELECT CUA.UA_USER_ID UA_USER_ID, CE.EXERCISE_ID EXERCISE_ID, UA_SCORE "+ 
+				" FROM CSC_EXERCISE CE,CSC_USER_ATTEMPT  CUA "+ 
+				" WHERE CE.EXERCISE_ID=CUA.UA_EXERCISE_ID and CE.EXERCISE_ScoringType=1 and ROWNUM <= 1 and CE.EXERCISE_COURSE ="+Course_id+
+				" ORDER BY CUA.UA_USER_ID, CE.EXERCISE_ID,CUA.UA_LASTATTEMPT_DATE DESC) "+ 
+
+				" UNION "+
+
+				" SELECT UA_USER_ID,EXERCISE_ID,UA_SCORE "+ 
+				" FROM ( SELECT CUA.UA_USER_ID UA_USER_ID, CE.EXERCISE_ID EXERCISE_ID, UA_SCORE "+ 
+				" FROM CSC_EXERCISE CE,CSC_USER_ATTEMPT  CUA  "+
+				" WHERE CE.EXERCISE_ID=CUA.UA_EXERCISE_ID and CE.EXERCISE_ScoringType=4 and ROWNUM <= 1 and CE.EXERCISE_COURSE = "+Course_id+
+				" ORDER BY CUA.UA_USER_ID, CE.EXERCISE_ID,CUA.UA_LASTATTEMPT_DATE ASC) "+
+
+				" UNION  "+
+
+				" SELECT UA_USER_ID,EXERCISE_ID,UA_SCORE  "+
+				" FROM ( SELECT CUA.UA_USER_ID, CE.EXERCISE_ID, UA_SCORE "+ 
+				" FROM CSC_EXERCISE CE,CSC_USER_ATTEMPT  CUA  "+
+				" WHERE CE.EXERCISE_ID=CUA.UA_EXERCISE_ID and CE.EXERCISE_ScoringType=2 and ROWNUM <= 1 and CE.EXERCISE_COURSE = "+Course_id+
+				" ORDER BY CUA.UA_USER_ID, CE.EXERCISE_ID,CUA.UA_SCORE DESC)  "+
+
+				" UNION  "+
+
+				" SELECT DISTINCT CUA.UA_USER_ID, CE.EXERCISE_ID, AVG(UA_SCORE)  "+
+				" FROM CSC_EXERCISE CE,CSC_USER_ATTEMPT  CUA  "+
+				" WHERE CE.EXERCISE_ID=CUA.UA_EXERCISE_ID and CE.EXERCISE_ScoringType=3 and CE.EXERCISE_COURSE = "+Course_id+
+				" GROUP BY CUA.UA_USER_ID, CE.EXERCISE_ID ) AA ON AA.UA_USER_ID=CC.USER_ID  "+
+				" INNER JOIN csc_exercise CE on CE.EXERCISE_ID=AA.EXERCISE_ID ";
+
+		ResultSet resultset = oracleDb
+				.GetResultSet(query);
+		try {
+			while (resultset.next()) {
+				user = new User();
+				user.UserFName = resultset.getString("FirstName");
+				user.UserLName = resultset.getString("LastName");
+				user.ExerciseName = resultset.getString("ExerciseName");
+				user.AverageScore = resultset.getDouble("TotalScore");
+				listUser.add(user);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			oracleDb.CloseConnection();
+		}
+		return listUser;
+	}
+
+	public ArrayList<Exercise> GetReport5(int Course_id) {
+		Exercise exercise = new Exercise();
+		ArrayList<Exercise> listExercise = new ArrayList<Exercise>();
+		oracleDb.OpenConnection();
+		String query = "Select CE.EXERCISE_ID AS EXERCISE_ID, CE.EXERCISE_NAME as EXERCISE_NAME,AA.AVERAGEATTEMPT "+
+				" as AVERAGEATTEMPT  FROM  csc_exercise CE "+
+				" LEFT JOIN  (SELECT ua_exercise_id, "+
+				" avg(Attempt) AVERAGEATTEMPT  from ( select ua_exercise_id,UA_USER_ID,count(*) as Attempt "+
+				" from csc_user_attempt ua "+
+				" Group By ua.ua_exercise_id, ua.UA_USER_ID) A group by ua_exercise_id ) AA  on AA.ua_exercise_id=CE.exercise_id "+
+				" where CE.EXERCISE_COURSE ="+Course_id;
+		
+		ResultSet resultset = oracleDb
+				.GetResultSet(query);
+		try {
+			while (resultset.next()) {
+				exercise = new Exercise();
+				exercise.EXERCISE_ID = resultset.getInt("EXERCISE_ID");
+				exercise.EXERCISE_NAME = resultset.getString("EXERCISE_NAME");
+				exercise.AverageAttempt = resultset.getInt("AVERAGEATTEMPT");
+				listExercise.add(exercise);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			oracleDb.CloseConnection();
+		}
+		return listExercise;
+	}

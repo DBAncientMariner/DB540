@@ -74,7 +74,7 @@ public class Login {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 			
-		JLabel lbl_Welcome = new JLabel("Welcome CSC 505");
+		JLabel lbl_Welcome = new JLabel("Welcome CSC 540");
 		lbl_Welcome.setBounds(173, 13, 172, 50);
 		frame.getContentPane().add(lbl_Welcome);
 		
@@ -172,7 +172,7 @@ public class Login {
 		frameStart.getContentPane().setLayout(null);
 		
 		
-		JLabel lbl_Welcome = new JLabel("Welcome CSC 505");
+		JLabel lbl_Welcome = new JLabel("Welcome CSC 540");
 		lbl_Welcome.setBounds(210, 13, 172, 50);
 		frameStart.getContentPane().add(lbl_Welcome);
 		
@@ -225,7 +225,7 @@ public class Login {
 		frameRegistration.getContentPane().setLayout(null);
 		
 		
-		JLabel lbl_Welcome = new JLabel("Welcome CSC 505 - Registration");
+		JLabel lbl_Welcome = new JLabel("Welcome CSC 540 - Registration");
 		lbl_Welcome.setBounds(169, 13, 247, 30);
 		frameRegistration.getContentPane().add(lbl_Welcome);
 		

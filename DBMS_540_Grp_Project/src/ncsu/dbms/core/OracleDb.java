@@ -26,6 +26,7 @@ public class OracleDb {
 	Statement Stmt;
 
 	public OracleDb() {
+		ConnectionDetails.ReadConfig();
 		UserName = ConnectionDetails.UserName;
 		Password = ConnectionDetails.Password;
 		Url = ConnectionDetails.Url;

@@ -61,6 +61,7 @@ public class ExerciseData {
 
 	public static List<Question> getQuestionsFromUserAttemptExercise(int exerciseId, List<UserAttemptExercise> userAttemptExerciseList) {
 		List<Question> questionList = new LinkedList<Question>();
+		List<Integer> orderedList = new LinkedList<Integer>();
 		Map<Integer, List<Options>> questionsMap = new HashMap<Integer, List<Options>>();
 		for (UserAttemptExercise userAttemptExercise : userAttemptExerciseList) {
 			if(questionsMap.containsKey(userAttemptExercise.UE_QUESTION_ID)) {
@@ -74,12 +75,13 @@ public class ExerciseData {
 				op.setMarked(userAttemptExercise.UE_ISSELECTED);
 				options.add(op);
 				questionsMap.put(userAttemptExercise.UE_QUESTION_ID, options);
+				orderedList.add(userAttemptExercise.UE_QUESTION_ID);
 			}
 		}
-		Set<Entry<Integer, List<Options>>> entrySet = questionsMap.entrySet();
-		for (Entry<Integer, List<Options>> entry : entrySet) {
-			List<QuestionBank> questionBank = OracleDataAdapter1.GetQuestionBankFromQid(entry.getKey());
-			Question q = new Question(entry.getKey(), "", entry.getValue(), false);
+		for (int order : orderedList) {
+			List<Options> optionList = questionsMap.get(order);
+			List<QuestionBank> questionBank = OracleDataAdapter1.GetQuestionBankFromQid(order);
+			Question q = new Question(order, "", optionList, false);
 			if(questionBank != null && !questionBank.isEmpty()) {
 				q.setQuestion(questionBank.get(0).QUESTIONBANK_TEXT);
 				q.setParameterized(questionBank.get(0).CSC_QB_IS_PARAMETERIZED);
@@ -89,8 +91,8 @@ public class ExerciseData {
 			
 			if(q.isParameterized()) {
 				int uaId = OracleDataAdapter1.GetUAIdForExId(exerciseId);
-				int paramSetId = OracleDataAdapter1.GetSetForUSERATTEMPTEXERCISEPRM(uaId, entry.getKey());
-				List<Parameter> parameterList = getParameters(entry.getKey(), paramSetId);
+				int paramSetId = OracleDataAdapter1.GetSetForUSERATTEMPTEXERCISEPRM(uaId, order);
+				List<Parameter> parameterList = getParameters(order, paramSetId);
 				q.setParameterList(parameterList);
 				QbParamSet set = new QbParamSet();
 				set.CSC_QB_PARAMETER_SET_PARM_ID = paramSetId;
@@ -215,6 +217,21 @@ public class ExerciseData {
 			List<Options> options = question.getOptions();
 			for (Options op : options) {
 				OracleDataAdapter1.InsertIntoUserAttempExercise(uaId, question.getQuestionId(), op.getAnswerId(), 'F');
+			}
+		}
+	}
+	
+	public static void explicitSaveExercise(List<Question> exerciseQuestions, Exercise exercise) {
+		OracleDataAdapter adp = new OracleDataAdapter();
+		int uaId = adp.UpdateUserAttempSubmit(exercise.EXERCISE_ID, 0, "F");
+		for (Question question : exerciseQuestions) {
+			List<Options> options = question.getOptions();
+			for (Options op : options) {
+				if(op.isMarked()) {
+					OracleDataAdapter1.UpdateIntoUserAttempExercise(uaId, question.getQuestionId(), op.getAnswerId(), 'T');
+				} else {
+					OracleDataAdapter1.UpdateIntoUserAttempExercise(uaId, question.getQuestionId(), op.getAnswerId(), 'F');
+				}
 			}
 		}
 	}

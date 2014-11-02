@@ -131,16 +131,16 @@ public class AttemptExercise {
 			}
 		});
 
-//		JButton btnSave = new JButton("Save");
-//		btnSave.addActionListener(new ActionListener() {
-//			public void actionPerformed(ActionEvent arg0) {
-//				frame.setVisible(false);
-//				ExerciseData.saveExercise(exerciseQuestions, exerciseList.get(index));
-//				new Home();
-//			}
-//		});
-//		btnSave.setBounds(12, 107, 187, 33);
-//		panel_Bottom.add(btnSave);
+		JButton btnSave = new JButton("Save");
+		btnSave.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				frame.setVisible(false);
+				ExerciseData.explicitSaveExercise(exerciseQuestions, exerciseList.get(index));
+				new Home();
+			}
+		});
+		btnSave.setBounds(12, 107, 187, 33);
+		panel_Bottom.add(btnSave);
 
 		JButton btnSubmit = new JButton("Submit");
 		btnSubmit.addActionListener(new ActionListener() {
@@ -174,6 +174,9 @@ public class AttemptExercise {
 				ButtonGroup group = new ButtonGroup();
 				for (final Options option : question.getOptions()) {
 					final JRadioButton optionbutton = new JRadioButton(option.getAnswer());
+					if(option.isMarked()) {
+						optionbutton.setSelected(true);
+					}
 					optionbutton.addActionListener(new ActionListener() {
 						
 						@Override

@@ -1355,7 +1355,7 @@ public class OracleDataAdapter {
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		oracleDb.OpenConnection();
 		ResultSet resultset = oracleDb
-				.GetResultSet("select * from CSC_USER_ATTEMPT UT,CSC_EXERCISE EX where UT.UA_EXERCISE_ID = EX.EXERCISE_ID and EX.EXERCISE_COURSE = "
+				.GetResultSet("select UT.* from CSC_USER_ATTEMPT UT,CSC_EXERCISE EX where UT.UA_EXERCISE_ID = EX.EXERCISE_ID and EX.EXERCISE_COURSE = "
 						+ course_id
 						+ " and UT.UA_SUBMITTED = 'T'and UT.UA_USER_ID = "
 						+ user.UserId);
@@ -2049,7 +2049,7 @@ public class OracleDataAdapter {
 		ArrayList<User> listUser = new ArrayList<User>();
 		oracleDb.OpenConnection();
 		
-		String query = " SELECT CC.USER_FNAME as FirstName,CC.USER_LNAME LastName, CE.EXERCISE_NAME as ExerciseName, UA_SCORE  as TotalScore "+ 
+		String query = " SELECT DISTINCT CE.EXERCISE_ID, CC.USER_FNAME as FirstName,CC.USER_LNAME LastName, CE.EXERCISE_NAME as ExerciseName, UA_SCORE  as TotalScore "+ 
 				" FROM CSC_USER CC  "+
 				" inner join CSC_USER_ROLE CUR on CC.USER_ID=CUR.USER_ROLE_USER_ID AND CUR.USER_ROLE_ROLE_ID=2  "+
 				" left join ( SELECT UA_USER_ID,EXERCISE_ID,UA_SCORE  "+
